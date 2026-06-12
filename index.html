@@ -1,0 +1,5277 @@
+<!DOCTYPE html>
+<html lang="pt">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Quiz Nadador-Salvador</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Barlow+Condensed:ital,wght@0,700;0,800;1,700&family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
+<style>
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+
+/* ══════════════════════════════════════════
+   OCEAN DESIGN TOKENS
+══════════════════════════════════════════ */
+/* ══════════════════════════════════════════
+   DESIGN TOKENS — LIGHT (DEFAULT)
+══════════════════════════════════════════ */
+:root{
+  --foam:#e0f2fe;
+  --wave:#0284c7;
+  --sand:#d4890a;
+  --rescue-red:#dc2626;
+  --safe-green:#16a34a;
+  --text-muted:#3a6d8c;
+  --glass:rgba(255,255,255,0.88);
+  --glass-border:rgba(2,132,199,0.18);
+  --wave-dim:rgba(2,132,199,0.1);
+  --wave-glow:rgba(2,132,199,0.15);
+  --body-bg:linear-gradient(160deg,#dff0fb 0%,#f0f9ff 60%,#e0f2fe 100%);
+  --bg:#dff0fb;
+  --card-bg:var(--glass);
+  --text-primary:#0c2340;
+  --text-secondary:#3a6d8c;
+  --text-accent:var(--wave);
+  --border-color:rgba(2,132,199,0.2);
+  --border-input:rgba(2,132,199,0.25);
+  --accent-bg:rgba(2,132,199,0.08);
+  --hover-bg:rgba(2,132,199,0.07);
+  --progress-bg:rgba(2,132,199,0.15);
+  --input-bg:rgba(255,255,255,0.9);
+  --panel-bg:rgba(255,255,255,0.96);
+  --panel-close-bg:#edf6fd;
+  --summary-bg:rgba(2,132,199,0.06);
+  --stat-bg:rgba(255,255,255,0.7);
+  --chart-bg:rgba(255,255,255,0.7);
+  --item-border:rgba(2,132,199,0.12);
+  --sort-handle:#5a8fab;
+  --ctx-bg:rgba(2,132,199,0.04);
+  --ctx-border:rgba(2,132,199,0.18);
+  --ctx-color:#0c2340;
+  --ref-bg:rgba(2,132,199,0.06);
+  --ref-border:rgba(2,132,199,0.2);
+  --ref-color:#0369a1;
+  --option-btn-bg:rgba(255,255,255,0.55);
+  --sort-item-bg:rgba(255,255,255,0.5);
+  --ocean-deep:#0a1628;
+  --ocean-mid:#0d2444;
+  --ocean-surface:#1a3a5c;
+}
+
+/* ══════════════════════════════════════════
+   DESIGN TOKENS — DARK
+══════════════════════════════════════════ */
+body.dark{
+  --wave:#0ea5e9;
+  --sand:#f0c060;
+  --rescue-red:#ef4444;
+  --safe-green:#22c55e;
+  --text-muted:#7ea8c4;
+  --glass:rgba(13,36,68,0.82);
+  --glass-border:rgba(14,165,233,0.15);
+  --wave-dim:rgba(14,165,233,0.12);
+  --wave-glow:rgba(14,165,233,0.18);
+  --body-bg:linear-gradient(160deg,#0a1628 0%,#0d2244 60%,#0a1e3a 100%);
+  --bg:#0a1628;
+  --card-bg:var(--glass);
+  --text-primary:#e0f2fe;
+  --text-secondary:#7ea8c4;
+  --text-accent:var(--wave);
+  --border-color:#1a3a5c;
+  --border-input:#1a3a5c;
+  --accent-bg:rgba(14,165,233,0.12);
+  --hover-bg:rgba(14,165,233,0.08);
+  --progress-bg:#1a3a5c;
+  --input-bg:#0a1628;
+  --panel-bg:#0d2444;
+  --panel-close-bg:#0a1628;
+  --summary-bg:rgba(14,165,233,0.07);
+  --stat-bg:#0a1628;
+  --chart-bg:#0a1628;
+  --item-border:#1a3a5c;
+  --sort-handle:#7ea8c4;
+  --ctx-bg:rgba(14,165,233,0.04);
+  --ctx-border:rgba(14,165,233,0.18);
+  --ctx-color:#bae6fd;
+  --ref-bg:rgba(14,165,233,0.07);
+  --ref-border:rgba(14,165,233,0.22);
+  --ref-color:#bae6fd;
+  --option-btn-bg:rgba(26,58,92,0.35);
+  --sort-item-bg:rgba(26,58,92,0.45);
+}
+
+/* ══════════════════════════════════════════
+   BASE
+══════════════════════════════════════════ */
+html{background:var(--bg);scroll-behavior:smooth}
+body{
+  font-family:'Inter',system-ui,sans-serif;
+  background:var(--body-bg) fixed;
+  color:var(--text-primary);
+  min-height:100vh;
+  display:flex;
+  align-items:flex-start;
+  justify-content:center;
+  padding:80px 16px 40px;
+}
+.container{width:100%;max-width:720px}
+
+/* ══════════════════════════════════════════
+   WAVE HEADER
+══════════════════════════════════════════ */
+.wave-header{
+  position:fixed;
+  top:0;left:0;right:0;
+  height:72px;
+  pointer-events:none;
+  z-index:800;
+  overflow:hidden;
+}
+.wave-header svg{width:100%;height:100%}
+.wp1{fill:rgba(2,132,199,0.1);animation:waveDrift 10s ease-in-out infinite}
+.wp2{fill:rgba(14,165,233,0.07);animation:waveDrift 14s ease-in-out infinite reverse}
+.wp3{fill:rgba(14,165,233,0.05);animation:waveDrift 7s ease-in-out infinite 2s}
+body.dark .wp1{fill:rgba(26,58,92,0.55)}
+body.dark .wp2{fill:rgba(14,165,233,0.06)}
+body.dark .wp3{fill:rgba(14,165,233,0.04)}
+@keyframes waveDrift{
+  0%,100%{transform:translateX(0) scaleY(1)}
+  33%{transform:translateX(-1.5%) scaleY(1.06)}
+  66%{transform:translateX(1%) scaleY(0.96)}
+}
+@media(prefers-reduced-motion:reduce){.wp1,.wp2,.wp3{animation:none}}
+
+/* ══════════════════════════════════════════
+   CARDS — GLASSMORPHISM
+══════════════════════════════════════════ */
+.card{
+  background:var(--glass);
+  backdrop-filter:blur(12px);
+  -webkit-backdrop-filter:blur(12px);
+  border:1px solid var(--glass-border);
+  border-radius:16px;
+  padding:32px;
+  box-shadow:0 4px 32px rgba(14,165,233,0.1),0 1px 0 rgba(255,255,255,0.04) inset;
+}
+
+/* ══════════════════════════════════════════
+   TYPOGRAPHY
+══════════════════════════════════════════ */
+h1{
+  font-family:'Barlow Condensed',sans-serif;
+  font-size:2.4rem;
+  font-weight:800;
+  color:var(--text-primary);
+  margin-bottom:8px;
+  line-height:1.05;
+  letter-spacing:0.01em;
+  text-transform:uppercase;
+}
+h2{
+  font-family:'Barlow Condensed',sans-serif;
+  font-size:1.5rem;
+  font-weight:700;
+  color:var(--text-primary);
+  margin-bottom:20px;
+  letter-spacing:0.02em;
+  text-transform:uppercase;
+}
+h3{font-size:0.95rem;font-weight:600;color:var(--text-primary)}
+.subtitle{color:var(--text-muted);font-size:0.9rem;margin-bottom:28px;line-height:1.55}
+
+/* ══════════════════════════════════════════
+   BUTTONS
+══════════════════════════════════════════ */
+.btn{
+  display:block;
+  width:100%;
+  padding:14px 20px;
+  border:none;
+  border-radius:10px;
+  font-family:'Inter',sans-serif;
+  font-size:1rem;
+  font-weight:600;
+  cursor:pointer;
+  transition:transform 0.15s ease,filter 0.15s ease,box-shadow 0.15s ease;
+  text-align:left;
+}
+.btn:hover{transform:translateY(-1px)}
+.btn:active{transform:translateY(0)}
+
+.btn-primary{
+  background:var(--wave);
+  color:#fff;
+  box-shadow:0 2px 16px rgba(14,165,233,0.3);
+}
+.btn-primary:hover{filter:brightness(1.15);box-shadow:0 4px 24px rgba(14,165,233,0.5)}
+
+.btn-secondary{
+  background:rgba(14,165,233,0.1);
+  color:var(--wave);
+  border:1px solid rgba(14,165,233,0.28);
+}
+.btn-secondary:hover{background:rgba(14,165,233,0.18);border-color:rgba(14,165,233,0.5)}
+
+.btn-timed{
+  background:linear-gradient(135deg,var(--sand) 0%,#e8912a 100%);
+  color:#0a1628;
+  font-weight:700;
+}
+.btn-timed:hover{filter:brightness(1.08)}
+
+.btn-success{
+  background:rgba(34,197,94,0.12);
+  color:var(--safe-green);
+  border:1px solid rgba(34,197,94,0.28);
+  margin-top:16px;
+}
+.btn-success:hover{background:rgba(34,197,94,0.22)}
+
+.btn-ordering{
+  background:linear-gradient(135deg,#7c3aed 0%,#6d28d9 100%);
+  color:#fff;
+}
+.btn-ordering:hover{filter:brightness(1.12)}
+
+.btn-danger{
+  background:rgba(239,68,68,0.1);
+  color:var(--rescue-red);
+  border:1px solid rgba(239,68,68,0.28);
+  border-radius:10px;
+  padding:12px 20px;
+  font-family:'Inter',sans-serif;
+  font-size:0.92rem;
+  font-weight:600;
+  cursor:pointer;
+  width:100%;
+  transition:background 0.15s,transform 0.15s;
+}
+.btn-danger:hover{background:rgba(239,68,68,0.2);transform:translateY(-1px)}
+
+/* ══════════════════════════════════════════
+   MODE BUTTONS
+══════════════════════════════════════════ */
+.mode-buttons{display:flex;flex-direction:column;gap:10px;margin-bottom:24px}
+
+/* ══════════════════════════════════════════
+   CHAPTER GRID
+══════════════════════════════════════════ */
+.chapter-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:8px;margin-bottom:20px}
+.chapter-btn{
+  padding:14px 8px;
+  border:1px solid var(--border-input);
+  border-radius:10px;
+  background:var(--accent-bg);
+  color:var(--text-accent);
+  font-family:'Inter',sans-serif;
+  font-size:0.88rem;
+  font-weight:600;
+  cursor:pointer;
+  text-align:center;
+  transition:all 0.15s;
+}
+.chapter-btn:hover{
+  background:rgba(14,165,233,0.15);
+  border-color:var(--wave);
+  box-shadow:0 0 0 3px rgba(14,165,233,0.1);
+  transform:translateY(-1px);
+}
+
+/* ══════════════════════════════════════════
+   NAV / META
+══════════════════════════════════════════ */
+.back-btn{
+  background:none;
+  border:none;
+  color:var(--text-muted);
+  font-family:'Inter',sans-serif;
+  font-size:0.88rem;
+  cursor:pointer;
+  padding:4px 0;
+  margin-bottom:20px;
+  display:flex;
+  align-items:center;
+  gap:6px;
+  transition:color 0.15s;
+}
+.back-btn:hover{color:var(--wave)}
+.meta{
+  font-size:0.78rem;
+  color:var(--text-muted);
+  font-weight:600;
+  margin-bottom:6px;
+  letter-spacing:0.08em;
+  text-transform:uppercase;
+}
+
+/* ══════════════════════════════════════════
+   PROGRESS BAR — shimmer
+══════════════════════════════════════════ */
+.progress-bar-wrap{
+  background:var(--progress-bg);
+  border-radius:99px;
+  height:5px;
+  margin-bottom:22px;
+  overflow:hidden;
+}
+.progress-bar-fill{
+  background:linear-gradient(90deg,var(--wave),var(--sand));
+  height:100%;
+  border-radius:99px;
+  transition:width 0.35s ease;
+  position:relative;
+  overflow:hidden;
+}
+.progress-bar-fill::after{
+  content:'';
+  position:absolute;
+  top:0;left:-60%;
+  width:55%;
+  height:100%;
+  background:linear-gradient(90deg,transparent,rgba(255,255,255,0.4),transparent);
+  animation:shimmer 2.2s ease-in-out infinite;
+}
+@keyframes shimmer{0%{left:-60%}100%{left:160%}}
+@media(prefers-reduced-motion:reduce){.progress-bar-fill::after{animation:none}}
+
+/* ══════════════════════════════════════════
+   TIMER
+══════════════════════════════════════════ */
+.timer-row{display:flex;align-items:center;justify-content:space-between;margin-bottom:16px}
+.timer-badge{
+  font-family:'Barlow Condensed',sans-serif;
+  font-size:1.7rem;
+  font-weight:800;
+  letter-spacing:0.06em;
+  padding:5px 14px;
+  border-radius:10px;
+  background:rgba(14,165,233,0.1);
+  border:1px solid rgba(14,165,233,0.2);
+  color:var(--wave);
+  transition:background 0.3s,color 0.3s,border-color 0.3s;
+}
+.timer-badge.warn{
+  background:rgba(240,192,96,0.12);
+  border-color:rgba(240,192,96,0.35);
+  color:var(--sand);
+}
+.timer-badge.danger{
+  background:rgba(239,68,68,0.12);
+  border-color:rgba(239,68,68,0.35);
+  color:var(--rescue-red);
+  animation:pulse 1s ease-in-out infinite;
+}
+@keyframes pulse{0%,100%{opacity:1}50%{opacity:0.55}}
+@media(prefers-reduced-motion:reduce){.timer-badge.danger{animation:none}}
+
+/* ══════════════════════════════════════════
+   QUESTION & OPTIONS
+══════════════════════════════════════════ */
+.question-text{
+  font-size:1.05rem;
+  font-weight:500;
+  line-height:1.62;
+  margin-bottom:22px;
+  color:var(--text-primary);
+}
+.options{display:flex;flex-direction:column;gap:8px;margin-bottom:8px}
+.option-btn{
+  display:flex;
+  align-items:flex-start;
+  gap:12px;
+  padding:13px 16px;
+  border:1px solid var(--border-input);
+  border-radius:10px;
+  background:var(--option-btn-bg);
+  cursor:pointer;
+  text-align:left;
+  font-family:'Inter',sans-serif;
+  font-size:0.95rem;
+  line-height:1.48;
+  color:var(--text-primary);
+  transition:border-color 0.15s,background 0.15s,box-shadow 0.15s;
+  width:100%;
+}
+.option-btn:hover:not(:disabled){
+  border-color:var(--wave);
+  background:var(--hover-bg);
+  box-shadow:0 0 0 3px var(--wave-dim);
+}
+.option-btn:disabled{cursor:default}
+.option-label{
+  font-family:'Barlow Condensed',sans-serif;
+  font-size:1.05rem;
+  font-weight:700;
+  color:var(--wave);
+  min-width:22px;
+  flex-shrink:0;
+  margin-top:0;
+  letter-spacing:0.02em;
+}
+.option-btn.correct{
+  border-color:var(--safe-green);
+  background:rgba(34,197,94,0.1);
+}
+.option-btn.correct .option-label{color:var(--safe-green)}
+.option-btn.wrong{
+  border-color:var(--rescue-red);
+  background:rgba(239,68,68,0.1);
+}
+.option-btn.wrong .option-label{color:var(--rescue-red)}
+.option-btn.dimmed{opacity:0.38}
+
+.continue-area{margin-top:18px;display:none}
+.continue-area.visible{display:block}
+
+/* ══════════════════════════════════════════
+   REFERENCE BOX
+══════════════════════════════════════════ */
+.ref-box{
+  display:none;
+  background:var(--ref-bg);
+  border:1px solid var(--ref-border);
+  border-radius:10px;
+  padding:11px 15px;
+  margin-top:14px;
+  font-size:0.88rem;
+  color:var(--ref-color);
+  line-height:1.5;
+}
+.ref-box.visible{display:flex;align-items:flex-start;gap:8px}
+.ref-box-icon{font-size:1rem;flex-shrink:0}
+
+/* ══════════════════════════════════════════
+   RESULTS
+══════════════════════════════════════════ */
+.result-card{text-align:center}
+.result-score{
+  font-family:'Barlow Condensed',sans-serif;
+  font-size:3.8rem;
+  font-weight:800;
+  color:var(--wave);
+  margin:16px 0 4px;
+  line-height:1;
+  letter-spacing:0.02em;
+}
+.result-pct{font-size:1.1rem;color:var(--text-muted);margin-bottom:8px}
+.result-msg{font-size:1rem;margin-bottom:20px;color:var(--text-primary)}
+.result-icon{font-size:3.5rem;margin-bottom:8px}
+.result-time{font-size:0.9rem;color:var(--text-muted);margin-bottom:20px}
+
+/* ══════════════════════════════════════════
+   DIVIDER — wave gradient
+══════════════════════════════════════════ */
+.divider{
+  height:1px;
+  background:linear-gradient(90deg,transparent,rgba(14,165,233,0.4),transparent);
+  margin:20px 0;
+  border:none;
+}
+
+/* ══════════════════════════════════════════
+   TIMED BREAKDOWN
+══════════════════════════════════════════ */
+.breakdown{
+  margin-top:8px;
+  max-height:340px;
+  overflow-y:auto;
+  border:1px solid var(--border-color);
+  border-radius:10px;
+  scrollbar-width:thin;
+  scrollbar-color:var(--border-color) transparent;
+}
+.breakdown-item{
+  display:flex;
+  gap:10px;
+  padding:10px 14px;
+  border-bottom:1px solid var(--item-border);
+  font-size:0.85rem;
+  align-items:flex-start;
+}
+.breakdown-item:last-child{border-bottom:none}
+.breakdown-item.ok{background:rgba(34,197,94,0.06)}
+.breakdown-item.fail{background:rgba(239,68,68,0.06)}
+.breakdown-icon{font-size:1rem;flex-shrink:0;margin-top:1px}
+.breakdown-text{flex:1;line-height:1.4;color:var(--text-primary)}
+.breakdown-num{font-weight:700;color:var(--text-secondary);flex-shrink:0;min-width:24px}
+
+/* ══════════════════════════════════════════
+   SEARCH / SOLO
+══════════════════════════════════════════ */
+.search-section{border-top:1px solid var(--border-color);padding-top:20px;margin-top:4px}
+.search-section h3{font-size:0.95rem;font-weight:600;color:var(--text-primary);margin-bottom:8px}
+.search-row{display:flex;gap:8px;margin-bottom:8px}
+.search-input{
+  flex:1;
+  padding:10px 14px;
+  border:1px solid var(--border-input);
+  border-radius:10px;
+  font-family:'Inter',sans-serif;
+  font-size:0.95rem;
+  color:var(--text-primary);
+  background:var(--input-bg);
+  outline:none;
+  transition:border-color 0.15s,box-shadow 0.15s;
+}
+.search-input:focus{border-color:var(--wave);box-shadow:0 0 0 3px var(--wave-dim)}
+.search-input::placeholder{color:var(--text-secondary)}
+.search-btn{
+  padding:10px 18px;
+  background:var(--wave);
+  color:#fff;
+  border:none;
+  border-radius:10px;
+  font-family:'Inter',sans-serif;
+  font-size:0.95rem;
+  font-weight:600;
+  cursor:pointer;
+  transition:filter 0.15s;
+  white-space:nowrap;
+}
+.search-btn:hover{filter:brightness(1.15)}
+.search-legend{font-size:0.78rem;color:var(--text-muted);line-height:1.6}
+.search-error{color:var(--rescue-red);font-size:0.88rem;margin-top:4px}
+.solo-meta{font-size:0.88rem;font-weight:500;color:var(--text-muted);margin-bottom:18px}
+
+/* ══════════════════════════════════════════
+   FOCUS RING
+══════════════════════════════════════════ */
+*:focus-visible{outline:2px solid var(--wave);outline-offset:2px}
+
+/* ══════════════════════════════════════════
+   STATS FAB
+══════════════════════════════════════════ */
+.stats-fab{
+  position:fixed;
+  top:14px;right:14px;
+  z-index:900;
+  background:var(--wave);
+  color:#fff;
+  border:none;
+  border-radius:50px;
+  padding:9px 16px;
+  font-family:'Inter',sans-serif;
+  font-size:0.85rem;
+  font-weight:700;
+  cursor:pointer;
+  box-shadow:0 2px 18px var(--wave-glow);
+  transition:filter 0.15s,transform 0.15s,box-shadow 0.15s;
+  display:flex;
+  align-items:center;
+  gap:6px;
+  white-space:nowrap;
+  line-height:1;
+}
+.stats-fab:hover{filter:brightness(1.12);transform:translateY(-1px)}
+.stats-fab .fab-label{display:inline}
+
+/* Dark/light toggle */
+.dark-fab{
+  position:fixed;
+  top:14px;left:14px;
+  z-index:900;
+  background:var(--accent-bg);
+  color:var(--text-accent);
+  border:1px solid var(--glass-border);
+  border-radius:50px;
+  padding:9px 13px;
+  font-size:1.1rem;
+  cursor:pointer;
+  box-shadow:0 2px 12px var(--wave-dim);
+  transition:background 0.15s,transform 0.15s;
+  line-height:1;
+}
+.dark-fab:hover{background:var(--hover-bg);transform:translateY(-1px)}
+
+/* ══════════════════════════════════════════
+   STATS OVERLAY & PANEL
+══════════════════════════════════════════ */
+.stats-overlay{
+  position:fixed;
+  inset:0;
+  z-index:1000;
+  background:rgba(5,12,28,0.7);
+  backdrop-filter:blur(6px);
+  -webkit-backdrop-filter:blur(6px);
+  display:flex;
+  justify-content:flex-end;
+}
+.stats-overlay.hidden{display:none}
+.stats-panel{
+  background:var(--panel-bg);
+  border-left:1px solid var(--glass-border);
+  width:100%;
+  max-width:500px;
+  height:100%;
+  overflow-y:auto;
+  padding:24px 22px 32px;
+  box-shadow:-4px 0 48px rgba(0,0,0,0.25);
+  position:relative;
+  scrollbar-width:thin;
+  scrollbar-color:var(--border-color) transparent;
+}
+.stats-close{
+  position:sticky;
+  top:0;
+  float:right;
+  background:var(--panel-close-bg);
+  border:1px solid var(--border-color);
+  font-size:0.95rem;
+  cursor:pointer;
+  color:var(--text-secondary);
+  line-height:1;
+  padding:6px 10px;
+  border-radius:8px;
+  margin-bottom:-30px;
+  z-index:10;
+  transition:border-color 0.15s,color 0.15s;
+}
+.stats-close:hover{border-color:var(--wave);color:var(--wave)}
+.stats-title{
+  font-family:'Barlow Condensed',sans-serif;
+  font-size:1.5rem;
+  font-weight:700;
+  color:var(--text-primary);
+  margin-bottom:20px;
+  padding-top:2px;
+  clear:both;
+  text-transform:uppercase;
+  letter-spacing:0.04em;
+}
+.stats-summary{
+  background:rgba(14,165,233,0.07);
+  border:1px solid rgba(14,165,233,0.15);
+  border-radius:12px;
+  padding:18px;
+  margin-bottom:20px;
+}
+.stats-accuracy{
+  font-family:'Barlow Condensed',sans-serif;
+  font-size:3rem;
+  font-weight:800;
+  color:var(--wave);
+  line-height:1;
+  margin-bottom:2px;
+}
+.stats-accuracy-label{font-size:0.82rem;color:var(--text-muted);margin-bottom:14px}
+.stats-grid{display:grid;grid-template-columns:1fr 1fr;gap:8px}
+.stats-stat{
+  background:var(--stat-bg);
+  border:1px solid var(--border-color);
+  border-radius:8px;
+  padding:10px 12px;
+}
+.stats-stat-val{font-size:1.1rem;font-weight:700;color:var(--text-primary)}
+.stats-stat-lbl{font-size:0.74rem;color:var(--text-secondary);margin-top:2px}
+.stats-section-title{
+  font-size:0.74rem;
+  font-weight:600;
+  color:var(--text-secondary);
+  text-transform:uppercase;
+  letter-spacing:0.09em;
+  margin:20px 0 10px;
+  border-top:1px solid var(--border-color);
+  padding-top:16px;
+}
+.hist-wrap{
+  overflow-x:auto;
+  border:1px solid var(--border-color);
+  border-radius:10px;
+  scrollbar-width:thin;
+  scrollbar-color:var(--border-color) transparent;
+}
+.hist-table{width:100%;border-collapse:collapse;font-size:0.83rem;min-width:360px}
+.hist-table th{
+  text-align:left;
+  padding:8px 10px;
+  background:var(--chart-bg);
+  color:var(--text-secondary);
+  font-size:0.72rem;
+  text-transform:uppercase;
+  letter-spacing:0.07em;
+  position:sticky;
+  top:0;
+}
+.hist-table td{
+  padding:7px 10px;
+  border-top:1px solid var(--item-border);
+  vertical-align:middle;
+  color:var(--text-primary);
+}
+.hist-row-green{background:rgba(34,197,94,0.07)}
+.hist-row-orange{background:rgba(240,192,96,0.06)}
+.hist-row-red{background:rgba(239,68,68,0.07)}
+.stats-chart{
+  background:var(--chart-bg);
+  border:1px solid var(--border-color);
+  border-radius:10px;
+  padding:12px 14px;
+  margin-bottom:4px;
+}
+.stats-chart svg text{fill:var(--text-secondary)}
+.confirm-row{display:flex;gap:10px;margin-top:8px}
+.confirm-row .btn{padding:11px;font-size:0.9rem;flex:1;text-align:center}
+.stats-empty{text-align:center;padding:48px 20px;color:var(--text-secondary);font-size:0.95rem}
+
+/* ══════════════════════════════════════════
+   ORDERING MODE
+══════════════════════════════════════════ */
+.scenario-grid{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-bottom:20px}
+.scenario-btn{
+  padding:14px 12px;
+  border:1px solid var(--border-input);
+  border-radius:10px;
+  background:var(--accent-bg);
+  color:var(--text-accent);
+  font-family:'Inter',sans-serif;
+  font-size:0.88rem;
+  font-weight:600;
+  cursor:pointer;
+  text-align:left;
+  transition:all 0.15s;
+  line-height:1.4;
+}
+.scenario-btn:hover{
+  background:var(--hover-bg);
+  border-color:var(--wave);
+  box-shadow:0 0 0 3px var(--wave-dim);
+  transform:translateY(-1px);
+}
+.scenario-context{
+  background:var(--ctx-bg);
+  border:1px solid var(--ctx-border);
+  border-radius:10px;
+  padding:14px 16px;
+  margin-bottom:18px;
+  font-size:0.9rem;
+  color:var(--ctx-color);
+  line-height:1.6;
+}
+.sort-list{
+  display:flex;
+  flex-direction:column;
+  gap:8px;
+  margin-bottom:18px;
+  -webkit-user-select:none;
+  user-select:none;
+}
+.sort-item{
+  display:flex;
+  align-items:center;
+  gap:10px;
+  padding:11px 14px;
+  background:var(--sort-item-bg);
+  border:1px solid var(--border-input);
+  border-radius:10px;
+  transition:border-color 0.15s,background 0.15s,opacity 0.15s,transform 0.18s ease;
+}
+.sort-ghost{
+  opacity:0.94;
+  box-shadow:0 8px 36px rgba(14,165,233,0.28);
+  cursor:grabbing!important;
+  transform:rotate(1.5deg) scale(1.04);
+}
+.sort-placeholder{
+  border:2px dashed var(--border-input);
+  border-radius:10px;
+  background:var(--accent-bg);
+  pointer-events:none;
+  box-sizing:border-box;
+}
+.sort-item.correct{border-color:var(--safe-green);background:rgba(34,197,94,0.1)}
+.sort-item.wrong{border-color:var(--rescue-red);background:rgba(239,68,68,0.1)}
+.sort-handle{
+  font-size:1.15rem;
+  color:var(--text-muted);
+  cursor:grab;
+  padding:2px 6px;
+  touch-action:none;
+  flex-shrink:0;
+  line-height:1;
+}
+.sort-handle:active{cursor:grabbing}
+.sort-num{
+  font-family:'Barlow Condensed',sans-serif;
+  font-weight:700;
+  color:var(--wave);
+  min-width:26px;
+  font-size:1rem;
+  flex-shrink:0;
+  letter-spacing:0.02em;
+}
+.sort-text{flex:1;font-size:0.9rem;line-height:1.48;color:var(--text-primary)}
+.sort-indicator{font-size:1rem;flex-shrink:0;margin-left:4px}
+.correct-seq{
+  background:rgba(34,197,94,0.08);
+  border:1px solid rgba(34,197,94,0.28);
+  border-radius:10px;
+  padding:14px 16px;
+  margin-top:14px;
+}
+.correct-seq-title{font-weight:700;font-size:0.88rem;color:var(--safe-green);margin-bottom:8px}
+.correct-seq-item{font-size:0.85rem;color:var(--text-primary);line-height:1.5;padding:2px 0}
+.correct-seq-num{color:var(--safe-green);font-weight:700;margin-right:6px}
+.ordering-score{
+  font-family:'Barlow Condensed',sans-serif;
+  font-size:2.8rem;
+  font-weight:800;
+  color:var(--wave);
+  line-height:1;
+  margin-bottom:2px;
+}
+.ordering-pct{color:var(--text-muted);font-size:0.95rem}
+
+/* ══════════════════════════════════════════
+   RESUME BANNER
+══════════════════════════════════════════ */
+.resume-banner{
+  background:rgba(14,165,233,0.08);
+  border:1px solid rgba(14,165,233,0.25);
+  border-radius:12px;
+  padding:14px 18px;
+  margin-bottom:16px;
+  display:flex;
+  align-items:center;
+  justify-content:space-between;
+  gap:12px;
+  flex-wrap:wrap;
+}
+.resume-text{font-size:0.92rem;color:var(--ref-color);font-weight:600;line-height:1.5;flex:1}
+.resume-btns{display:flex;gap:8px;flex-shrink:0}
+.resume-btns .btn{width:auto;padding:9px 14px;font-size:0.88rem;text-align:center}
+
+/* ══════════════════════════════════════════
+   REVIEW SCREEN
+══════════════════════════════════════════ */
+.review-summary{
+  display:flex;
+  align-items:center;
+  gap:16px;
+  background:rgba(14,165,233,0.07);
+  border:1px solid rgba(14,165,233,0.15);
+  border-radius:10px;
+  padding:14px 18px;
+  margin-bottom:20px;
+  flex-wrap:wrap;
+}
+.review-correct{color:var(--safe-green);font-weight:700;font-size:0.95rem}
+.review-wrong{color:var(--rescue-red);font-weight:700;font-size:0.95rem}
+.review-pct{
+  font-family:'Barlow Condensed',sans-serif;
+  font-weight:800;
+  font-size:1.3rem;
+  color:var(--wave);
+  margin-left:auto;
+  letter-spacing:0.02em;
+}
+.review-list{display:flex;flex-direction:column}
+.review-question{border-bottom:1px solid var(--border-color);padding:0 0 18px;margin-bottom:18px}
+.review-question:last-child{border-bottom:none;margin-bottom:0}
+.review-q-header{display:flex;align-items:flex-start;gap:8px;margin-bottom:10px}
+.review-icon{font-size:1.05rem;flex-shrink:0;margin-top:2px}
+.review-q-num{font-weight:700;color:var(--text-muted);flex-shrink:0;font-size:0.82rem;margin-top:3px;white-space:nowrap}
+.review-q-text{font-size:0.95rem;font-weight:500;color:var(--text-primary);line-height:1.52;margin-bottom:10px}
+.ordering-score-box{
+  background:rgba(14,165,233,0.07);
+  border:1px solid rgba(14,165,233,0.18);
+  border-radius:10px;
+  padding:14px 16px;
+  margin-bottom:16px;
+  text-align:center;
+}
+
+/* ══════════════════════════════════════════
+   RESPONSIVE
+══════════════════════════════════════════ */
+@media(max-width:480px){
+  body{padding-top:70px}
+  .card{padding:22px 16px}
+  h1{font-size:1.9rem}
+  h2{font-size:1.25rem}
+  .chapter-grid{grid-template-columns:repeat(3,1fr)}
+  .timer-badge{font-size:1.35rem}
+  .stats-fab .fab-label{display:none}
+  .stats-panel{max-width:100%}
+  .stats-accuracy{font-size:2.4rem}
+  .scenario-grid{grid-template-columns:1fr}
+}
+</style>
+</head>
+<body>
+<div class="wave-header" aria-hidden="true">
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1440 72" preserveAspectRatio="none">
+    <path class="wp1" d="M0,0 L1440,0 L1440,40 C1200,60 960,20 720,42 C480,64 240,28 0,48 Z"/>
+    <path class="wp2" d="M0,0 L1440,0 L1440,30 C1080,54 720,10 360,38 C180,52 80,44 0,36 Z"/>
+    <path class="wp3" d="M0,0 L1440,0 L1440,18 C1300,32 1100,8 900,22 C700,36 500,12 300,26 C150,36 60,20 0,24 Z"/>
+  </svg>
+</div>
+<div class="container"><div id="app"></div></div>
+<button class="dark-fab" id="darkFab">🌙</button>
+<button class="stats-fab" id="statsFab">📊 <span class="fab-label">Estatísticas</span></button>
+<div class="stats-overlay hidden" id="statsOverlay">
+  <div class="stats-panel" id="statsPanel">
+    <button class="stats-close" id="statsClose">✕</button>
+    <div id="statsPanelContent"></div>
+  </div>
+</div>
+<script>
+const QUESTIONS = [
+  {
+    "chapter": 1,
+    "question": "Em 1800, em que cidade Portuguesa surge a primeira embarcação salva-vidas?",
+    "options": [
+      "Faro",
+      "Lisboa",
+      "Porto",
+      "Aveiro"
+    ],
+    "correct": 2,
+    "reference": "p. 13"
+  },
+  {
+    "chapter": 1,
+    "question": "Em que ano se realizou o primeiro curso de Nadador-Salvador (NS) em Portugal?",
+    "options": [
+      "1955",
+      "1956",
+      "1909",
+      "2000"
+    ],
+    "correct": 1,
+    "reference": "p. 16"
+  },
+  {
+    "chapter": 1,
+    "question": "Em que ano o Real Instituto Socorros a Náufragos (RISN) criou o primeiro serviço de assistência a banhistas nas praias?",
+    "options": [
+      "1910",
+      "1909",
+      "1957",
+      "1892"
+    ],
+    "correct": 1,
+    "reference": "p. 16"
+  },
+  {
+    "chapter": 1,
+    "question": "Em que ano o Instituto de Socorros a Náufragos (ISN) se tornou membro fundador da International Life Saving Federation (ILS)?",
+    "options": [
+      "1995",
+      "1998",
+      "2000",
+      "1993"
+    ],
+    "correct": 3,
+    "reference": "p. 16"
+  },
+  {
+    "chapter": 1,
+    "question": "O Instituto Socorros a Náufragos (ISN), assegura o reconhecimento e certificação nos seguintes domínios da atividade do Nadador-Salvador (NS):",
+    "options": [
+      "Nadador-Salvador (NS)",
+      "Cursos e entidades formadoras",
+      "Material e equipamento",
+      "Todas as respostas estão corretas"
+    ],
+    "correct": 3,
+    "reference": "p. 20"
+  },
+  {
+    "chapter": 1,
+    "question": "Qual o órgão regulador a nível Nacional na estrutura da Autoridade Marítima Nacional (AMN), competente para o reconhecimento das qualificações profissionais, no âmbito da profissão regulamentada prevista na alínea b) do nº1 do artigo 2º, da portaria 88/2012 de 30 de março?",
+    "options": [
+      "Instituto Socorros a Náufragos (ISN)",
+      "Direção-Geral da Autoridade Marítima (DGAM)",
+      "Polícia Marítima (PM)",
+      "Escola de Autoridade Marítima (EAM)"
+    ],
+    "correct": 0,
+    "reference": "p. 19"
+  },
+  {
+    "chapter": 1,
+    "question": "Em que ano foi criado o Real Instituto de Socorros a Náufragos (RISN) e por quem?",
+    "options": [
+      "Em 1883, pelo Rei D. Carlos",
+      "Em 1892, pela Rainha D. Amélia",
+      "Em 1901, pelo Rei D. Carlos",
+      "Em 1910, pela Rainha D. Amélia"
+    ],
+    "correct": 1,
+    "reference": "p. 13"
+  },
+  {
+    "chapter": 1,
+    "question": "O Real Instituto de Socorros a Náufragos (RISN), foi criado pela:",
+    "options": [
+      "Rainha D. Amélia",
+      "Rainha D. Amália",
+      "Rainha D. Leonor",
+      "Rainha D. Beatriz"
+    ],
+    "correct": 0,
+    "reference": "p. 13"
+  },
+  {
+    "chapter": 1,
+    "question": "Em que ano, o Real Instituto de Socorros a Náufragos (RISN), passou a designar-se pelo atual nome, Instituto de Socorros a Náufragos (ISN)?",
+    "options": [
+      "Em 1910",
+      "Em 1892",
+      "Em 1990",
+      "Em 1882"
+    ],
+    "correct": 0,
+    "reference": "p. 14"
+  },
+  {
+    "chapter": 1,
+    "question": "Atualmente, o Instituto de Socorros a Náufragos (ISN), é um organismo de que estrutura?",
+    "options": [
+      "Direção-Geral da Autoridade Marítima (DGAM)",
+      "Direção Geral de Viação (DGV)",
+      "Direção da Defesa Nacional (DDN)",
+      "Autoridade Nacional de Proteção Civil (ANPC)"
+    ],
+    "correct": 0,
+    "reference": "p. 14 e 15"
+  },
+  {
+    "chapter": 1,
+    "question": "Em que praia portuguesa, o Real Instituto de Socorros a Náufragos (RISN), criou o primeiro serviço de assistência a banhistas?",
+    "options": [
+      "Na praia da Trafaria",
+      "Na praia de Caxias",
+      "Na praia de Albufeira",
+      "Na praia de Algés"
+    ],
+    "correct": 0,
+    "reference": "p. 16"
+  },
+  {
+    "chapter": 1,
+    "question": "O ano de 1995 foi particularmente importante para a segurança nas praias, atendendo que nesse ano, surgiram novos meios de salvamento aquático, nomeadamente:",
+    "options": [
+      "O cinto de Salvamento",
+      "A boia torpedo",
+      "A prancha de salvamento",
+      "Todas as respostas estão certas"
+    ],
+    "correct": 3,
+    "reference": "p. 17"
+  },
+  {
+    "chapter": 1,
+    "question": "Compete ao Instituto de Socorros a Náufragos (ISN):",
+    "options": [
+      "Autuar os concessionários quando o material do posto de praia não se encontre em perfeitas condições de utilização",
+      "Celebrar contratos de Nadador-Salvador (NS)",
+      "Informar as entidades requerentes sobre a organização do respetivo processo de certificação",
+      "Todas as respostas estão corretas"
+    ],
+    "correct": 2,
+    "reference": "p. 20"
+  },
+  {
+    "chapter": 1,
+    "question": "Qual a entidade que compete promover as ações necessárias para a avaliação externa do sistema?",
+    "options": [
+      "Autoridade Marítima Nacional (AMN)",
+      "Instituto de Socorros a Náufragos (ISN)",
+      "Associações Nadadores-Salvadores (ANS)",
+      "Capitanias locais"
+    ],
+    "correct": 1,
+    "reference": "p. 20"
+  },
+  {
+    "chapter": 1,
+    "question": "O Instituto de Socorros a Náufragos (ISN) é responsável pela doutrina da assistência a banhistas, certificando os Nadadores-Salvadores (NS) para:",
+    "options": [
+      "A prestação da assistência a banhistas nas piscinas privadas",
+      "A prestação de socorro a nível nacional e internacional",
+      "A prestação da assistência a banhistas nos espaços aquáticos a nível nacional",
+      "A nível nacional a prestação de socorro e assistência a banheiros"
+    ],
+    "correct": 2,
+    "reference": "p. 15"
+  },
+  {
+    "chapter": 1,
+    "question": "A quem compete definir as especificações técnicas dos materiais e equipamentos destinados às atividades de informação, apoio, vigilância, segurança, socorro a náufragos e salvamento prestado a banhistas?",
+    "options": [
+      "À Autoridade Marítima Local",
+      "Às autoridades Locais",
+      "Ao Instituto de Socorros a Náufragos (ISN)",
+      "À Capitania do Porto"
+    ],
+    "correct": 2,
+    "reference": "p. 20"
+  },
+  {
+    "chapter": 1,
+    "question": "Ao abrigo da Lei n.º 68/2014 artigo 32.º, a atividade de Nadador-Salvador (NS) está sujeita a controlo e fiscalizações técnicas periódicas, são da competência de:",
+    "options": [
+      "Autoridade Marítima Nacional (AMN), Polícia Marítima (PM) e Guarda Nacional Republicana (GNR)",
+      "Órgão Local Autoridade Marítima Nacional, Instituto de Socorros a Náufragos (ISN) e Agência Portuguesa do Ambiente (APA)",
+      "Autoridade Marítima Nacional (AMN), Instituto de Socorros a Náufragos (ISN) e Polícia Segurança Pública (PSP)",
+      "Autoridade Marítima Nacional (AMN), Guarda Nacional Republicana (GNR) e Agência Portuguesa do Ambiente (APA)"
+    ],
+    "correct": 1,
+    "reference": "Lei n.º 68/2014, artigo 32.º"
+  },
+  {
+    "chapter": 1,
+    "question": "O Decreto-Lei n.º 96-A/2006 de 2 de junho aprovou o regime contraordenacional. A não participação de acidentes na Zona de Assistência a Banhistas (ZAB) à autoridade marítima no prazo de 24 horas, é punível com:",
+    "options": [
+      "Coima de 100€ a 1000€ a pagar pelo Nadador-Salvador (NS)",
+      "Coima de 100€ a 1000€ a pagar pelo titular da licença da ZAB",
+      "Coima de 250€ a 2500€ a pagar pelo Nadador-Salvador (NS)",
+      "Coima de 250€ a 2500€ a pagar pelo titular de licença ou concessões de ZAB"
+    ],
+    "correct": 3,
+    "reference": ""
+  },
+  {
+    "chapter": 1,
+    "question": "Qual a entidade competente para a coordenação e controlo das ações de fiscalização da conformidade do exercício da atividade de Nadador-Salvador (NS) profissional?",
+    "options": [
+      "Autoridade Marítima Nacional (AMN)",
+      "Instituto de Socorros a Náufragos (ISN)",
+      "Agência Portuguesa do Ambiente (APA)",
+      "Câmaras Municipais (CM), APA e ISN"
+    ],
+    "correct": 1,
+    "reference": "Lei n.º 68/2014, artigo 7.º, ponto 2"
+  },
+  {
+    "chapter": 1,
+    "question": "A atividade de Nadador-Salvador (NS) está sujeita a controlo e fiscalizações técnicas periódicas, a efetuar por?",
+    "options": [
+      "Autoridade Marítima Nacional (AMN)",
+      "Instituto de Socorros a Náufragos (ISN)",
+      "Agência Portuguesa do Ambiente (APA)",
+      "Todas as respostas estão corretas"
+    ],
+    "correct": 3,
+    "reference": "Lei n.º 68/2014, artigo 32.º"
+  },
+  {
+    "chapter": 1,
+    "question": "Qual a lei ou decreto-lei, que define o regime jurídico do exercício da atividade e aprova o regulamento da atividade de Nadador-Salvador (NS)?",
+    "options": [
+      "Decreto-Lei n.º 96-A/2006 de 02 de junho",
+      "Lei n.º 68/2014 de 29 de agosto",
+      "Decreto-Lei n.º 16/2008 de 26 de agosto",
+      "Lei n.º 44/2004 de 19 de agosto"
+    ],
+    "correct": 1,
+    "reference": ""
+  },
+  {
+    "chapter": 1,
+    "question": "Constitui contraordenação punível com coima de 100 a 1000€, o seguinte ato praticado pelo Nadador-Salvador (NS):",
+    "options": [
+      "Afastamento injustificado da área de vigilância e socorro, durante o horário de serviço",
+      "Não efetuar uma inspeção aos meios de salvamento do posto de praia",
+      "Içar a bandeira vermelha sem autorização da Polícia Marítima (PM)",
+      "Não usar os pés de pato durante um salvamento"
+    ],
+    "correct": 0,
+    "reference": "Decreto-Lei n.º 96-A/2006 de 02 de junho"
+  },
+  {
+    "chapter": 1,
+    "question": "O Nadador-Salvador (NS) afasta-se injustificadamente da área de vigilância e socorro, durante o horário de serviço. Que contraordenação comete?",
+    "options": [
+      "Contraordenação punível com coima de 50€ a 1000€",
+      "Contraordenação punível com coima de 100€ a 1000€",
+      "Contraordenação punível com coima de 50€ a 250€",
+      "Crime punível com prisão até 30 dias"
+    ],
+    "correct": 1,
+    "reference": "Decreto-Lei n.º 96-A/2006 de 02 de junho"
+  },
+  {
+    "chapter": 1,
+    "question": "Não estar devidamente uniformizado, o Nadador-Salvador (NS) incorre numa:",
+    "options": [
+      "Contraordenação punível com coima de 50 a 1000 euros",
+      "Contraordenação punível com coima de 100 a 1000 euros",
+      "Contraordenação punível com coima de 50 a 250 euros",
+      "Crime punível com prisão até 30 dias"
+    ],
+    "correct": 1,
+    "reference": "Decreto-Lei n.º 96-A/2006 de 02 de junho"
+  },
+  {
+    "chapter": 1,
+    "question": "Qual a portaria que aprova o Regulamento de Uniformes do Nadador-Salvador (NS)?",
+    "options": [
+      "Portaria nº 311/2015 de 1 de outubro",
+      "Portaria n.º 321/2015 de 1 de outubro",
+      "Portaria nº 321/2012 de 1 de outubro",
+      "Portaria nº 311/2012 de 1 de outubro"
+    ],
+    "correct": 0,
+    "reference": ""
+  },
+  {
+    "chapter": 1,
+    "question": "O que se entende por frente de praia?",
+    "options": [
+      "A ocupação de areal para banhos com a maré cheia",
+      "São praias qualificadas como tal com diploma legal",
+      "O comprimento da faixa de areal sujeita a ocupação balnear",
+      "A largura da ocupação balnear"
+    ],
+    "correct": 2,
+    "reference": "Decreto-Lei n.º 96-A/2006 de 02 de junho"
+  },
+  {
+    "chapter": 1,
+    "question": "Atendendo a uma Unidade Balnear (UB) com uma frente de praia de 200 metros, qual o dispositivo de segurança que deverá existir de acordo com a Lei n.º 68/2014 de 29 de agosto?",
+    "options": [
+      "Quatro Nadadores-Salvadores (NS) e dois postos de praia",
+      "Um Nadador-Salvador (NS) para cada posto de praia",
+      "Três Nadadores-Salvadores (NS) e dois postos de praia",
+      "Dois Nadadores-Salvadores (NS) e dois postos de praia"
+    ],
+    "correct": 0,
+    "reference": "Lei n.º 68/2014, artigo 30.º; Portaria n.º 311/2015"
+  },
+  {
+    "chapter": 1,
+    "question": "Qual a entidade com competências para certificar ou reconhecer o nadador-salvador profissional?",
+    "options": [
+      "Autoridade Marítima Nacional (AMN)",
+      "Instituto de Socorros a Náufragos (ISN)",
+      "Associações Nadadores-Salvadores (ANS)",
+      "Capitanias"
+    ],
+    "correct": 1,
+    "reference": "Lei n.º 68/2014, Anexo cap. I, Art.º 6º"
+  },
+  {
+    "chapter": 2,
+    "question": "Indique qual a sequência correta nas categorias de progressão de carreira do Nadador-Salvador (NS) em Portugal?",
+    "options": [
+      "Nadador-Salvador, Nadador-Salvador Coordenador (NSC) e Nadador-Salvador Formador (NSF)",
+      "Nadador-Salvador, Nadador-Salvador Formador (NSF) e Nadador-Salvador Coordenador (NSC)",
+      "Nadador-Salvador, Nadador-Salvador Coordenador (NSC) e Nadador-Salvador Reformado (NSR)",
+      "Nadador-Salvador Formador (NSF), Nadador-Salvador e Nadador-Salvador Coordenador (NSC)"
+    ],
+    "correct": 0,
+    "reference": "p. 23"
+  },
+  {
+    "chapter": 2,
+    "question": "Qual das seguintes afirmações, constitui um mecanismo imprescindível de defesa e de prova da correta atuação do Nadador-Salvador (NS)?",
+    "options": [
+      "Efetuar um salvamento com o meio correto",
+      "O preenchimento cuidadoso dos relatórios de salvamento",
+      "Ter pelo menos duas testemunhas",
+      "O Nadador-Salvador não precisa de provas para a defesa da sua atuação"
+    ],
+    "correct": 1,
+    "reference": "p. 36"
+  },
+  {
+    "chapter": 2,
+    "question": "Após qualquer tipo de ocorrência é obrigatório e fundamental ____________ para aumentar a qualidade do serviço prestado.",
+    "options": [
+      "praticar exercício físico",
+      "preencher o relatório",
+      "acompanhar a vítima ao hospital",
+      "chamar o 112"
+    ],
+    "correct": 1,
+    "reference": "p. 36"
+  },
+  {
+    "chapter": 2,
+    "question": "O Nadador-Salvador (NS) tem direitos e deveres que caracterizam o exercício da sua função. Qual destes é um direito?",
+    "options": [
+      "Possuir um seguro profissional adequado à atividade",
+      "Assegurar a vigilância do plano de água munido do meio de salvamento",
+      "Auxiliar e advertir os banhistas para situações de risco",
+      "Todas as respostas estão corretas"
+    ],
+    "correct": 0,
+    "reference": "p. 36"
+  },
+  {
+    "chapter": 2,
+    "question": "Que conselhos deve o Nadador-Salvador (NS) transmitir sobre a exposição solar?",
+    "options": [
+      "Aplicar protetor solar 30 minutos antes da exposição ao sol",
+      "Não exponha crianças com menos de três anos de idade ao sol",
+      "Faça períodos curtos de exposição solar",
+      "Todas as respostas estão corretas"
+    ],
+    "correct": 3,
+    "reference": "p. 42"
+  },
+  {
+    "chapter": 2,
+    "question": "A desidratação do Nadador-Salvador (NS) pode ser prevenida:",
+    "options": [
+      "Comendo refeições balanceadas antes do turno e durante os intervalos",
+      "Beber bebidas com cafeína e/ou açúcar",
+      "Ingerir bebidas alcoólicas",
+      "Ingerir pouca água durante o seu turno"
+    ],
+    "correct": 0,
+    "reference": "p. 50"
+  },
+  {
+    "chapter": 2,
+    "question": "Faz parte da conduta do Nadador-Salvador (NS):",
+    "options": [
+      "Atenção, postura, companheirismo e dignidade",
+      "Comunicação, prevenção, dignidade e dedicação",
+      "Companheirismo, atenção, assíduo, prevenção e comunicação",
+      "Prevenção, companheirismo, dignidade, comunicação e atenção"
+    ],
+    "correct": 3,
+    "reference": "p. 37"
+  },
+  {
+    "chapter": 2,
+    "question": "O Nadador-Salvador (NS) encontra-se devidamente uniformizado quando envergue pelo menos, os seguintes artigos do uniforme:",
+    "options": [
+      "Apito, pés de pato, cinto de salvamento e camisola de manga curta",
+      "Apito, boia torpedo, pés de pato e camisola de manga curta",
+      "Apito, pés de pato, camisola de manga curta e calção de banho (M/F)",
+      "Apito, calção de banho (M/F), pés de pato e corta-vento"
+    ],
+    "correct": 2,
+    "reference": "p. 27"
+  },
+  {
+    "chapter": 2,
+    "question": "A aquisição do uniforme do Nadador-Salvador (NS) é da responsabilidade do:",
+    "options": [
+      "Nadador-salvador",
+      "Concessionário",
+      "Associação de Nadadores salvadores (ANS)",
+      "Todas as respostas estão corretas"
+    ],
+    "correct": 0,
+    "reference": "p. 27"
+  },
+  {
+    "chapter": 2,
+    "question": "Quais as categorias de Nadador-Salvador (NS) que conhece?",
+    "options": [
+      "Nadador-salvador profissional (NSP) e Nadador Salvador voluntário (NSV)",
+      "Nadador salvador profissional (NSP) e Nadador Salvador examinador (NSE)",
+      "Nadador Salvador Coordenador (NSC) e Nadador Salvador Profissional (NSP)",
+      "Nadador Salvador Formador (NSF) e Nadador Salvador chefe de equipa (NSCH)"
+    ],
+    "correct": 2,
+    "reference": "p. 23"
+  },
+  {
+    "chapter": 2,
+    "question": "São deveres gerais do Nadador-Salvador (NS):",
+    "options": [
+      "Socorrer banhistas em situações de perigo, de emergência ou acidente",
+      "Possuir um seguro profissional adequado à atividade",
+      "Colaborar com o Instituto de Socorros a Náufragos (ISN) na elaboração de planos de emergência",
+      "Dispor de uniforme adequado"
+    ],
+    "correct": 0,
+    "reference": "p. 38"
+  },
+  {
+    "chapter": 2,
+    "question": "O Nadador-Salvador (NS) deve içar a bandeira de xadrez em que situações?",
+    "options": [
+      "Necessita de ir à casa de banho e assim consegue avisar os restantes NS da sua ausência",
+      "Realiza um salvamento, garantindo assim que o concessionário ligue para o 112",
+      "Existir trovoada e relâmpagos, para informar os banhistas que a praia tem de estar temporariamente desocupada",
+      "Em casos excecionais e de reconhecida emergência"
+    ],
+    "correct": 3,
+    "reference": "p. 86"
+  },
+  {
+    "chapter": 2,
+    "question": "Onde deve o Nadador-Salvador (NS) registar cuidadosamente todas as ocorrências?",
+    "options": [
+      "Na folha de registo do concessionário",
+      "Na agenda semanal",
+      "No bloco de notas",
+      "Nos relatórios"
+    ],
+    "correct": 3,
+    "reference": "p. 39"
+  },
+  {
+    "chapter": 2,
+    "question": "Após qualquer tipo de ocorrência na praia, o Nadador-Salvador (NS) é obrigado a preencher que tipo de documento?",
+    "options": [
+      "O relatório de salvamento",
+      "O relatório de ocorrências",
+      "Só é obrigado a preencher o relatório de salvamento se o acidente for grave",
+      "Não existe nenhum documento específico"
+    ],
+    "correct": 0,
+    "reference": "p. 36"
+  },
+  {
+    "chapter": 2,
+    "question": "O Nadador-Salvador (NS) tem deveres e direitos no exercício das suas funções. Qual das seguintes afirmações é um dever geral?",
+    "options": [
+      "Colaborar a título excecional com os banhistas",
+      "Não comparecer ao serviço com assiduidade",
+      "Participar em ações de treino, simulacros de salvamento marítimo ou em outro meio aquático",
+      "Exercer a atividade a título remunerado ou gratuito"
+    ],
+    "correct": 2,
+    "reference": "p. 38"
+  },
+  {
+    "chapter": 2,
+    "question": "O Nadador-Salvador (NS) tem deveres e direitos no exercício das suas funções. Qual das seguintes é um direito?",
+    "options": [
+      "Colaborar com os agentes de autoridade ou com outras entidades em matéria de segurança a banhistas",
+      "Não comparecer ao serviço com assiduidade",
+      "Participar em ações de treino, simulacros de salvamento marítimo ou aquático",
+      "Possuir um seguro profissional adequado à atividade"
+    ],
+    "correct": 3,
+    "reference": "p. 38"
+  },
+  {
+    "chapter": 2,
+    "question": "Vigiar a forma como decorrem os banhos em caso de acidente pessoal ocorrido com banhistas ou de alteração das condições meteorológicas, são:",
+    "options": [
+      "Deveres especiais do Nadador-Salvador (NS)",
+      "Direitos do Nadador-Salvador (NS)",
+      "Deveres gerais do Nadador-Salvador (NS)",
+      "Outros direitos do Nadador-Salvador (NS)"
+    ],
+    "correct": 2,
+    "reference": "p. 38"
+  },
+  {
+    "chapter": 2,
+    "question": "Socorrer os banhistas em situações de perigo, de emergência ou de acidente, são:",
+    "options": [
+      "Deveres especiais do Nadador-Salvador (NS)",
+      "Direitos do Nadador-Salvador (NS)",
+      "Deveres gerais do Nadador-Salvador (NS)",
+      "Outros direitos do Nadador-Salvador (NS)"
+    ],
+    "correct": 2,
+    "reference": "p. 38"
+  },
+  {
+    "chapter": 2,
+    "question": "Participar em ações de treino, simulacros de salvamento marítimo ou em outro meio aquático e outros exercícios com características similares, é:",
+    "options": [
+      "Um dever do Nadador-Salvador (NS)",
+      "Um dever extraordinário do Nadador-Salvador (NS)",
+      "Um dever especial do Nadador-Salvador (NS)",
+      "Facultativo"
+    ],
+    "correct": 0,
+    "reference": "p. 38"
+  },
+  {
+    "chapter": 2,
+    "question": "São fatores que contribuem para a ocorrência de acidentes de trabalho:",
+    "options": [
+      "Rotina, ausência de medidas de segurança e fadiga",
+      "Fadiga e rotatividade do posto de trabalho",
+      "Negligência dos banhistas, medidas de segurança e fadiga",
+      "Excesso de medidas de proteção"
+    ],
+    "correct": 0,
+    "reference": "p. 47"
+  },
+  {
+    "chapter": 2,
+    "question": "Após uma intervenção do Nadador-Salvador (NS) numa piscina, que documento terá de preencher?",
+    "options": [
+      "Relatório de praia, no prazo de 24 h",
+      "Relatório de ocorrências, no prazo de 48 h no portal da capitania on-line",
+      "Relatório de acidente em piscina, logo que possível",
+      "Relatório de ocorrência, no prazo de 24 h"
+    ],
+    "correct": 3,
+    "reference": "p. 257"
+  },
+  {
+    "chapter": 2,
+    "question": "Faz parte da conduta do Nadador-Salvador (NS):",
+    "options": [
+      "Prevenção",
+      "Companheirismo",
+      "Dignidade",
+      "Todas as respostas estão corretas"
+    ],
+    "correct": 3,
+    "reference": "p. 37"
+  },
+  {
+    "chapter": 2,
+    "question": "Dispor dos meios e equipamentos adequados afetos à segurança, vigilância, socorro, salvamento e assistência aos banhistas, são:",
+    "options": [
+      "Direitos do Nadador-Salvador (NS)",
+      "Deveres gerais do Nadador-Salvador (NS)",
+      "Deveres especiais do Nadador-Salvador (NS)",
+      "Todas as respostas estão corretas"
+    ],
+    "correct": 0,
+    "reference": "p. 36"
+  },
+  {
+    "chapter": 2,
+    "question": "No exercício das suas funções o Nadador-Salvador (NS) deve ter sempre presente que:",
+    "options": [
+      "Pode desempenhar tarefas estranhas à sua atividade",
+      "Deve efetuar uma tentativa de salvamento caso exista um grande risco de segurança de vida",
+      "Não é agente de Autoridade, nem seu substituto",
+      "Não deve efetuar um salvamento mesmo fora da sua área de responsabilidade"
+    ],
+    "correct": 2,
+    "reference": "p. 26"
+  },
+  {
+    "chapter": 2,
+    "question": "Assegurar a vigilância do plano de água, munido do meio de salvamento, é um:",
+    "options": [
+      "Dever geral",
+      "Dever especial",
+      "Uma recomendação",
+      "Todas as respostas estão corretas"
+    ],
+    "correct": 0,
+    "reference": "p. 38"
+  },
+  {
+    "chapter": 2,
+    "question": "Dispor de uniforme adequado que obedeça às especificações técnicas legalmente estabelecidas, são:",
+    "options": [
+      "Direitos do Nadador-Salvador (NS)",
+      "Deveres gerais do Nadador-Salvador (NS)",
+      "Deveres especiais do Nadador-Salvador (NS)",
+      "Todas as respostas estão corretas"
+    ],
+    "correct": 1,
+    "reference": "p. 38"
+  },
+  {
+    "chapter": 2,
+    "question": "O relatório de salvamento deve ser preenchido em que situações?",
+    "options": [
+      "Picada peixe-aranha",
+      "Criança perdida",
+      "Paragem digestiva",
+      "Todas as respostas estão corretas"
+    ],
+    "correct": 3,
+    "reference": "p. 36"
+  },
+  {
+    "chapter": 2,
+    "question": "Uma das funções mais importantes do Nadador-Salvador (NS) é a prevenção das situações de perigo informando e aconselhando os banhistas para potenciais incidentes e acidentes. Indique quais os principais conselhos a dar aos banhistas?",
+    "options": [
+      "Não vire as costas às ondas e ao mar, tome banho nas áreas indicadas como zonas de banho",
+      "Se se sentir cansado procure flutuar e procure sempre tomar banhos ou nadar acompanhado",
+      "Não hesite em pedir socorro quando em dificuldade, se sentir frio saia imediatamente da água",
+      "Todas as respostas estão corretas"
+    ],
+    "correct": 3,
+    "reference": "p. 40-41"
+  },
+  {
+    "chapter": 2,
+    "question": "A quem compete zelar pela segurança dos banhistas nos espaços aquáticos e zelar pela prevenção das condições ambientais desses espaços?",
+    "options": [
+      "Ao Nadador-Salvador (NS)",
+      "Autoridade Marítima Nacional (AMN) em conjunto com o Instituto de Socorros a Náufragos (ISN)",
+      "Ao concessionário ou à entidade responsável pela exploração do espaço aquático",
+      "À associação dos espaços aquáticos e ambientais"
+    ],
+    "correct": 0,
+    "reference": "p. 42"
+  },
+  {
+    "chapter": 2,
+    "question": "Qual da seguinte afirmações é uma dica para preservar o ambiente dos espaços aquáticos?",
+    "options": [
+      "O Nadador-Salvador (NS) não deve impor-se pelas suas atitudes, não dando bons exemplos",
+      "Levar animais domésticos para a praia, porque são o melhor amigo do homem",
+      "Não andar na zona dunar para não danificar o ecossistema",
+      "Desobedecer às regras de higiene impostas nos espaços aquáticos construídos"
+    ],
+    "correct": 2,
+    "reference": "p. 46"
+  },
+  {
+    "chapter": 2,
+    "question": "Os Nadadores-Salvadores (NS) têm como função assegurar a integridade física e a saúde dos banhistas dos espaços aquáticos. Alguns dos sintomas comuns de uma desidratação moderada incluem:",
+    "options": [
+      "Sede, sonolência e cansaço",
+      "Energia, pressão arterial alta e frequência cardíaca baixa",
+      "Sem pressão e sem frequência cardíaca",
+      "Aumento da produção de urina, boca húmida e pele vermelha"
+    ],
+    "correct": 0,
+    "reference": "p. 49"
+  },
+  {
+    "chapter": 2,
+    "question": "Ter especial atenção a crianças, idosos, pessoas portadoras de deficiência e outras não habituadas ao mar, (...) não deve ultrapassar os limites das suas qualificações e competências, devendo respeitar as hierarquias técnicas, estamos a falar de:",
+    "options": [
+      "Direitos do Nadador-Salvador (NS)",
+      "Deveres gerais do Nadador-Salvador (NS)",
+      "Deveres do Nadador-Salvador (NS)",
+      "Recomendações do Nadador-Salvador (NS)"
+    ],
+    "correct": 3,
+    "reference": "p. 39"
+  },
+  {
+    "chapter": 2,
+    "question": "O Nadador-Salvador (NS) é a pessoa singular habilitada com o curso de NS certificado ou reconhecido pelo ISN, a quem compete, para além dos conteúdos técnicos profissionais específicos:",
+    "options": [
+      "Informar, prevenir, socorrer e prestar o SBV com obrigatoriedade de vigilância",
+      "Informar, prevenir, socorrer em piscinas e outros locais onde ocorram práticas aquáticas com obrigatoriedade de vigilância",
+      "Informar, prevenir, socorrer e prestar o Suporte Básico de Vida (SBV) em qualquer circunstância nas praias de banhos, em áreas concessionadas, em piscinas e outros locais onde ocorram práticas aquáticas com obrigatoriedade de vigilância",
+      "Informar, prevenir, socorrer e prestar o SBV em qualquer circunstância nas praias de banhos, nos pavilhões ginásio e em piscinas com obrigatoriedade de vigilância"
+    ],
+    "correct": 2,
+    "reference": "p. 23"
+  },
+  {
+    "chapter": 3,
+    "question": "Em que fase do afogamento, a vítima não faz qualquer tipo de movimento e continua a fazer grandes aspirações de água para o pulmão?",
+    "options": [
+      "Aspiração inicial de líquido",
+      "Apneia voluntária",
+      "Espasmo glótico",
+      "Apneia terminal"
+    ],
+    "correct": 2,
+    "reference": "p. 64"
+  },
+  {
+    "chapter": 3,
+    "question": "Na classificação de afogamento grau 3, como se apresenta o náufrago e quais os procedimentos a tomar?",
+    "options": [
+      "Pouca espuma na boca e/ou nariz, administrar O2 a 15l/min, PLS e aquecimento corporal",
+      "Muita espuma na boca e/ou nariz com pulso periférico palpável, administrar O2 a 15l/min, PLS e internamento hospitalar",
+      "Pouca espuma na boca e/ou nariz; administrar O2 nasal a 5l/min, aquecimento corporal, repouso, tranquilização e observação hospitalar",
+      "Muita espuma na boca e/ou nariz sem pulso periférico palpável, administrar O2 a 15l/min, PLS e internamento hospitalar"
+    ],
+    "correct": 1,
+    "reference": "p. 67"
+  },
+  {
+    "chapter": 3,
+    "question": "O que é o afogamento?",
+    "options": [
+      "É o processo que resulta em insuficiência respiratória por imersão ou submersão em meio líquido",
+      "É o processo que resulta em insuficiência cardíaca por imersão ou submersão em meio líquido",
+      "É o processo que resulta em insuficiência cerebral por imersão ou submersão em meio líquido",
+      "É o processo que resulta em insuficiência cardio celular por imersão ou submersão em meio líquido"
+    ],
+    "correct": 0,
+    "reference": "p. 61"
+  },
+  {
+    "chapter": 3,
+    "question": "O organismo humano consegue sobreviver em situações adversas extremas e meios inóspitos, até cerca de:",
+    "options": [
+      "5 minutos sem oxigénio",
+      "5 minutos sem proteção e abrigo",
+      "3 minutos sem oxigénio e 3 horas sem proteção e abrigo",
+      "3 minutos sem oxigénio e 3 dias sem comida"
+    ],
+    "correct": 2,
+    "reference": "p. 62"
+  },
+  {
+    "chapter": 3,
+    "question": "A hipoxia, ocorre devido a:",
+    "options": [
+      "Oxigénio a mais no cérebro",
+      "Falta de sangue no cérebro",
+      "Diminuição de oxigénio no sangue",
+      "Oxigénio a mais no sangue"
+    ],
+    "correct": 2,
+    "reference": "p. 63"
+  },
+  {
+    "chapter": 3,
+    "question": "Quais são as fases que caracterizam o afogamento?",
+    "options": [
+      "Apneia voluntária, aspiração inicial de líquido, apneia terminal e espasmo glótico",
+      "É a apneia involuntária, aspiração inicial, apneia e espasmo glótico",
+      "É a entrada de água nos pulmões, paragem do coração e falência cerebral",
+      "É a apneia voluntária, aspiração final de líquido e espasmo pulmonar"
+    ],
+    "correct": 0,
+    "reference": "p. 64"
+  },
+  {
+    "chapter": 3,
+    "question": "Em que fase do afogamento a vítima encontra-se em pânico total e luta com todas as forças para se manter à superfície (pode durar entre 10 a 60 segundos)?",
+    "options": [
+      "Apneia voluntária",
+      "Aspiração inicial de líquido",
+      "Espasmo glótico",
+      "Todas as respostas estão corretas"
+    ],
+    "correct": 0,
+    "reference": "p. 64"
+  },
+  {
+    "chapter": 3,
+    "question": "Em que fase do afogamento a vítima não faz qualquer tipo de movimento?",
+    "options": [
+      "Apneia voluntária",
+      "Aspiração inicial de líquido",
+      "Espasmo glótico",
+      "Todas as respostas estão corretas"
+    ],
+    "correct": 2,
+    "reference": "p. 64"
+  },
+  {
+    "chapter": 3,
+    "question": "Quais os sintomas de um náufrago afogado em grau 2?",
+    "options": [
+      "Pouca espuma na boca e/ou nariz",
+      "Pouca espuma na boca",
+      "Muita espuma na boca e/ou nariz",
+      "Muita espuma na boca"
+    ],
+    "correct": 0,
+    "reference": "p. 66-67"
+  },
+  {
+    "chapter": 3,
+    "question": "Na classificação do afogamento, qual o grau em que a vítima se encontra sem tosse, nem espuma na boca/nariz, nem dificuldades na respiração, nem paragem respiratória nem Paragem Cardiorrespiratória (PCR)?",
+    "options": [
+      "Grau 1",
+      "Grau 2",
+      "Resgate aquático",
+      "Grau 4"
+    ],
+    "correct": 2,
+    "reference": "p. 67"
+  },
+  {
+    "chapter": 3,
+    "question": "Quais os sintomas de um náufrago em afogamento de grau 4?",
+    "options": [
+      "Pouca espuma na boca e/ou nariz",
+      "Pouca espuma na boca",
+      "Muita espuma na boca e/ou nariz sem pulso periférico palpável",
+      "Muita espuma na boca e/ou nariz com pulso periférico palpável"
+    ],
+    "correct": 2,
+    "reference": "p. 67"
+  },
+  {
+    "chapter": 3,
+    "question": "A hipotermia ocorre quando a temperatura corporal baixa para além dos:",
+    "options": [
+      "35ºC",
+      "32ºC",
+      "38ºC",
+      "Limites"
+    ],
+    "correct": 0,
+    "reference": "p. 68"
+  },
+  {
+    "chapter": 3,
+    "question": "Qual é o tempo médio de sobrevivência de um náufrago, exposto a uma temperatura da água de 21ºC?",
+    "options": [
+      "24 horas",
+      "48 horas",
+      "2 a 3 dias",
+      "Nunca mais de 2 dias"
+    ],
+    "correct": 0,
+    "reference": "p. 69"
+  },
+  {
+    "chapter": 3,
+    "question": "Em que fase do afogamento acontece a inconsciência da vítima? \"Há água nos pulmões e estômago, podendo haver relaxamento dos esfíncteres\".",
+    "options": [
+      "Apneia voluntária",
+      "Espasmo glótico",
+      "Apneia terminal",
+      "Aspiração inicial do líquido"
+    ],
+    "correct": 2,
+    "reference": "p. 64"
+  },
+  {
+    "chapter": 3,
+    "question": "Na classificação do afogamento em que grau a vítima se encontra em paragem cardiorrespiratória (PCR)?",
+    "options": [
+      "Grau 5",
+      "Grau 1 e grau 2",
+      "Grau 4",
+      "Grau 6"
+    ],
+    "correct": 3,
+    "reference": "p. 67"
+  },
+  {
+    "chapter": 3,
+    "question": "Quais os perigos associados à temperatura da água?",
+    "options": [
+      "Hidrocussão e Hipertermia",
+      "Hipotermia e paragem digestiva",
+      "Hipotermia e Hidrocussão",
+      "Todas as respostas estão certas"
+    ],
+    "correct": 2,
+    "reference": "p. 68"
+  },
+  {
+    "chapter": 3,
+    "question": "As consequências do afogamento são classificadas como?",
+    "options": [
+      "Morte, rigidez e ausência de rigidez",
+      "Morte, óbito e ausência de morte",
+      "Morte, morbidez e ausência de morbidez",
+      "Apneia voluntária, aspiração do líquido, apneia terminal e espasmo glótico"
+    ],
+    "correct": 2,
+    "reference": "p. 61-62"
+  },
+  {
+    "chapter": 3,
+    "question": "A vítima começa a perder as forças, existe aspiração de maior quantidade de líquido podendo ocorrer um laringospasmo. Qual a fase do afogamento que pode durar entre 60 a 90 segundos?",
+    "options": [
+      "Apneia terminal",
+      "Espasmo glótico",
+      "Aspiração inicial de líquido",
+      "Apneia voluntária"
+    ],
+    "correct": 2,
+    "reference": "p. 64"
+  },
+  {
+    "chapter": 3,
+    "question": "Um acidente provocado pela súbita exposição à água com a temperatura 5ºC abaixo da temperatura corporal, dá-se o nome de:",
+    "options": [
+      "Hipotermia ou hidrocussão",
+      "Hipotermia ou síndrome de imersão",
+      "Hidrocussão ou síndrome de imersão",
+      "Hipotermia moderada ou hidrocussão"
+    ],
+    "correct": 2,
+    "reference": "p. 68"
+  },
+  {
+    "chapter": 4,
+    "question": "Como é medida a amplitude (altura) da onda?",
+    "options": [
+      "Medida do distúrbio máximo durante um ciclo completo de oscilação",
+      "É medida em relação à linha de equilíbrio da onda",
+      "É medida em metros",
+      "Todas as respostas estão corretas"
+    ],
+    "correct": 3,
+    "reference": "p. 75"
+  },
+  {
+    "chapter": 4,
+    "question": "De quem é a responsabilidade de içar a bandeira, conforme a avaliação do estado do mar, condições ambientais e/ou por determinação da Autoridade Marítima Nacional (AMN)?",
+    "options": [
+      "Nadador-Salvador (NS)",
+      "Concessionário",
+      "Banhista",
+      "Todas as respostas estão corretas"
+    ],
+    "correct": 0,
+    "reference": "p. 86"
+  },
+  {
+    "chapter": 4,
+    "question": "É da responsabilidade do Nadador-Salvador (NS):",
+    "options": [
+      "Içar/arriar as bandeiras de sinais",
+      "Içar/arriar a bandeira azul",
+      "Içar/arriar a bandeira de ouro",
+      "Todas as respostas estão corretas"
+    ],
+    "correct": 0,
+    "reference": "p. 86"
+  },
+  {
+    "chapter": 4,
+    "question": "A bandeira xadrez tem as seguintes cores:",
+    "options": [
+      "Preto e branco",
+      "Vermelho e amarelo",
+      "Azul e branca",
+      "Vermelho e branco"
+    ],
+    "correct": 2,
+    "reference": "p. 86"
+  },
+  {
+    "chapter": 4,
+    "question": "Do seguinte material, qual não é obrigatório no posto de praia?",
+    "options": [
+      "Carretel e mastro de sinais",
+      "Mala de 1º socorros",
+      "Binóculos e telemóvel",
+      "Bandeiras de sinais"
+    ],
+    "correct": 2,
+    "reference": "p. 92-93"
+  },
+  {
+    "chapter": 4,
+    "question": "Qual a cor das bandeirolas de zona de banhos?",
+    "options": [
+      "Vermelha e Amarela",
+      "Amarela e verde",
+      "Vermelha",
+      "Amarela"
+    ],
+    "correct": 0,
+    "reference": "p. 95"
+  },
+  {
+    "chapter": 4,
+    "question": "Quando a crista da onda rebenta à frente da mesma e surge principalmente na vazante. Identifique qual o tipo de onda descrita?",
+    "options": [
+      "Onda progressiva",
+      "Onda mergulhante",
+      "Onda de maré",
+      "Onda espraiada"
+    ],
+    "correct": 0,
+    "reference": "p. 75"
+  },
+  {
+    "chapter": 4,
+    "question": "Nas praias fluviais existem vários perigos, sendo característica de um deles: \"a água a cair de um obstáculo forma uma corrente de retorno sobre ele próprio\". Estamos a falar de:",
+    "options": [
+      "Remoinhos",
+      "Funil ou escoadouro",
+      "Agueiros",
+      "Retornos"
+    ],
+    "correct": 3,
+    "reference": "p. 81"
+  },
+  {
+    "chapter": 4,
+    "question": "Quais são os fatores que influenciam o declive numa praia marítima?",
+    "options": [
+      "O tamanho das partículas de sedimentos e a intensidade da ação das ondas",
+      "O tamanho e a intensidade da ação das ondas",
+      "O tamanho e a intensidade da ação das ondas, assim como, o tipo de areia",
+      "O vento, as ondas, tipo de areia e o fundo"
+    ],
+    "correct": 0,
+    "reference": "p. 73"
+  },
+  {
+    "chapter": 4,
+    "question": "O que entende por mar total (set)?",
+    "options": [
+      "É um conjunto de sete ondas que vai aumentando de tamanho",
+      "Ondas geradas pelo vento com aspeto mais ou menos regular",
+      "Sobreposição de grupos de ondas geradas pelo vento na superfície do mar",
+      "Ondas que se propagam para fora da zona de geração com aspeto regular e cristas longas"
+    ],
+    "correct": 2,
+    "reference": "p. 74"
+  },
+  {
+    "chapter": 4,
+    "question": "Ao conceito de onda, associam-se três conceitos que o Nadador-Salvador (NS) deve conhecer para compreender as informações sobre a previsão do estado mar. Estamos a falar de que conceitos?",
+    "options": [
+      "Comprimento da onda, período de onda e amplitude de onda",
+      "A vaga, ondulação e mar total (SET)",
+      "Onda mergulhante, onda progressiva e onda espraiada",
+      "Correntes de mar, correntes de maré e agueiros"
+    ],
+    "correct": 0,
+    "reference": "p. 74"
+  },
+  {
+    "chapter": 4,
+    "question": "A onda mergulhante caracteriza-se por:",
+    "options": [
+      "Onda que rebenta sempre com força e pode facilmente atirar um nadador para o fundo do mar e ocorre geralmente na maré baixa",
+      "Onda que rebenta com muita força enrola facilmente um nadador e ocorre na preia-mar",
+      "Onda que rebenta à frente da sua crista e ocorre na vazante",
+      "Onda que surge quando o mar fica encrespado e ocorre na enchente"
+    ],
+    "correct": 0,
+    "reference": "p. 75"
+  },
+  {
+    "chapter": 4,
+    "question": "Onda que apenas rebenta quando chega à linha de praia, devido a uma grande profundidade de água, de forma a que a onda não perde velocidade e, portanto, não ganha altura, denomina-se por:",
+    "options": [
+      "Onda mergulhante",
+      "Onda espraiada",
+      "Todos os tipos de ondas",
+      "Onda progressiva"
+    ],
+    "correct": 1,
+    "reference": "p. 76"
+  },
+  {
+    "chapter": 4,
+    "question": "O retorno ao mar da água das ondas e são normalmente mais fortes onde a praia tem o gradiente mais acentuado. Estamos a falar de:",
+    "options": [
+      "Correntes alternas",
+      "Correntes amovíveis",
+      "Correntes de maré",
+      "Correntes de mar"
+    ],
+    "correct": 3,
+    "reference": "p. 77"
+  },
+  {
+    "chapter": 4,
+    "question": "A água transportada para a praia acumula-se e procura retornar para o mar aberto, na zona de maior profundidade. Estamos a falar de que tipo de correntes?",
+    "options": [
+      "Agueiros ou \"Rip current\"",
+      "Correntes amovíveis",
+      "Correntes de maré",
+      "Correntes de mar"
+    ],
+    "correct": 0,
+    "reference": "p. 77"
+  },
+  {
+    "chapter": 4,
+    "question": "Os agueiros podem ser:",
+    "options": [
+      "Móveis quando aparecem subitamente, podendo ser muito fortes",
+      "Estacionários quando estão no mesmo local todo o ano, devido ao seu fundo arenoso",
+      "Móveis quando mudam de local diariamente, sendo extremamente perigosos",
+      "Estacionários quando o fundo é rochoso, mantêm-se permanentes ao longo do ano"
+    ],
+    "correct": 3,
+    "reference": "p. 78"
+  },
+  {
+    "chapter": 4,
+    "question": "Que tipos de agueiros conhece?",
+    "options": [
+      "Os estacionários, móveis e súbitos",
+      "Os estacionários, os móveis e \"rip current\"",
+      "Os móveis e os imóveis",
+      "Os perigosos e os não perigosos"
+    ],
+    "correct": 0,
+    "reference": "p. 78"
+  },
+  {
+    "chapter": 4,
+    "question": "Quais os sinais chaves que são indicadores de estar na presença de uma \"rip current\", agueiro ou golas?",
+    "options": [
+      "Ondas maiores e mais frequentes nos dois lados desta corrente",
+      "Tremura da Água no agueiro, quando à sua volta é lisa",
+      "Cor da água acastanhada devido ao arrastamento da areia do fundo",
+      "Todas as respostas estão corretas"
+    ],
+    "correct": 3,
+    "reference": "p. 79"
+  },
+  {
+    "chapter": 4,
+    "question": "Em Portugal, ocorrem duas marés altas e 2 marés baixas por dia, com intervalo de cerca de:",
+    "options": [
+      "12h25m entre a maré alta e a maré baixa e 6h12m entre duas marés altas consecutivas",
+      "Só existe uma maré baixa e uma maré alta",
+      "6h12m entre cada maré alta e maré baixa e 24h50 minutos entre 2 marés altas consecutivas",
+      "6h12m entre cada maré alta e baixa e 12h25m entre 2 marés altas consecutivas"
+    ],
+    "correct": 3,
+    "reference": "p. 79"
+  },
+  {
+    "chapter": 4,
+    "question": "O Nadador-Salvador (NS) perante um cenário de nevoeiro, que bandeira deve içar?",
+    "options": [
+      "Verde, se as condições de mar estivessem boas",
+      "Amarela, porque existe algum perigo",
+      "Vermelha, porque é uma situação de risco",
+      "Aquela que as condições de mar assim exigirem"
+    ],
+    "correct": 2,
+    "reference": "p. 82"
+  },
+  {
+    "chapter": 4,
+    "question": "De quem é a responsabilidade da aquisição dos materiais e equipamentos destinados à assistência a banhistas numa zona de apoio balnear (ZAB)?",
+    "options": [
+      "Da Autoridade Marítima Nacional (AMN)",
+      "Do Nadador-Salvador (NS)",
+      "Do Instituto de Socorros a Náufragos (ISN)",
+      "Do Concessionário"
+    ],
+    "correct": 3,
+    "reference": "p. 83"
+  },
+  {
+    "chapter": 4,
+    "question": "O posto de praia e demais materiais complementares destinado à informação, vigilância e prestação de salvamento, socorro a náufragos e assistência a banhistas, é instalado nas zonas de apoio balnear (ZAB) nos termos determinados por?",
+    "options": [
+      "O Instituto de Socorros a Náufragos (ISN)",
+      "O Edital da Capitania do Porto",
+      "Os concessionários",
+      "A Polícia Marítima (PM)"
+    ],
+    "correct": 1,
+    "reference": "p. 83"
+  },
+  {
+    "chapter": 4,
+    "question": "Existe um conjunto de materiais complementares ao posto de praia que não são obrigatórios. Quais são?",
+    "options": [
+      "Cercado de proteção, boia torpedo, cinto de salvamento e bandeiras de sinais",
+      "Prancha, carretel, vara e mala de 1os socorros",
+      "Boia circular, boia torpedo e armação de praia",
+      "Mota de água, viatura 4x4, embarcação de pequeno porte, moto 4x4 e apito"
+    ],
+    "correct": 3,
+    "reference": "p. 84"
+  },
+  {
+    "chapter": 4,
+    "question": "O cercado de proteção serve para cercar todo o material que faz parte do posto de praia, quantos metros tem?",
+    "options": [
+      "6 metros quadrados",
+      "5 metros quadrados",
+      "2,5 metros quadrados",
+      "Quatro metros quadrados"
+    ],
+    "correct": 1,
+    "reference": "p. 85"
+  },
+  {
+    "chapter": 4,
+    "question": "De que bandeira estamos a falar quando há \"condições aceitáveis para a prática de banhos, assumindo as regras e recomendações de segurança\"?",
+    "options": [
+      "Bandeira amarela",
+      "Bandeira vermelha",
+      "Bandeira azul",
+      "Bandeira verde"
+    ],
+    "correct": 0,
+    "reference": "p. 86"
+  },
+  {
+    "chapter": 4,
+    "question": "Para delimitar a área de banhos, deverão ser colocadas próximo da linha de água e de forma visível duas bandeirolas. Quais as cores destas?",
+    "options": [
+      "Amarela e Laranja",
+      "Vermelha e Amarela",
+      "Xadrez de Preto e Branco",
+      "Verde e Amarela"
+    ],
+    "correct": 1,
+    "reference": "p. 95"
+  },
+  {
+    "chapter": 4,
+    "question": "Ao período de acalmia entre cada set, dá-se o nome de?",
+    "options": [
+      "Mar chão",
+      "Correntes de maré",
+      "Sota",
+      "Correntes de mar"
+    ],
+    "correct": 2,
+    "reference": "p. 74"
+  },
+  {
+    "chapter": 4,
+    "question": "Classifique as correntes nas praias fluviais:",
+    "options": [
+      "Retornos, Funil, Agueiros",
+      "Funil ou Escoadouro, Corrente de Mar",
+      "Agueiros, Retornos, Remoinhos",
+      "Remoinhos, Retornos, Funil ou Escoadouro"
+    ],
+    "correct": 3,
+    "reference": "p. 81"
+  },
+  {
+    "chapter": 4,
+    "question": "Nos casos em que a frente de praia tem uma extensão igual ou superior a 100 metros, é obrigatório manter quantos Nadadores-Salvadores (NS)?",
+    "options": [
+      "Obrigatório manter um Nadador-Salvador (NS) por cada 50 metros",
+      "Obrigatório manter dois Nadadores-Salvadores (NS) por cada 50 metros",
+      "Obrigatório manter um Nadador-Salvador (NS) por cada 25 metros",
+      "Nenhumas destas respostas estão corretas"
+    ],
+    "correct": 0,
+    "reference": "p. 93"
+  },
+  {
+    "chapter": 4,
+    "question": "A maré de sizígia ou maré viva ocorre quando:",
+    "options": [
+      "O Sol e a Lua estão alinhados com a Terra",
+      "O Sol e a Lua formam um ângulo de 90º com a Terra",
+      "A Terra completa uma volta ao Sol",
+      "A Terra completa uma volta no seu próprio eixo"
+    ],
+    "correct": 0,
+    "reference": "p. 80"
+  },
+  {
+    "chapter": 4,
+    "question": "A maré de quadratura ou maré morta ocorre quando:",
+    "options": [
+      "O Sol e a Lua estão alinhados com a Terra",
+      "Após 12 horas de preia-mar",
+      "A Terra completa uma volta no seu próprio eixo",
+      "A Lua e o Sol estão posicionados num ângulo de 90º com a Terra"
+    ],
+    "correct": 3,
+    "reference": "p. 80"
+  },
+  {
+    "chapter": 5,
+    "question": "Qual do seguinte material não pertence ao posto de piscina?",
+    "options": [
+      "Mala de 1º socorros",
+      "Plano rígido",
+      "Boia circular",
+      "Boia torpedo"
+    ],
+    "correct": 3,
+    "reference": "p. 108"
+  },
+  {
+    "chapter": 5,
+    "question": "Na piscina, a vigilância pode ser feita de que forma?",
+    "options": [
+      "Estática e em movimento",
+      "Dinâmica",
+      "Estática e dinâmica",
+      "Todas as respostas estão corretas"
+    ],
+    "correct": 2,
+    "reference": "p. 113"
+  },
+  {
+    "chapter": 5,
+    "question": "Quais os perigos associados às piscinas?",
+    "options": [
+      "Ambientais e humanos",
+      "Balneários",
+      "Crianças e idosos",
+      "Utentes de mobilidade reduzida"
+    ],
+    "correct": 0,
+    "reference": "p. 101-102"
+  },
+  {
+    "chapter": 5,
+    "question": "Do seguinte material qual é o obrigatório no posto de piscina?",
+    "options": [
+      "Plano rígido e mala de 1º socorros",
+      "Vara de salvamento e cinto de salvamento",
+      "Boia circular e armação de piscina",
+      "Todas as respostas estão corretas"
+    ],
+    "correct": 3,
+    "reference": "p. 107"
+  },
+  {
+    "chapter": 5,
+    "question": "Na sinalética utilizada em piscinas, enquadram-se os seguintes tipos de comunicação:",
+    "options": [
+      "Sonora, gestual e verbal",
+      "Verbal, visual e acústica",
+      "Visual, acústica e apito",
+      "Apito, rádio e bandeiras"
+    ],
+    "correct": 0,
+    "reference": "p. 115"
+  },
+  {
+    "chapter": 5,
+    "question": "Os sistemas de observação em piscinas, são técnicas de identificação proactiva de sinais de afogamento. Quais os sistemas adotados em Portugal?",
+    "options": [
+      "Observação parcial e observação total",
+      "Observação por zonas e observação completa",
+      "Observação total e de vigilância de emergência",
+      "Observação por zonas e de vigilância de emergência"
+    ],
+    "correct": 2,
+    "reference": "p. 114-115"
+  },
+  {
+    "chapter": 5,
+    "question": "Na vigilância em piscina, os indicadores de emergência podem ser:",
+    "options": [
+      "Um banhista que sai da água com as mãos na cabeça",
+      "Um banhista a flutuar em qualquer local da piscina",
+      "Uma ou mais pessoas a apontar numa determinada direção, com uma expressão facial preocupada",
+      "Todas as respostas estão corretas"
+    ],
+    "correct": 3,
+    "reference": "p. 116"
+  },
+  {
+    "chapter": 5,
+    "question": "Como se classifica os tanques em que as características morfológicas e funcionais os tornam particularmente adequados ao recreio e diversão aquática através de acessórios lúdicos?",
+    "options": [
+      "Tanques Desportivos",
+      "Tanques Infantis ou Chapinheiros",
+      "Tanques de Recreio e Diversão",
+      "Tanque de Aprendizagem e Recreio"
+    ],
+    "correct": 2,
+    "reference": "p. 101"
+  },
+  {
+    "chapter": 5,
+    "question": "Diga qual o tempo máximo para auxiliar o utente em caso de incidente em piscina?",
+    "options": [
+      "20s",
+      "30s",
+      "35s",
+      "40s"
+    ],
+    "correct": 0,
+    "reference": "p. 111-112"
+  },
+  {
+    "chapter": 5,
+    "question": "Qual dos Requisitos Técnicos de Segurança está correto?",
+    "options": [
+      "Nos períodos de inatividade não deve ser garantido o isolamento do espelho de água prevenindo a ocorrência de acidentes",
+      "Os ralos de fundo, devem estar protegidos por grelhas de segurança apropriadas para que não seja possível alguém ficar preso",
+      "As escadas não precisam ser mantidas em perfeitas condições de utilização evitando assim o risco de lesões",
+      "As normas de funcionamento e os períodos de vigilância não devem estar afixados em local visível"
+    ],
+    "correct": 1,
+    "reference": "p. 116"
+  },
+  {
+    "chapter": 5,
+    "question": "Identifique a(s) sinalética(s) destinada à assistência a banhistas nas Piscinas:",
+    "options": [
+      "Placas de Interdição",
+      "Perigos e Riscos",
+      "Recomendações",
+      "Todas as respostas estão corretas"
+    ],
+    "correct": 3,
+    "reference": "p. 118"
+  },
+  {
+    "chapter": 5,
+    "question": "Nas piscinas de uso público a contratação dos Nadadores-Salvadores (NS) é da responsabilidade da:",
+    "options": [
+      "Entidade que concessiona a piscina",
+      "Assembleia da Câmara Municipal",
+      "Associação de Natação local",
+      "Instituto de Socorros a Náufragos (ISN)"
+    ],
+    "correct": 0,
+    "reference": "p. 99"
+  },
+  {
+    "chapter": 5,
+    "question": "Quanto à natureza ambiental ou tipologia construtiva, as piscinas distinguem-se em:",
+    "options": [
+      "Piscinas ao ar livre, cobertas, combinadas, transformáveis",
+      "Piscinas cobertas, combinadas, transformáveis e convertíveis",
+      "Piscinas ao ar livre, cobertas, combinadas e convertíveis",
+      "Piscinas cobertas, combinadas, convertíveis e privadas"
+    ],
+    "correct": 2,
+    "reference": "p. 99-100"
+  },
+  {
+    "chapter": 5,
+    "question": "Quanto à valência ou tipologia funcional, as piscinas podem classificar-se nos seguintes grupos principais:",
+    "options": [
+      "Tanques desportivos, aprendizagem e recreio e juniores",
+      "Tanques desportivos, aprendizagem, infantis, recreio e juniores",
+      "Tanques desportivos, aprendizagem e recreio, infantis, recreio e diversão e polivalentes",
+      "Tanques desportivos, aprendizagem e recreio, infantis, juvenis, juniores e polifuncionais"
+    ],
+    "correct": 2,
+    "reference": "p. 100"
+  },
+  {
+    "chapter": 5,
+    "question": "Alguns dos banhistas nas piscinas, são considerados de risco por reunirem um conjunto de características que faz deles pessoas mais suscetíveis de sofrerem uma lesão. São grupo de risco:",
+    "options": [
+      "Os que não se encontram sob o efeito de álcool",
+      "Os que têm boa mobilidade",
+      "As crianças",
+      "Os que sabem nadar"
+    ],
+    "correct": 2,
+    "reference": "p. 103"
+  },
+  {
+    "chapter": 5,
+    "question": "O tipo da lesão e a capacidade de nadar do banhista vão determinar o seu comportamento. As lesões mais comuns são?",
+    "options": [
+      "Hemorragias nasais, internas e externas e extensões",
+      "Fraturas, luxações hemorragias e extensões",
+      "Fraturas, luxações, cãibras e hemorragias",
+      "Cãibras, hemorragias, luxações e picadas"
+    ],
+    "correct": 2,
+    "reference": "p. 105"
+  },
+  {
+    "chapter": 5,
+    "question": "Material e equipamento destinados à informação, vigilância, prestação de socorro e salvamento, obrigatórios nos postos de piscinas. Qual não pertence ao posto de piscina?",
+    "options": [
+      "Armação de piscina",
+      "Boia circular",
+      "Vara de salvamento",
+      "Bandeiras"
+    ],
+    "correct": 3,
+    "reference": "p. 108"
+  },
+  {
+    "chapter": 5,
+    "question": "Ter as instruções do Instituto de Socorros a Náufragos (ISN) e ter os meios de salvamento devidamente arrumados, estamos a falar de que material do posto de piscina?",
+    "options": [
+      "Armação piscina",
+      "Cadeira telescópica",
+      "Placar informativo",
+      "Edital de Piscina"
+    ],
+    "correct": 0,
+    "reference": "p. 108"
+  },
+  {
+    "chapter": 5,
+    "question": "Para efeito de cálculo do número de Nadadores-Salvadores (NS) empenhados nos dispositivos de segurança aquático em piscinas, deve atender-se:",
+    "options": [
+      "Um NS permanente, quando a lotação instantânea mínima de banhistas é de até 400",
+      "Dois NS permanentes, quando a lotação instantânea máxima de banhistas é de até 400",
+      "Um NS permanente, quando a lotação instantânea máxima de banhistas é de até 400",
+      "Dois NS permanentes, quando a lotação instantânea mínima de banhistas é de até 400"
+    ],
+    "correct": 2,
+    "reference": "p. 110"
+  },
+  {
+    "chapter": 5,
+    "question": "No decorrer da vigilância o Nadador-Salvador (NS) deve:",
+    "options": [
+      "Dedicar mais tempo aos banhistas que sabem nadar",
+      "Desvalorizar qualquer comportamento que indique problemas",
+      "Usar óculos de sol quando se encontra em piscinas cobertas",
+      "Avisar o colega responsável pela outra zona de vigilância caso os banhistas de risco mudem de zona"
+    ],
+    "correct": 3,
+    "reference": "p. 112"
+  },
+  {
+    "chapter": 5,
+    "question": "O Nadador-Salvador (NS) deve ser capaz de verificar a sua zona de vigilância e estar perto o suficiente para auxiliar em caso de incidente. Esta prática é reconhecida internacionalmente e é denominada por:",
+    "options": [
+      "Sistema 10:20",
+      "Sistema 15:20",
+      "Sistema 20:20",
+      "Sistema 20:30"
+    ],
+    "correct": 0,
+    "reference": "p. 111"
+  },
+  {
+    "chapter": 5,
+    "question": "Nas piscinas, as normas de funcionamento e os períodos de vigilância devem ser afixados em local visível. Isto é considerado:",
+    "options": [
+      "Requisito técnico de segurança",
+      "Indicadores de emergência",
+      "Sistema de segurança",
+      "Sistema de observação"
+    ],
+    "correct": 0,
+    "reference": "p. 116"
+  },
+  {
+    "chapter": 5,
+    "question": "Em termos de sinalética entre Nadadores-Salvadores (NS), \"elevar o braço acima da cabeça agitando-o em movimentos circulares\". Corresponde a:",
+    "options": [
+      "OK",
+      "2ª Ajuda",
+      "Submerso",
+      "Parar"
+    ],
+    "correct": 1,
+    "reference": "p. 117"
+  },
+  {
+    "chapter": 5,
+    "question": "Segundo o Conselho Nacional da Qualidade (CNQ), as piscinas podem classificar-se com base nos seguintes critérios?",
+    "options": [
+      "Ambiente ou tipologia construtiva e valência ou tipologia funcional",
+      "Prática desportiva e prática de lazer",
+      "Tipologia ambiental e tipologia valenciana",
+      "Aprendizagem e competição"
+    ],
+    "correct": 0,
+    "reference": "p. 99"
+  },
+  {
+    "chapter": 6,
+    "question": "Quantos elos tem a cadeia de sobrevivência no afogamento?",
+    "options": [
+      "6",
+      "4",
+      "5",
+      "3"
+    ],
+    "correct": 2,
+    "reference": "p. 121"
+  },
+  {
+    "chapter": 6,
+    "question": "Na caracterização das fases do salvamento, no reconhecimento, qual a primeira ação que o Nadador-Salvador (NS) deve tomar?",
+    "options": [
+      "Escolher o método de salvamento adequado à situação",
+      "Alerta SOS - 1º ajuda",
+      "Avaliar as condições do mar e ambientais",
+      "Entrar na água com o meio de salvamento escolhido"
+    ],
+    "correct": 1,
+    "reference": "p. 124"
+  },
+  {
+    "chapter": 6,
+    "question": "Existem três fases do salvamento. Em que fase o Nadador-Salvador (NS) tem que \"pensar antes de agir\"?",
+    "options": [
+      "Reconhecimento",
+      "Ação e planeamento",
+      "Ação",
+      "Planeamento"
+    ],
+    "correct": 3,
+    "reference": "p. 123"
+  },
+  {
+    "chapter": 6,
+    "question": "O NS que se encontra em terra verifica que o outro NS se virou para terra e tem os dois braços cruzados acima da cabeça fora de água, o que lhe está a transmitir?",
+    "options": [
+      "O NS necessita de apoio",
+      "Pedido de 2º ajuda",
+      "Náufrago encontra-se mais para trás",
+      "Náufrago submerso"
+    ],
+    "correct": 3,
+    "reference": "p. 155"
+  },
+  {
+    "chapter": 6,
+    "question": "Na cadeia de sobrevivência do afogamento, qual dos elos se considera de maior importância?",
+    "options": [
+      "Prevenção",
+      "Reconhecer o afogado e ligar 112",
+      "Suporte Básico de Vida (SBV)",
+      "Todos são de igual modo importantes"
+    ],
+    "correct": 3,
+    "reference": "p. 122"
+  },
+  {
+    "chapter": 6,
+    "question": "Perante uma situação de múltiplos náufragos, o Nadador-Salvador (NS) deverá considerar a seguinte triagem:",
+    "options": [
+      "Primeiro os náufragos inconscientes",
+      "Primeiro os náufragos conscientes que sabem nadar",
+      "Primeiro os náufragos conscientes, entre estes, os não nadadores",
+      "Deverá efetuar o salvamento sem qualquer ordem porque o importante é salvar vidas"
+    ],
+    "correct": 2,
+    "reference": "p. 127"
+  },
+  {
+    "chapter": 6,
+    "question": "Em que fase do salvamento, o Nadador-Salvador (NS) deve escolher o meio de salvamento?",
+    "options": [
+      "No reconhecimento",
+      "Na ação",
+      "No planeamento",
+      "Na entrada na água"
+    ],
+    "correct": 2,
+    "reference": "p. 146"
+  },
+  {
+    "chapter": 6,
+    "question": "Tendo em conta a sinalética usada entre Nadadores-Salvadores (NS), quando este está na água virado para terra a efetuar movimentos com o braço lateralizado para cima e para baixo, batendo com a mão na água, significa que:",
+    "options": [
+      "Está-se a afogar",
+      "Necessita de apoio",
+      "O náufrago está submerso",
+      "Está a efetuar o 2º pedido de ajuda"
+    ],
+    "correct": 1,
+    "reference": "p. 155"
+  },
+  {
+    "chapter": 6,
+    "question": "Dos métodos de salvamento abaixo, indique o de menor e o de maior risco para o Nadador-Salvador (NS):",
+    "options": [
+      "Lançar e rebocar",
+      "Caminhar e nadar",
+      "Alcançar e rebocar",
+      "Nadar e rebocar"
+    ],
+    "correct": 2,
+    "reference": "p. 123"
+  },
+  {
+    "chapter": 6,
+    "question": "Em que fase do salvamento se encontra \"reconhecer as prioridades da emergência e quais os procedimentos necessários\"?",
+    "options": [
+      "Ação",
+      "Planeamento",
+      "Evacuação",
+      "Reconhecimento"
+    ],
+    "correct": 3,
+    "reference": "p. 123"
+  },
+  {
+    "chapter": 6,
+    "question": "Qual dos métodos de salvamento oferece menos perigo para o Nadador-Salvador (NS)?",
+    "options": [
+      "Remar",
+      "Rebocar",
+      "Lançar",
+      "Caminhar"
+    ],
+    "correct": 2,
+    "reference": "p. 123"
+  },
+  {
+    "chapter": 6,
+    "question": "Nos princípios do salvamento aquático, em que fase se encontra o \"constatar a emergência e assumir a responsabilidade\"?",
+    "options": [
+      "Planeamento",
+      "Evasão",
+      "Reconhecimento",
+      "Ação"
+    ],
+    "correct": 2,
+    "reference": "p. 123"
+  },
+  {
+    "chapter": 6,
+    "question": "Na fase da ação, existem várias formas de efetuar o salvamento e no que diz respeito ao grau de contacto com a vítima. Qual é o método em que utilizamos a vara de salvamento?",
+    "options": [
+      "Alcançar",
+      "Lançar",
+      "Caminhar",
+      "Nadar até a vítima"
+    ],
+    "correct": 0,
+    "reference": "p. 123"
+  },
+  {
+    "chapter": 6,
+    "question": "Qual destes métodos de salvamento oferece mais perigo para o Nadador-Salvador (NS)?",
+    "options": [
+      "Remar",
+      "Lançar",
+      "Nadar",
+      "Caminhar"
+    ],
+    "correct": 2,
+    "reference": "p. 123"
+  },
+  {
+    "chapter": 6,
+    "question": "Em que fase do salvamento, o Nadador-Salvador (NS) confirma o número(s) de vítima(s)?",
+    "options": [
+      "Na evasão",
+      "No reconhecimento",
+      "No planeamento",
+      "Na ação"
+    ],
+    "correct": 1,
+    "reference": "p. 124"
+  },
+  {
+    "chapter": 6,
+    "question": "Perante um náufrago consciente, o Nadador-Salvador (NS) deverá?",
+    "options": [
+      "Acionar a 2ª ajuda",
+      "Ceder o meio de salvamento ao náufrago, criando uma barreira de interposição entre o NS e o náufrago",
+      "Dar-lhe 5 insuflações",
+      "Verificar se respira espontaneamente"
+    ],
+    "correct": 1,
+    "reference": "p. 125"
+  },
+  {
+    "chapter": 6,
+    "question": "As componentes do resgate aquático na fase de ação, são:",
+    "options": [
+      "Entrada, aproximação, reboque e transporte",
+      "Reconhecimento, planeamento e ação",
+      "Entrada, 2ª ajuda, aproximação e reboque",
+      "Seleção do meio, entrada, reboque e transporte"
+    ],
+    "correct": 0,
+    "reference": "p. 125"
+  },
+  {
+    "chapter": 6,
+    "question": "Ao chegar à distância de segurança e verificar que o náufrago está aparentemente inconsciente, qual deverá ser o seu procedimento?",
+    "options": [
+      "Pedir ajuda, retirar as vias respiratórias fora de água e rebocá-lo",
+      "Acionar a 2ª ajuda",
+      "Pede-lhe colaboração no resgate",
+      "Agarrar o náufrago, trazendo-o à superfície se estiver submerso"
+    ],
+    "correct": 1,
+    "reference": "p. 134"
+  },
+  {
+    "chapter": 6,
+    "question": "Após alcançar o náufrago e verificar que está aparentemente inconsciente como deverá proceder?",
+    "options": [
+      "Iniciar o reboque para terra e dar-lhe 2 insuflações de 15 em 15 segundos",
+      "Resgata para terra sem insuflações",
+      "Retirar as vias respiratórias fora de água e dar-lhe 5 insuflações",
+      "Segura o náufrago em reboque convencional, retira as VR fora de água, verifica respiração espontânea; se não ventilar dá-lhe 10 insuflações"
+    ],
+    "correct": 3,
+    "reference": "p. 134"
+  },
+  {
+    "chapter": 6,
+    "question": "Perante uma vítima com suspeita de lesão na cervical, na ausência de alternativa e tendo de extrair a vítima da água. Que reboque utilizaria?",
+    "options": [
+      "Reboque convencional",
+      "Reboque pelos maxilares",
+      "Reboque com boia circular",
+      "Reboque braços em V"
+    ],
+    "correct": 3,
+    "reference": "p. 143"
+  },
+  {
+    "chapter": 6,
+    "question": "No algoritmo de salvamento aquático, indique as operações a realizar na fase de reconhecimento?",
+    "options": [
+      "Alerta SOS, aproximar, resgatar, relatar",
+      "Localizar, transportar, avaliar, resgatar",
+      "Verificar n.º de náufragos, localizar, planear, abordar, transportar",
+      "Alerta SOS, verificar o n.º de náufragos, localizar, avaliar condições de mar"
+    ],
+    "correct": 3,
+    "reference": "p. 146"
+  },
+  {
+    "chapter": 6,
+    "question": "Após o Nadador-Salvador (NS) alcançar o náufrago, verificar que está aparentemente inconsciente e que não respira, como deverá proceder?",
+    "options": [
+      "Dá-lhe 3 insuflações, inicia o resgate para terra com 5 insuflações de 15 em 15 segundos",
+      "Resgate sem insuflações",
+      "Dá-lhe 5 insuflações, inicia o resgate para terra com 3 insuflações de 15 em 15 segundos",
+      "Dá-lhe 10 insuflações e inicia o resgate para terra"
+    ],
+    "correct": 3,
+    "reference": "p. 146"
+  },
+  {
+    "chapter": 6,
+    "question": "Quais as técnicas de extração de náufragos em piscina?",
+    "options": [
+      "Técnica de arrasto e a 2 nadadores salvadores",
+      "Técnica de declive suave e de declive acentuado",
+      "Técnica de bombeiro e por arrasto",
+      "Técnica de declive suave e a 2 nadadores salvadores"
+    ],
+    "correct": 1,
+    "reference": "p. 153-154"
+  },
+  {
+    "chapter": 6,
+    "question": "No sistema de sinalização com apito, é utilizado o seguinte código:",
+    "options": [
+      "1 sopro curto para chamar à atenção de outros NS. 3 sopros longos para sinalizar o início de procedimento de salvamento e emergência",
+      "2 sopros curtos para chamar à atenção de utentes e banhistas. 1 sopro curto para chamar à atenção de outros NS",
+      "1 sopro curto para chamar à atenção individualmente de utentes e banhistas. 3 sopros longos para sinalizar o início de procedimento de salvamento e emergência",
+      "2 sopros curtos para sinalizar o início de procedimento de salvamento e emergência. 3 sopros longos para chamar à atenção de outros NS"
+    ],
+    "correct": 2,
+    "reference": "p. 156"
+  },
+  {
+    "chapter": 6,
+    "question": "Na cadeia de sobrevivência no afogamento, \"caso necessário ligar 112\", refere-se a que elo?",
+    "options": [
+      "Prevenção",
+      "Reconheça o afogado",
+      "Forneça flutuação",
+      "Retire da água"
+    ],
+    "correct": 1,
+    "reference": "p. 121"
+  },
+  {
+    "chapter": 6,
+    "question": "Quais os elos da cadeia de sobrevivência no afogado?",
+    "options": [
+      "112, Suporte Básico de Vida (SBV), Desfibrilhador Automático Externo (DAE) e Suporte Avançado de Vida (SAV)",
+      "Reconheça o afogado, SAV, fornecer flutuação e prevenção",
+      "Prevenção, reconheça o afogado, forneça flutuação, retire da água e Suporte Básico de Vida (SBV)",
+      "112, reconheça o afogado, SBV e DAE"
+    ],
+    "correct": 2,
+    "reference": "p. 121"
+  },
+  {
+    "chapter": 6,
+    "question": "Quais os cuidados a ter durante os reboques?",
+    "options": [
+      "Que a vítima tenha sempre as vias respiratórias fora de água",
+      "Que seja seguro para o Nadador-Salvador (NS) e para o náufrago",
+      "Que seja eficiente para o NS, de forma a que ao chegar a terra não esteja exausto para efetuar manobras de SBV",
+      "Todas as respostas estão corretas"
+    ],
+    "correct": 3,
+    "reference": "p. 142"
+  },
+  {
+    "chapter": 6,
+    "question": "A máscara de reanimação (pocket mask) deve ser utilizada como mecanismo de barreira:",
+    "options": [
+      "Para diminuir a transmissão de bactérias",
+      "Para aumentar as probabilidades de sucesso",
+      "Para evitar a troca de oxigénio com o dióxido de carbono",
+      "Para a vítima reanimar mais rapidamente"
+    ],
+    "correct": 0,
+    "reference": "p. 145"
+  },
+  {
+    "chapter": 6,
+    "question": "Como deve proceder o Nadador-Salvador (NS) na abordagem ao náufrago consciente?",
+    "options": [
+      "Dar indicações curtas, claras e precisas",
+      "Ceder o meio de salvamento",
+      "Evitar situações de submersão",
+      "Todas as respostas estão corretas"
+    ],
+    "correct": 3,
+    "reference": "p. 125"
+  },
+  {
+    "chapter": 7,
+    "question": "O Nadador-Salvador (NS) encontra um banhista aparentemente inconsciente na praia, reúne as condições de segurança e avalia o estado de consciência. Como faz para a avaliação da função respiratória?",
+    "options": [
+      "AVDS",
+      "ABCDE",
+      "Permeabilização da via aérea e VOS",
+      "Avalia a função cardiocirculatória"
+    ],
+    "correct": 2,
+    "reference": "p. 162"
+  },
+  {
+    "chapter": 7,
+    "question": "Numa vítima inconsciente, criança, e sabendo que é uma obstrução grave da via aérea, o que deve fazer?",
+    "options": [
+      "Iniciar RCP",
+      "Dar 30:2",
+      "Dar 5 insuflações seguidas de 15:2",
+      "Ligar 112"
+    ],
+    "correct": 3,
+    "reference": "p. 181"
+  },
+  {
+    "chapter": 7,
+    "question": "O Nadador-Salvador (NS) depara-se com um banhista em paragem respiratória e tem o kit de oxigenoterapia consigo. Que material deve utilizar?",
+    "options": [
+      "Máscara facial simples",
+      "Insuflador manual com balonete",
+      "Máscara facial composta",
+      "Todas as respostas estão corretas"
+    ],
+    "correct": 1,
+    "reference": "p. 188"
+  },
+  {
+    "chapter": 7,
+    "question": "Qual o débito que o Nadador-Salvador (NS) deve administrar utilizando os óculos nasais?",
+    "options": [
+      "Não utilizar débitos superiores a 5 litros/min de O2",
+      "Não utilizar débitos superiores a 10 litros/min de O2",
+      "Não utilizar débitos superiores a 15 litros/min de O2",
+      "Todas as respostas estão corretas"
+    ],
+    "correct": 0,
+    "reference": "p. 189"
+  },
+  {
+    "chapter": 7,
+    "question": "Perante uma obstrução da via aérea grave numa criança, ficando esta inconsciente, o Nadador-Salvador (NS) deve:",
+    "options": [
+      "Permeabilizar a via aérea, dar 5 insuflações seguidas de 1 min de SBV",
+      "Teste VOS, dar 5 insuflações e observar sinais de vida",
+      "Ligar 112 e iniciar RCP (15:2)",
+      "Iniciar RCP (30:2)"
+    ],
+    "correct": 2,
+    "reference": "p. 181"
+  },
+  {
+    "chapter": 7,
+    "question": "Qual dos seguintes meios deve utilizar para administrar oxigénio por inalação?",
+    "options": [
+      "Máscara facial composta",
+      "Boca-a-boca",
+      "Insuflador manual com balonete",
+      "Todas as respostas estão corretas"
+    ],
+    "correct": 0,
+    "reference": "p. 188"
+  },
+  {
+    "chapter": 7,
+    "question": "No grau 3 do afogamento e após a recuperação num adulto, qual a quantidade de oxigénio a administrar?",
+    "options": [
+      "15 l/min",
+      "10 l/min",
+      "5 l/min",
+      "3 l/min"
+    ],
+    "correct": 0,
+    "reference": "p. 190"
+  },
+  {
+    "chapter": 7,
+    "question": "A permeabilização das vias aéreas, é uma técnica realizada em 2 passos, quais são?",
+    "options": [
+      "Extensão da cabeça e elevação da mandíbula",
+      "Hiperextensão da cabeça e elevação do queixo",
+      "Extensão da cabeça e elevação da mandíbula, exceto quando houver suspeita de trauma",
+      "A cabeça deve estar sempre na posição neutra"
+    ],
+    "correct": 2,
+    "reference": "p. 165"
+  },
+  {
+    "chapter": 7,
+    "question": "Quais os objetivos da posição lateral de segurança?",
+    "options": [
+      "Realiza-se sempre que a vítima não responde e não respira",
+      "Manter as vias aéreas permeáveis e evitar a aspiração do vómito",
+      "Evitar a aspiração do vómito e manter a cabeça em flexão",
+      "Evitar a pressão sobre o coração e o pulmão direito"
+    ],
+    "correct": 1,
+    "reference": "p. 165"
+  },
+  {
+    "chapter": 7,
+    "question": "Quais os cuidados a ter na aplicação das insuflações?",
+    "options": [
+      "Manter a cabeça da vítima em posição neutra, para o ar ir diretamente para os pulmões",
+      "Inspirar normalmente, colocar a boca no bocal da máscara, insuflar o ar de forma homogénea e ao mesmo tempo verificar se o tórax se eleva",
+      "Inspiração forte, selar bem a boca do NS com a da vítima e realizar a insuflação rapidamente, verificando se o tórax se eleva",
+      "As 2 insuflações aplicadas pelo NS não devem durar mais de 2 segundos"
+    ],
+    "correct": 1,
+    "reference": "p. 167"
+  },
+  {
+    "chapter": 7,
+    "question": "Qual a sequência correta do Suporte Básico de Vida (SBV)?",
+    "options": [
+      "Permeabilizar a via aérea, teste de VOS e avaliar do estado de consciência",
+      "Avaliar condições de segurança, permeabilizar a via aérea, teste de VOS",
+      "Ligar 112, permeabilizar a via aérea e 5 insuflações",
+      "Avaliar condições de segurança, avaliar o estado de consciência e permeabilizar a via aérea"
+    ],
+    "correct": 3,
+    "reference": "p. 173"
+  },
+  {
+    "chapter": 7,
+    "question": "Sempre que o SBV é aplicado na sequência do resgate aquático, que passos podem ser suprimidos com o objetivo de ganhar tempo?",
+    "options": [
+      "Avaliar as condições de segurança e avaliar o estado de consciência",
+      "Avaliar o estado de consciência, gritar por ajuda e ligar 112",
+      "Avaliar condições de segurança e ligar 112",
+      "Teste de VOS e ligar 112"
+    ],
+    "correct": 1,
+    "reference": "p. 172"
+  },
+  {
+    "chapter": 7,
+    "question": "No Suporte Básico de Vida (SBV) há uma fase denominada por \"avaliação do estado de consciência\", o que deverá fazer o Nadador-Salvador (NS) para avaliar esse estado?",
+    "options": [
+      "Abanar a vítima nos ombros e pergunta em voz alta: \"Está bem? Está-me a ouvir?\"",
+      "Havendo condições de segurança agarra um objeto pontiagudo e pica levemente a vítima para ver se há resposta",
+      "Presta-lhe 1 minuto de SBV, se a vítima se encontrar inconsciente",
+      "Se estão asseguradas as condições de segurança, aciona a 2ª ajuda"
+    ],
+    "correct": 0,
+    "reference": "p. 168"
+  },
+  {
+    "chapter": 7,
+    "question": "Numa situação em que o náufrago se encontre em paragem cardiorrespiratória, quando é que o Nadador-Salvador (NS) deixa de prestar o Suporte Básico de Vida (SBV)?",
+    "options": [
+      "Até a vítima mexer os olhos, ou ficar uma marca vermelha na zona onde o NS faz as compressões",
+      "Quando a vítima respirar normalmente, chegar a ajuda diferenciada que tome conta da situação ou exaustão do NS",
+      "Até chegarem os familiares da vítima",
+      "Ao fim de 3 ciclos de compressões e insuflações"
+    ],
+    "correct": 1,
+    "reference": "p. 169"
+  },
+  {
+    "chapter": 7,
+    "question": "No algoritmo do suporte básico de vida (SBV), se a vítima não ventila e após ligar 112, qual é o próximo passo?",
+    "options": [
+      "Faz a permeabilização da via aérea",
+      "Verifica a respiração (VOS)",
+      "Coloca em posição lateral de segurança (PLS)",
+      "Ressuscitação Cárdio Pulmonar (RCP)"
+    ],
+    "correct": 3,
+    "reference": "p. 173"
+  },
+  {
+    "chapter": 7,
+    "question": "Sendo caso pediátrico e estando sozinho, quando é que o Nadador-Salvador (NS) aciona 2ª ajuda?",
+    "options": [
+      "Após verificar que não ventila",
+      "Após a permeabilização da via aérea",
+      "Após 5 insuflações",
+      "Após um minuto de Suporte Básico de Vida (SBV)"
+    ],
+    "correct": 3,
+    "reference": "p. 174"
+  },
+  {
+    "chapter": 7,
+    "question": "Ao efetuar o patrulhamento na sua área de responsabilidade o Nadador-Salvador (NS) depara-se com um banhista adulto inconsciente no areal. Após verificar que não ventila, o que deverá fazer?",
+    "options": [
+      "Inicia Suporte Básico de Vida (SBV) 30:2",
+      "Dá 2 insuflações, inicia SBV 30:2",
+      "Dá 5 insuflações, 1 minuto de SBV e ativa o 112",
+      "Aciona a 2ª ajuda"
+    ],
+    "correct": 3,
+    "reference": "p. 173"
+  },
+  {
+    "chapter": 7,
+    "question": "Não sendo caso de afogamento, quando é que o Nadador-Salvador (NS) aciona a 2ª ajuda?",
+    "options": [
+      "Após um minuto de Suporte Básico de Vida (SBV)",
+      "Após a permeabilização da via aérea",
+      "Após verificar que a vítima não ventila",
+      "Após testar a consciência"
+    ],
+    "correct": 2,
+    "reference": "p. 173"
+  },
+  {
+    "chapter": 7,
+    "question": "O Nadador-Salvador (NS) encontra um banhista no areal, inanimado e que não respira. Após acionar a 2ª ajuda qual é o passo seguinte em termos de Suporte Básico de Vida (SBV)?",
+    "options": [
+      "Presta um minuto de SBV",
+      "Aplica 30 compressões",
+      "Gritar por ajuda",
+      "Aplica 5 insuflações"
+    ],
+    "correct": 1,
+    "reference": "p. 173"
+  },
+  {
+    "chapter": 7,
+    "question": "\"A incapacidade de chorar, ruído agudo alto à inspiração ou ausência total de ruído, cianose…\", são sinais e sintomas de obstrução da via aérea. Perante esta descrição, como a classifica quanto à sua gravidade?",
+    "options": [
+      "Ligeira",
+      "Total",
+      "Grave",
+      "Parcial"
+    ],
+    "correct": 2,
+    "reference": "p. 178"
+  },
+  {
+    "chapter": 7,
+    "question": "Está perante uma obstrução da via aérea grave. Em que situação deve optar pelas compressões torácicas em vez das compressões abdominais?",
+    "options": [
+      "Vítima de afogamento",
+      "Vítima de paragem digestiva",
+      "Vítima com obesidade mórbida",
+      "Vítima de cansaço"
+    ],
+    "correct": 2,
+    "reference": "p. 180"
+  },
+  {
+    "chapter": 7,
+    "question": "Perante uma obstrução da via aérea grave, qual o procedimento correto?",
+    "options": [
+      "Encorajar a tossir se consciente e abanar a vítima",
+      "Se a vítima ficar inconsciente, ligar 112, permeabilizar a via aérea e RCP",
+      "Se o ar não entrar nas insuflações, repetir a manobra as vezes necessárias até que o ar entrar",
+      "Aplicar de imediato 1 minuto de SBV e depois avaliar, se necessário ligar 112"
+    ],
+    "correct": 1,
+    "reference": "p. 181"
+  },
+  {
+    "chapter": 7,
+    "question": "O Nadador-Salvador (NS) presencia uma situação em que há obstrução da via aérea grave num adulto, ficando inconsciente deverá fazer?",
+    "options": [
+      "Dar 5 insuflações com a máxima força para empurrar o objeto que não deixa passar o ar",
+      "Dar até 5 pancadas interescapulares ou iniciar a manobra de Heimlich",
+      "Aciona 112",
+      "Iniciar o Suporte Básico de Vida (SBV)"
+    ],
+    "correct": 2,
+    "reference": "p. 181"
+  },
+  {
+    "chapter": 7,
+    "question": "Quais os métodos de ventilação artificial que conhece?",
+    "options": [
+      "Ar expirado e mecânicos",
+      "Insuflação e inalação",
+      "Boca-a-boca e boca-estoma",
+      "Inalação e compressão"
+    ],
+    "correct": 0,
+    "reference": "p. 183-186"
+  },
+  {
+    "chapter": 7,
+    "question": "Perante uma obstrução da via aérea grave num latente, deve:",
+    "options": [
+      "Fazer 5 compressões abdominais",
+      "Fazer 5 compressões torácicas",
+      "Levar 5 vezes os joelhos do bebé ao abdómen",
+      "Deitar o bebé em decúbito dorsal no chão e fazer uma massagem abdominal"
+    ],
+    "correct": 1,
+    "reference": "p. 183"
+  },
+  {
+    "chapter": 7,
+    "question": "Qual a consequência ao aplicar ventilações muito rápidas e com muita força?",
+    "options": [
+      "Rebentamento dos alvéolos pulmonares",
+      "Fratura do esterno",
+      "Distensão gástrica",
+      "Excesso de oxigénio no sangue"
+    ],
+    "correct": 2,
+    "reference": "p. 186"
+  },
+  {
+    "chapter": 7,
+    "question": "Perante que sinais e sintomas deverá o Nadador-Salvador (NS) administrar oxigénio?",
+    "options": [
+      "Nos casos de dispneia",
+      "Sempre que a vítima pedir",
+      "Intoxicação por GRAMOXONE",
+      "Em situações extremas"
+    ],
+    "correct": 0,
+    "reference": "p. 188"
+  },
+  {
+    "chapter": 7,
+    "question": "Ao administrar oxigénio a uma vítima, o Nadador-Salvador (NS) deve considerar:",
+    "options": [
+      "A utilização de óculos nasais, sempre que a vítima esteja inconsciente",
+      "A utilização de máscara simples, para débitos de 10 l/min",
+      "A utilização de máscara composta para débitos de 10 l/min e 15 l/min",
+      "A utilização de máscara composta para débitos de 5 l/min"
+    ],
+    "correct": 2,
+    "reference": "p. 189"
+  },
+  {
+    "chapter": 7,
+    "question": "Quando utilizar o insuflador manual ligado a uma fonte de oxigénio (O2), o Nadador-Salvador (NS) deve considerar:",
+    "options": [
+      "Nunca utilizar o tubo orofaríngeo (Guedel)",
+      "Utilizar o tubo orofaríngeo apenas nos adultos",
+      "Nunca utilizar o tubo orofaríngeo nos bebés",
+      "Utilizar sempre o tubo orofaríngeo"
+    ],
+    "correct": 3,
+    "reference": "p. 190"
+  },
+  {
+    "chapter": 7,
+    "question": "Em que situações o Nadador-Salvador (NS) deverá administrar 10 litros de oxigénio a uma criança?",
+    "options": [
+      "Hemorragias ligeiras",
+      "Edema agudo do pulmão",
+      "Dificuldade respiratória ligeira",
+      "Crise de asma ligeira"
+    ],
+    "correct": 1,
+    "reference": "p. 190"
+  },
+  {
+    "chapter": 7,
+    "question": "Em que situações o Nadador-Salvador (NS) deverá administrar 5 litros de oxigénio a um adulto?",
+    "options": [
+      "Hemorragias graves",
+      "Crise de asma ligeira",
+      "Paragem respiratória",
+      "Edema agudo do pulmão"
+    ],
+    "correct": 1,
+    "reference": "p. 190"
+  },
+  {
+    "chapter": 7,
+    "question": "Quais os cuidados a ter com o equipamento de oxigénio (O2)?",
+    "options": [
+      "Não expor a garrafa a temperaturas superiores a 30ºC",
+      "Manter o equipamento sempre limpo e lubrificado",
+      "Após a sua utilização fechar a garrafa e descarregar o sistema",
+      "Não fumar ou fazer lume ao administrar oxigénio, realizar a prova hidráulica de 10 em 10 anos"
+    ],
+    "correct": 2,
+    "reference": "p. 191"
+  },
+  {
+    "chapter": 7,
+    "question": "Quais os riscos para o Nadador-Salvador (NS) associados à prestação de 1ºs socorros?",
+    "options": [
+      "Ficar exausto e não conseguir executar as manobras de SBV",
+      "Não usar luvas, máscara e não desinfetar as vias aéreas da vítima com álcool a 70º",
+      "Expor-se a um risco igual ou superior ao que a vítima está exposta",
+      "O NS deve correr riscos para salvar a vida da vítima, pois é esse o seu dever"
+    ],
+    "correct": 2,
+    "reference": "p. 192"
+  },
+  {
+    "chapter": 7,
+    "question": "A respiração artificial com ar expirado pode ser feita de que modos?",
+    "options": [
+      "Com o insuflador manual",
+      "Boca-a-boca, boca-nariz-boca e Boca-estoma",
+      "Boca-nariz, boca-máscara e máscara composta",
+      "Todas as respostas anteriores estão corretas"
+    ],
+    "correct": 1,
+    "reference": "p. 183-184"
+  },
+  {
+    "chapter": 7,
+    "question": "A respiração artificial com a ventilação mecânica é feita com o seguinte aparelho:",
+    "options": [
+      "Insuflador manual",
+      "Máscara facial composta",
+      "Máscara facial simples",
+      "Todas as respostas anteriores estão corretas"
+    ],
+    "correct": 0,
+    "reference": "p. 186"
+  },
+  {
+    "chapter": 7,
+    "question": "Caracterize os procedimentos do exame Primário?",
+    "options": [
+      "Permeabilidade da via aérea, Exposição com prevenção de Hipotermia, função ventilatória, função respiratória e função circulatória",
+      "Permeabilidade da via aérea, função respiratória, função cardiocirculatória, disfunção neurológica, exposição com prevenção da Hipotermia",
+      "Função ventilatória, função respiratória, função circulatória e permeabilidade da via aérea",
+      "Função ventilatória, função circulatória, função neurológica, prevenção da hipotermia, estímulos verbais e de reação"
+    ],
+    "correct": 1,
+    "reference": "p. 162-163"
+  },
+  {
+    "chapter": 7,
+    "question": "A Posição lateral de segurança (PLS) é efetuada, quando?",
+    "options": [
+      "Quando a vítima não respira",
+      "A vítima está inconsciente, mas ventila e há suspeita de trauma",
+      "Quando a vítima está inconsciente, mas ventila e não há suspeitas de trauma, certificar-se que tem a via aérea permeabilizada",
+      "Quando a vítima está inconsciente, mas ventila normalmente e não há suspeitas de trauma e a via aérea não está permeabilizada"
+    ],
+    "correct": 2,
+    "reference": "p. 165"
+  },
+  {
+    "chapter": 7,
+    "question": "Identifique como proceder para auferir a autonomia da garrafa de oxigénio (O2):",
+    "options": [
+      "Saber a sua pressão e dividir pela sua capacidade",
+      "Saber a capacidade da garrafa e a sua pressão",
+      "Saber os minutos e pela sua capacidade",
+      "Multiplicar pela sua capacidade e dividir pela sua pressão"
+    ],
+    "correct": 1,
+    "reference": "p. 190"
+  },
+  {
+    "chapter": 7,
+    "question": "Indique qual o método e os débitos indicados, quando se utiliza a máscara composta para administrar oxigénio (O2)?",
+    "options": [
+      "Insuflação com 10l/15l minuto",
+      "Inalação com 10l/15l minuto",
+      "Insuflação com 5l minuto",
+      "Inalação com 5l minuto"
+    ],
+    "correct": 1,
+    "reference": "p. 188-189"
+  },
+  {
+    "chapter": 7,
+    "question": "O Nadador-Salvador (NS) tem 100 bar na garrafa de Oxigénio (O2) de 2 litros, está a debitar 10 litros. Durante quanto tempo consegue o NS fornecer O2?",
+    "options": [
+      "10 minutos",
+      "15 minutos",
+      "20 minutos",
+      "25 minutos"
+    ],
+    "correct": 2,
+    "reference": "p. 191"
+  },
+  {
+    "chapter": 7,
+    "question": "Perante uma criança com uma crise de asma grave, o Nadador-Salvador (NS) administra oxigénio (O2) e liga 112. A garrafa de 2 litros está carregada a 180 bar, durante quanto tempo o NS consegue garantir a administração de O2?",
+    "options": [
+      "25 minutos",
+      "36 minutos",
+      "24 minutos",
+      "72 minutos"
+    ],
+    "correct": 1,
+    "reference": "p. 191"
+  },
+  {
+    "chapter": 7,
+    "question": "Perante um adulto com uma crise de asma grave, o Nadador-Salvador (NS) administra oxigénio (O2) e telefona ao 112. A garrafa de 2 litros está carregada a 150 bar, durante quanto tempo o NS consegue garantir a administração de O2?",
+    "options": [
+      "30 minutos",
+      "25 minutos",
+      "60 minutos",
+      "20 minutos"
+    ],
+    "correct": 3,
+    "reference": "p. 191"
+  },
+  {
+    "chapter": 7,
+    "question": "Para fazer face a uma paragem cardiorrespiratória, o Nadador-Salvador (NS) utiliza o SBV com o objetivo de garantir:",
+    "options": [
+      "A avaliação inicial, VOS e a permeabilização da via aérea",
+      "A ventilação e circulação",
+      "A permeabilização da via aérea e a ventilação",
+      "As Compressões Torácicas Externas (CTE) e as insuflações"
+    ],
+    "correct": 1,
+    "reference": "p. 164-167"
+  },
+  {
+    "chapter": 7,
+    "question": "Se a vítima respira e está inconsciente, deve-se:",
+    "options": [
+      "Iniciar as manobras de Suporte Básico de Vida (SBV)",
+      "Colocar açúcar debaixo da língua",
+      "Elevar as pernas a 45º",
+      "Colocar na Posição Lateral de Segurança (PLS)"
+    ],
+    "correct": 3,
+    "reference": "p. 165"
+  },
+  {
+    "chapter": 7,
+    "question": "A compressão cardíaca externa faz-se no:",
+    "options": [
+      "No terço superior externo",
+      "No terço inferior externo",
+      "Na linha do umbigo",
+      "No centro do tórax"
+    ],
+    "correct": 3,
+    "reference": "p. 167"
+  },
+  {
+    "chapter": 7,
+    "question": "Porque é importante permeabilizar a via aérea da vítima antes de iniciar o VOS (Ver Ouvir e Sentir)?",
+    "options": [
+      "Porque a queda da língua pode bloquear a via aérea",
+      "Porque a queda da língua pode causar uma hemorragia",
+      "Porque a vítima pode ter algum alimento na boca que necessita de engolir",
+      "Porque a queda da língua é a causa de todas as paragens cardiorrespiratórias"
+    ],
+    "correct": 0,
+    "reference": "p. 168"
+  },
+  {
+    "chapter": 7,
+    "question": "Como se executam compressões torácicas eficazes?",
+    "options": [
+      "Deprimindo o esterno 5 a 6 cm a uma frequência de pelo menos 100 por minuto e não mais que 120 por minuto",
+      "Deprimindo o esterno 5 a 6 cm a uma frequência de pelo menos 80 por minuto e não mais que 100 por minuto",
+      "Deprimindo o esterno 5 a 6 cm a uma frequência de pelo menos 60 por minuto e não mais que 80 por minuto",
+      "Deprimindo o esterno 5 a 6 cm a uma frequência de pelo menos 60 por minuto e não mais que 70 por minuto"
+    ],
+    "correct": 0,
+    "reference": "p. 167-168"
+  },
+  {
+    "chapter": 7,
+    "question": "Como proceder perante uma situação de obstrução da via aérea (OVA) em que a vítima tosse e fala com dificuldade?",
+    "options": [
+      "Realizar de imediato 5 compressões torácicas",
+      "Realizar de imediato 5 pancadas interescapulares",
+      "Realizar de imediato 5 compressões abdominais",
+      "Incentivar a vítima a tossir"
+    ],
+    "correct": 3,
+    "reference": "p. 178"
+  },
+  {
+    "chapter": 7,
+    "question": "Quantos centímetros deve o tórax baixar durante as compressões torácicas no adulto?",
+    "options": [
+      "3 a 5 centímetros",
+      "4 a 5 centímetros",
+      "4 a 6 centímetros",
+      "5 a 6 centímetros"
+    ],
+    "correct": 3,
+    "reference": "p. 167"
+  },
+  {
+    "chapter": 7,
+    "question": "Ao chegar ao ginásio encontra uma pessoa caída junto a uma das máquinas. Qual o primeiro passo perante a situação?",
+    "options": [
+      "Avaliar as condições de segurança",
+      "Ligar 112",
+      "Avaliar o estado de consciência",
+      "Teste VOS"
+    ],
+    "correct": 0,
+    "reference": "p. 168"
+  },
+  {
+    "chapter": 8,
+    "question": "O Grande Mal Epilético, caracteriza-se por quantas fases?",
+    "options": [
+      "3",
+      "5",
+      "4",
+      "6"
+    ],
+    "correct": 2,
+    "reference": "p. 231"
+  },
+  {
+    "chapter": 8,
+    "question": "Do ponto de vista fisiopatológico, podemos identificar quantos tipos de choque?",
+    "options": [
+      "2",
+      "4",
+      "3",
+      "5"
+    ],
+    "correct": 2,
+    "reference": "p. 197"
+  },
+  {
+    "chapter": 8,
+    "question": "Existem vários tipos de queimaduras. Em que grau há destruição de toda a espessura da pele e dos tecidos adjacentes, podendo chegar à carbonização? A pele apresenta-se acastanhada ou negra.",
+    "options": [
+      "Queimadura 2º grau",
+      "Queimadura 4º grau",
+      "Queimadura 3º grau",
+      "Queimadura 1º grau"
+    ],
+    "correct": 2,
+    "reference": "p. 207"
+  },
+  {
+    "chapter": 8,
+    "question": "Existem vários tipos de queimaduras. Em que grau a pele apresenta-se vermelha (eritema), quente, seca, dolorosa e sente-se ardor?",
+    "options": [
+      "Queimadura 4º grau",
+      "Queimadura 3º grau",
+      "Queimadura 2º grau",
+      "Queimadura 1º grau"
+    ],
+    "correct": 3,
+    "reference": "p. 206"
+  },
+  {
+    "chapter": 8,
+    "question": "Existem vários tipos de queimaduras. Em que grau a pele apresenta-se vermelha, quente, seca com ardor e dor, aparecendo flictenas (pequenas bolhas)?",
+    "options": [
+      "Queimadura 4º grau",
+      "Queimadura 3º grau",
+      "Queimadura 2º grau",
+      "Queimadura 1º grau"
+    ],
+    "correct": 2,
+    "reference": "p. 207"
+  },
+  {
+    "chapter": 8,
+    "question": "Entrada repentina de um banhista na água fria pode causar a paragem brusca das funções vitais. De que tipo de acidente mais frequente estamos a falar?",
+    "options": [
+      "Insolação",
+      "Hidrocussão",
+      "Hipotermia",
+      "Golpe de calor"
+    ],
+    "correct": 1,
+    "reference": "p. 229"
+  },
+  {
+    "chapter": 8,
+    "question": "Do ponto de vista fisiopatológico, quais os tipos de choque que conhece?",
+    "options": [
+      "Hipovolémico, Neurogénico e Cardiogénico",
+      "Neurogénico, Anafilático e Hemorrágico",
+      "Cardiogénico, Hemorrágico e Hipovolémico",
+      "Neurogénico, Hipovolémico e Convulsivo"
+    ],
+    "correct": 0,
+    "reference": "p. 197"
+  },
+  {
+    "chapter": 8,
+    "question": "A hemorragia é a saída do sangue das artérias, veias ou capilares. Como se apresenta o sangue de uma hemorragia arterial?",
+    "options": [
+      "Sangue apresenta-se \"suar\" através das feridas",
+      "Sangue apresenta-se vermelho escuro, sai babando",
+      "Sangue apresenta-se na ferida e provoca hematoma",
+      "Sangue apresenta-se vermelho vivo, e tem a sua saída em jatos intermitentes"
+    ],
+    "correct": 3,
+    "reference": "p. 199"
+  },
+  {
+    "chapter": 8,
+    "question": "Qual a sintomatologia associada às hemorragias?",
+    "options": [
+      "Ausência de dor, sem sinais e sintomas de choque e bradicardia",
+      "A vítima refere sede, dor no local e tem a visão turva",
+      "Sinais e sintomas de choque neurogénico, perda de volume de sangue",
+      "Todas as respostas estão corretas"
+    ],
+    "correct": 1,
+    "reference": "p. 200"
+  },
+  {
+    "chapter": 8,
+    "question": "Qual o procedimento do Nadador-Salvador (NS), perante um acidente causado por contacto com caravelas portuguesas?",
+    "options": [
+      "Esfregar bem a área atingida, para remover completamente os tentáculos ou partes da matéria colada ainda na pele",
+      "Colocar compressas no local com água do mar gelada e vinagre no local afetado, por períodos de 10 a 20 minutos",
+      "Colocar compressa no local com álcool, para aliviar o ardor e promover a libertação do veneno na corrente sanguínea",
+      "Lavar bem com água doce corrente, até que o ardor passe no local afetado, durante 10 a 20 minutos"
+    ],
+    "correct": 1,
+    "reference": "p. 203"
+  },
+  {
+    "chapter": 8,
+    "question": "Qual a sintomatologia associada à paragem digestiva?",
+    "options": [
+      "Cianose, sem perda de conhecimento e suores frios",
+      "Aumento da pressão arterial, enjoos e perda de conhecimento",
+      "Suores frios, cãibras e palidez da pele",
+      "Vómitos, náuseas, pele seca e cianose"
+    ],
+    "correct": 2,
+    "reference": "p. 204"
+  },
+  {
+    "chapter": 8,
+    "question": "Qual a abordagem do Nadador-Salvador (NS), a uma vítima com suspeita de traumatismo vertebromedular?",
+    "options": [
+      "Movimentar a vítima para um local seguro o mais rapidamente possível",
+      "Exame geral da vítima, avaliação neurológica (AVDS) e prevenir o choque",
+      "Evacuar a vítima para o hospital, o mais rapidamente possível e por qualquer meio",
+      "Verificar o estado geral da vítima, segundo a escala de avaliação neurológica de Heimlich, vigiar as funções vitais"
+    ],
+    "correct": 1,
+    "reference": "p. 211"
+  },
+  {
+    "chapter": 8,
+    "question": "Qual a sintomatologia associada à hiperglicemia?",
+    "options": [
+      "Náuseas, vómitos, diminuição da frequência ventilatória e hiperatividade",
+      "Fraqueza muscular, aumento da frequência ventilatória e hálito cetónico",
+      "Sonolência, fraqueza muscular e diminuição da frequência ventilatória",
+      "Sensação de fome, pulso rápido e sudação abundante"
+    ],
+    "correct": 1,
+    "reference": "p. 224"
+  },
+  {
+    "chapter": 8,
+    "question": "\"A ansiedade, a irritabilidade e mesmo a agitação, a sensação de fome, o pulso rápido e fraco, a pele pálida, húmida e sudorese\". Esta sintomatologia está associada a que acidente?",
+    "options": [
+      "Hiperglicemia",
+      "Estado de choque",
+      "Hipoglicemia",
+      "Insolação"
+    ],
+    "correct": 2,
+    "reference": "p. 225"
+  },
+  {
+    "chapter": 8,
+    "question": "Quais os procedimentos a adotar numa vítima em hiperglicemia?",
+    "options": [
+      "Vigiar os sinais vitais, determinar a glicemia capilar e promover o transporte da vítima ao hospital",
+      "Dar água açucarada em caso da glicemia superior a 60 mg/dl depois de determinar a glicemia capilar",
+      "Dar de beber, mesmo que exista vómito",
+      "Dar uma papa espessa de açúcar"
+    ],
+    "correct": 0,
+    "reference": "p. 224"
+  },
+  {
+    "chapter": 8,
+    "question": "Qual a sintomatologia associada à insolação?",
+    "options": [
+      "Pele húmida e rosada, ventilação rápida e profunda",
+      "Aumento da temperatura corporal e pele com aspeto congestionado e avermelhada",
+      "Pele avermelhada, ventilação lenta e superficial e agitação",
+      "Pele seca, vómitos, pulso lento e regular e convulsões"
+    ],
+    "correct": 1,
+    "reference": "p. 227"
+  },
+  {
+    "chapter": 8,
+    "question": "De que acidente estamos a falar, que afeta normalmente as pessoas que estão expostas a ambientes quentes e húmidos durante um período prolongado?",
+    "options": [
+      "Da insolação",
+      "Da Hipertermia",
+      "Do golpe de calor",
+      "Da hidrocussão"
+    ],
+    "correct": 2,
+    "reference": "p. 228"
+  },
+  {
+    "chapter": 8,
+    "question": "Um dos acidentes mais frequentes nas praias é a hipotermia. Quais os procedimentos que devemos adotar?",
+    "options": [
+      "Retirar vestuário molhado ou húmido",
+      "Abordar a vítima segundo a metodologia ABCDE",
+      "Arrefecer o ambiente, quando possível",
+      "Fazer movimentos bruscos que podem originar arritmias e paragem cardíaca"
+    ],
+    "correct": 0,
+    "reference": "p. 229"
+  },
+  {
+    "chapter": 8,
+    "question": "Quais os fatores e circunstâncias que podem desencadear as crises de epilepsia?",
+    "options": [
+      "Nível baixo de açúcar no sangue e falta de sono",
+      "Fraqueza muscular e hidratação",
+      "Tonturas, pulso rápido e fraco",
+      "Náuseas e/ou vómitos e níveis altos de açúcar"
+    ],
+    "correct": 0,
+    "reference": "p. 230"
+  },
+  {
+    "chapter": 8,
+    "question": "Quais os procedimentos perante uma vítima com sinais evidentes de desidratação?",
+    "options": [
+      "Dar líquidos à vítima abundantemente e cobri-la com panos molhados",
+      "Colocar a vítima num chuveiro com água tépida e aplicar um creme gordo",
+      "Prevenir o estado de choque e dar de beber à vítima pequenas quantidades de líquidos",
+      "Colocar a vítima em PLS, arejar o local e agitar o ar à sua volta"
+    ],
+    "correct": 2,
+    "reference": "p. 230"
+  },
+  {
+    "chapter": 8,
+    "question": "Qual o procedimento perante uma vítima com sinais de crise epilética (Grande Mal Epilético)?",
+    "options": [
+      "Maniatar a vítima, falar alto com ela, dizendo-lhe para se acalmar",
+      "Manter a via aérea permeável, não colocar nada na boca da vítima durante as crises",
+      "Agarrar a vítima com força para evitar que ela se magoe, colocar um lenço entre os dentes desta, para que não morda a língua",
+      "Se a crise ocorrer na água, iniciar imediatamente as manobras de SBV aplicando 5 insuflações"
+    ],
+    "correct": 1,
+    "reference": "p. 232"
+  },
+  {
+    "chapter": 8,
+    "question": "Perante a ocorrência de uma criança perdida, devemos:",
+    "options": [
+      "Procurar a criança acompanhado pelos pais desta, para facilitar o seu reconhecimento",
+      "Procurar a criança na direção do sol, porque elas caminham nessa direção",
+      "Emitir um alerta via rádio/telemóvel para os outros postos de praia e agentes da Autoridade Marítima Nacional (AMN), informando-os do sucedido",
+      "Abandonar a sua área de responsabilidade, pois esta situação é mais urgente do que vigiar a sua área de responsabilidade"
+    ],
+    "correct": 2,
+    "reference": "p. 232-233"
+  },
+  {
+    "chapter": 8,
+    "question": "\"Diminuição do volume de sangue dentro dos vasos\". Que tipo de choque pode ocorrer?",
+    "options": [
+      "Choque Neurogénico",
+      "Choque Hipovolémico",
+      "Choque Cardiogénico",
+      "Todas as respostas anteriores estão corretas"
+    ],
+    "correct": 1,
+    "reference": "p. 197"
+  },
+  {
+    "chapter": 8,
+    "question": "Identifique as técnicas de remoção de vítimas de Traumatismo Vertebromedular (TVM).",
+    "options": [
+      "Levantamento e Rolamento",
+      "Arrancamento, Rolamento",
+      "Deslocamento, Levantamento",
+      "Levantamento, Arrancamento"
+    ],
+    "correct": 0,
+    "reference": "p. 213"
+  },
+  {
+    "chapter": 8,
+    "question": "Identifique as fases que se podem suceder continuamente no Grande Mal Epilético:",
+    "options": [
+      "Tónica e Pós-Crítica",
+      "Aura e Clónica",
+      "Clónica e Aura",
+      "Tónica e Clónica"
+    ],
+    "correct": 3,
+    "reference": "p. 232"
+  },
+  {
+    "chapter": 8,
+    "question": "No exame geral da vítima, num Traumatismo Vertebromedular (TVM), a avaliação neurológica permite-nos determinar entre outros:",
+    "options": [
+      "O débito de O2 que necessita",
+      "A função respiratória e circulatória",
+      "Se responde a estímulos verbais e/ou dolorosos",
+      "O estado de hipotermia da vítima"
+    ],
+    "correct": 2,
+    "reference": "p. 211"
+  },
+  {
+    "chapter": 8,
+    "question": "No Grande Mal Epilético, qual é a fase em que a vítima perde a consciência?",
+    "options": [
+      "Fase aura",
+      "Fase tónica",
+      "Fase clónica",
+      "Pós-crítica"
+    ],
+    "correct": 1,
+    "reference": "p. 231"
+  },
+  {
+    "chapter": 8,
+    "question": "No Grande Mal Epilético, qual é a fase em que a vítima tem movimentos de contração-relaxamento de grupos de músculos?",
+    "options": [
+      "Fase aura",
+      "Fase tónica",
+      "Fase clónica",
+      "Pós-crítica"
+    ],
+    "correct": 2,
+    "reference": "p. 231"
+  },
+  {
+    "chapter": 8,
+    "question": "No Grande Mal Epilético, qual é a fase em que a vítima tem ou refere ter tido uma alucinação sensorial com sensação de ataque eminente?",
+    "options": [
+      "Fase aura",
+      "Fase tónica",
+      "Fase clónica",
+      "Pós-crítica"
+    ],
+    "correct": 0,
+    "reference": "p. 231"
+  },
+  {
+    "chapter": 8,
+    "question": "Os mergulhos, saltos para a água, quedas, são ações em que podem resultar em traumatismos vertebromedulares (TVM). Perante uma suspeita de TVM, o Nadador-Salvador (NS) deve:",
+    "options": [
+      "Manter a vítima na água para prevenir o choque neurogénico",
+      "Manter a vítima em imobilização absoluta e colocar o colar cervical",
+      "Não utilizar o plano rígido, vigiar sinais vitais e evacuar para o hospital",
+      "Todas as respostas anteriores estão corretas"
+    ],
+    "correct": 1,
+    "reference": "p. 221"
+  },
+  {
+    "chapter": 8,
+    "question": "De que acidente estamos a falar quando existe a incapacidade de regulação térmica do organismo, por exposição a climas quentes, provocada pela falência do mecanismo de regulação térmica?",
+    "options": [
+      "Insolação",
+      "Golpe de calor",
+      "Hipotermia",
+      "Hidrocussão"
+    ],
+    "correct": 0,
+    "reference": "p. 227"
+  },
+  {
+    "chapter": 8,
+    "question": "Na Epilepsia, em que fase a vítima tem alterações sensoriais, nomeadamente auditiva, visual, gustativa e olfativa com sensação de ataque iminente?",
+    "options": [
+      "Fase tónica",
+      "Fase clónica",
+      "Fase aura",
+      "Fase de relaxamento"
+    ],
+    "correct": 2,
+    "reference": "p. 231"
+  },
+  {
+    "chapter": 8,
+    "question": "Como classificar a avaliação da gravidade de uma queimadura?",
+    "options": [
+      "Profundidade, intensão, localização e idade",
+      "Profundidade, extensão, localização e idade",
+      "Profundidade, extensão, localização e sexo",
+      "Profundidade, intensão, localização e sexo"
+    ],
+    "correct": 1,
+    "reference": "p. 206"
+  },
+  {
+    "chapter": 8,
+    "question": "Numa vítima de golpe de calor qual o seu procedimento?",
+    "options": [
+      "Transportar de acordo com o grau de afogamento da vítima",
+      "Levar a vítima para um lugar quente e fechado",
+      "Dar-lhe água a beber em grandes quantidades",
+      "Transportar de acordo com o grau de consciência da vítima"
+    ],
+    "correct": 3,
+    "reference": "p. 228"
+  },
+  {
+    "chapter": 8,
+    "question": "Segundo o manual de Nadador-Salvador (NS), consideram-se valores normais de glicemia em jejum os seguintes:",
+    "options": [
+      "110 e 126 mg/dl",
+      "70 e 110 mg/dl",
+      "40 e 70 mg/dl",
+      "126 e 180 mg/dl"
+    ],
+    "correct": 1,
+    "reference": "p. 223"
+  },
+  {
+    "chapter": 8,
+    "question": "A rutura de fibras musculares resultante de um esforço violento pode originar:",
+    "options": [
+      "Fratura",
+      "Hemorragia",
+      "Distensão",
+      "Traumatismo"
+    ],
+    "correct": 2,
+    "reference": "p. 221"
+  },
+  {
+    "chapter": 8,
+    "question": "Nas hemorragias, o local onde o vaso se rompe e por onde sai o sangue, designa-se por:",
+    "options": [
+      "Ponto de compressão direto",
+      "Válvula hemorrágica",
+      "Ponto de compressão indireto",
+      "Foco hemorrágico"
+    ],
+    "correct": 3,
+    "reference": "p. 199"
+  },
+  {
+    "chapter": 8,
+    "question": "Quando o diâmetro da artéria coronária diminui pela decomposição de placas de gordura e outras substâncias originando uma redução da chegada de oxigénio às células do miocárdio, dá-se:",
+    "options": [
+      "Convulsão",
+      "Epilepsia",
+      "Choque",
+      "Angina de peito"
+    ],
+    "correct": 3,
+    "reference": "p. 195"
+  },
+  {
+    "chapter": 8,
+    "question": "Como se classifica o episódio de insuficiência circulatória aguda?",
+    "options": [
+      "Convulsão",
+      "Choque",
+      "Epilepsia",
+      "Traumatismo"
+    ],
+    "correct": 1,
+    "reference": "p. 197"
+  },
+  {
+    "chapter": 8,
+    "question": "O deslocamento repentino e duradouro parcial ou completo de um ou mais ossos de uma articulação designa-se de:",
+    "options": [
+      "Luxação",
+      "Fratura",
+      "Cãibra",
+      "Distensão"
+    ],
+    "correct": 0,
+    "reference": "p. 220"
+  },
+  {
+    "chapter": 9,
+    "question": "A quem compete certificar e emitir o cartão de identificação do Nadador-Salvador (NS)?",
+    "options": [
+      "Escola de Autoridade Marítima (EAM)",
+      "Instituto de Socorros a Náufragos (ISN)",
+      "Escolas de Formação Profissionais de Nadadores-Salvadores (EFPNS)",
+      "Associações de Nadadores-Salvadores (ANS)"
+    ],
+    "correct": 1,
+    "reference": "p. 237"
+  },
+  {
+    "chapter": 9,
+    "question": "Qual a validade da categoria de Nadador-Salvador (NS)?",
+    "options": [
+      "4 Anos",
+      "5 Anos",
+      "3 Anos",
+      "Vitalício"
+    ],
+    "correct": 2,
+    "reference": "p. 237"
+  },
+  {
+    "chapter": 9,
+    "question": "A quem compete emitir os certificados de Nadador-Salvador (NS)?",
+    "options": [
+      "À Escola de Autoridade Marítima (EAM) ou estabelecimento de ensino reconhecido",
+      "Ao Instituto de Socorros a Náufragos (ISN)",
+      "Ao Formador do curso",
+      "Às Associações de Nadadores-Salvadores (ANS)"
+    ],
+    "correct": 0,
+    "reference": "p. 237"
+  }
+];
+const LABELS = ['A','B','C','D'];
+const TIMED_COUNT = 20;
+const TIMED_SECONDS = 20 * 60;
+
+// ---- ORDERING MODE DATA ----
+const SCENARIOS = [
+  {
+    num:1,
+    title:"Afogamento adulto + O2 inalação",
+    context:"Praia do Cabedelo. Um homem com aproximadamente 40 anos de idade foi resgatado do mar por populares e encontra-se inanimado no areal. Não há suspeita de trauma.",
+    steps:[
+      "Definir algoritmo SBV Afogamento",
+      "Avaliar condições de segurança",
+      "Avaliar estado de consciência (estímulo verbal + tátil bilateral)",
+      "Permeabilizar via aérea (extensão da cabeça + elevação da mandíbula)",
+      "Teste de VOS (até 10 segundos)",
+      "Ligar 112",
+      "5 insuflações iniciais com O2",
+      "Iniciar RCP 30:2 (2 a 4 ciclos)",
+      "Colocar vítima em PLS",
+      "Montar regulador de pressão + ligar tubo conector",
+      "Máscara de alta concentração, 15 L/min",
+      "Desmontar material e fechar garrafa"
+    ]
+  },
+  {
+    num:2,
+    title:"SBV adulto + O2 inalação",
+    context:"Praia Norte. Uma mulher com aproximadamente 55 anos de idade encontra-se inanimada na areia. Não há registo de afogamento nem suspeita de trauma.",
+    steps:[
+      "Definir algoritmo SBV",
+      "Avaliar condições de segurança",
+      "Avaliar estado de consciência",
+      "Permeabilizar via aérea",
+      "Teste de VOS",
+      "Ligar 112",
+      "Iniciar RCP 30:2 (2 a 4 ciclos)",
+      "Colocar vítima em PLS",
+      "Montar regulador + máscara alta concentração, 15 L/min",
+      "Desmontar material e fechar garrafa"
+    ]
+  },
+  {
+    num:3,
+    title:"Afogamento pediátrico + O2 inalação",
+    context:"Praia de Paçô. Um rapaz com aproximadamente 8 anos de idade foi retirado do mar e encontra-se inanimado no areal. Não há suspeita de trauma.",
+    steps:[
+      "Definir algoritmo SBV Afogamento",
+      "Avaliar condições de segurança",
+      "Avaliar estado de consciência",
+      "Permeabilizar via aérea",
+      "Teste de VOS",
+      "Ligar 112",
+      "5 insuflações iniciais (inverter máscara — criança)",
+      "Iniciar RCP 15:2 (3 a 6 ciclos)",
+      "Colocar vítima em PLS",
+      "Montar regulador + máscara pediátrica alta concentração, 10 L/min",
+      "Desmontar material e fechar garrafa"
+    ]
+  },
+  {
+    num:4,
+    title:"SBV pediátrico + O2 inalação",
+    context:"Praia de Afife. Uma rapariga com aproximadamente 6 anos de idade encontra-se inanimada na areia. Não há registo de afogamento nem suspeita de trauma. O Nadador-Salvador encontra-se sozinho.",
+    steps:[
+      "Definir algoritmo SBV Pediátrico",
+      "Avaliar condições de segurança + gritar por ajuda",
+      "Avaliar estado de consciência",
+      "Permeabilizar via aérea",
+      "Teste de VOS",
+      "5 insuflações (inverter máscara — criança)",
+      "Iniciar 1 minuto de RCP — 5 ciclos 15:2",
+      "Ligar 112",
+      "Continuar RCP 15:2 (3 a 6 ciclos)",
+      "Colocar vítima em PLS",
+      "Montar regulador + máscara pediátrica alta concentração, 10 L/min",
+      "Desmontar material e fechar garrafa"
+    ]
+  },
+  {
+    num:5,
+    title:"OVA grávida + O2 insuflação",
+    context:"Praia da Arda. Uma mulher grávida com aproximadamente 35 anos de idade apresenta sinais de engasgamento (obstrução da via aérea). A vítima evolui para perda de consciência.",
+    steps:[
+      "Definir algoritmo OVA",
+      "Avaliar condições de segurança",
+      "Avaliar obstrução (ligeira→tossir; grave→desobstruir)",
+      "Pancadas inter-escapulares (até 5)",
+      "Compressões torácicas (grávida — em vez de abdominais)",
+      "Ligar 112 se inconsciente",
+      "Iniciar RCP 30:2",
+      "Colocar vítima em PLS",
+      "Montar regulador + insuflador manual com balonete, 15 L/min",
+      "Colocar tubo orofaríngeo (medição, introdução invertida, rodar 180°)",
+      "Selar máscara e insuflar com 1 mão",
+      "Desmontar material e fechar garrafa"
+    ]
+  },
+  {
+    num:6,
+    title:"OVA lactente + O2 insuflação",
+    context:"Praia de Moledo. Um bebé de 8 meses apresenta sinais de obstrução grave da via aérea (engasgamento). A vítima evolui para perda de consciência.",
+    steps:[
+      "Definir algoritmo OVA lactente",
+      "Avaliar condições de segurança",
+      "Avaliar obstrução grave",
+      "Pancadas inter-escapulares (até 5)",
+      "Compressões torácicas com 2 dedos (até 5)",
+      "Ligar 112 se inconsciente",
+      "Iniciar RCP 15:2 (3 a 6 ciclos) — inverter máscara lactente",
+      "Colocar vítima em PLS",
+      "Montar regulador + insuflador manual com balonete, 10 L/min",
+      "Reduzir insuflador (vítima lactente) + tubo orofaríngeo",
+      "Usar máscara pediátrica, selar e insuflar com 1 mão",
+      "Desmontar material e fechar garrafa"
+    ]
+  },
+  {
+    num:7,
+    title:"Dificuldade respiratória consciente → SBV + O2",
+    context:"Praia do Rodanho. Uma mulher com aproximadamente 60 anos de idade apresenta dificuldade respiratória, encontrando-se consciente. Durante o atendimento o seu estado agrava-se progressivamente até perda de consciência e ausência de ventilação.",
+    steps:[
+      "Abordagem ABCDE (exame primário)",
+      "Avaliar condições de segurança",
+      "Avaliar estado de consciência (consciente)",
+      "Administrar O2 por inalação: máscara simples ou cânulas nasais, 5 L/min",
+      "[Agravamento] Avaliar estado de consciência (não responde)",
+      "Permeabilizar via aérea",
+      "Teste de VOS",
+      "Ligar 112",
+      "Trocar para insuflador manual + balonete, 15 L/min",
+      "Colocar tubo orofaríngeo",
+      "Iniciar RCP 30:2 (2 a 4 ciclos)",
+      "Colocar vítima em PLS",
+      "Trocar para máscara alta concentração, 15 L/min",
+      "Desmontar material e fechar garrafa"
+    ]
+  },
+  {
+    num:8,
+    title:"Afogamento + trauma + O2 inalação",
+    context:"Praia da Amorosa. Um homem com aproximadamente 40 anos de idade foi resgatado do mar após queda resultante de mergulhos em zona pouco profunda. Suspeita-se de traumatismo vertebromedular. A vítima encontra-se inanimada no areal.",
+    steps:[
+      "Definir algoritmo SBV Afogamento",
+      "Avaliar condições de segurança",
+      "Avaliar estado de consciência",
+      "Permeabilizar via aérea",
+      "Teste de VOS",
+      "Ligar 112",
+      "5 insuflações com O2",
+      "Iniciar RCP 30:2 (2 a 4 ciclos)",
+      "Colocar vítima em PLS",
+      "Abordagem ABCDE — avaliar disfunção neurológica (escala AVDS)",
+      "Estabilizar cabeça e cervical (alinhamento nariz-umbigo-pés)",
+      "Colocar colar cervical (medição ângulo mandíbula–início ombro)",
+      "Técnica de rolamento para plano rígido (mínimo 3 elementos)",
+      "Imobilizar no plano rígido (cintas: tórax → pélvica → ombros em Y → cabeça → joelhos → tornozelos)",
+      "Montar regulador + máscara alta concentração, 15 L/min",
+      "Desmontar material e fechar garrafa"
+    ]
+  },
+  {
+    num:9,
+    title:"Trauma em piscina + imobilização + O2",
+    context:"Piscina Municipal do Atlântico. Um homem com aproximadamente 55 anos de idade sofreu uma queda nas instalações. Suspeita-se de traumatismo vertebromedular. A vítima encontra-se inanimada.",
+    steps:[
+      "Abordagem ABCDE — Trauma",
+      "Avaliar condições de segurança",
+      "Avaliar estado de consciência",
+      "Permeabilizar via aérea (elevação mandíbula ou tubo orofaríngeo)",
+      "Teste de VOS",
+      "Ligar 112",
+      "Iniciar RCP 30:2 (2 a 4 ciclos)",
+      "Avaliação ABCDE: D (escala AVDS) + E (exposição com controlo temperatura)",
+      "Estabilizar cabeça e cervical",
+      "Colocar colar cervical",
+      "Técnica de rolamento para plano rígido",
+      "Imobilizar no plano rígido",
+      "Montar regulador + máscara alta concentração, 15 L/min",
+      "Desmontar material e fechar garrafa"
+    ]
+  },
+  {
+    num:10,
+    title:"Trauma em piscina + insuflação → imobilização + O2",
+    context:"Piscina Municipal de Barroselas. Uma mulher com aproximadamente 60 anos de idade sofreu uma queda nas instalações. Suspeita-se de traumatismo vertebromedular. A vítima encontra-se inanimada e não ventila.",
+    steps:[
+      "Abordagem ABCDE — Trauma",
+      "Avaliar condições de segurança",
+      "Avaliar estado de consciência",
+      "Permeabilizar via aérea",
+      "Teste de VOS",
+      "Ligar 112",
+      "Iniciar RCP 30:2 (2 a 4 ciclos)",
+      "Avaliação ABCDE: D + E",
+      "Montar regulador + insuflador manual com balonete, 15 L/min",
+      "Colocar tubo orofaríngeo + selar máscara, insuflar com 1 mão",
+      "[Vítima cuspiu tubo] Teste de VOS — ventila",
+      "Avaliação disfunção neurológica (escala AVDS)",
+      "Estabilizar cabeça e cervical",
+      "Colocar colar cervical",
+      "Técnica de rolamento para plano rígido",
+      "Imobilizar no plano rígido",
+      "Retirar insuflador, montar máscara alta concentração, 15 L/min",
+      "Desmontar material e fechar garrafa"
+    ]
+  }
+];
+
+function shuffle(arr){
+  const a=[...arr];
+  for(let i=a.length-1;i>0;i--){const j=Math.floor(Math.random()*(i+1));[a[i],a[j]]=[a[j],a[i]];}
+  return a;
+}
+
+// Compute global numbering (1-based) and chapter ranges
+const CHAPTER_RANGES = (function(){
+  const ranges = {};
+  let idx = 1;
+  for(let c=1;c<=9;c++){
+    const qs = QUESTIONS.filter(q=>q.chapter===c);
+    if(qs.length){
+      ranges[c]={start:idx, end:idx+qs.length-1, count:qs.length};
+      idx+=qs.length;
+    }
+  }
+  return ranges;
+})();
+
+function globalIdxOf(q){
+  return QUESTIONS.indexOf(q); // 0-based index in QUESTIONS array
+}
+
+let state = {
+  screen: 'start',
+  mode: null,        // 'random'|'chapter'|'timed'|'solo'
+  chapterMode: null,
+  questions: [],
+  current: 0,
+  score: 0,
+  answered: false,
+  shuffledOptions: [],
+  selectedIdx: null,
+  // timed
+  timerSec: TIMED_SECONDS,
+  timerInterval: null,
+  startTime: null,
+  timeUsed: 0,
+  answerHistory: [], // [{question, wasCorrect}]
+  // solo
+  soloGlobalNum: 0,
+  // ordering mode
+  orderingScenarioIdx: null,
+  orderingSteps: [],
+  orderingConfirmed: false,
+};
+
+function prepareQuiz(questions){
+  state.questions=shuffle(questions);
+  state.current=0;
+  state.score=0;
+  state.answerHistory=[];
+  loadQuestion();
+}
+
+function loadQuestion(){
+  state.answered=false;
+  state.selectedIdx=null;
+  const q=state.questions[state.current];
+  const opts=q.options.map((text,i)=>({text,originalIdx:i}));
+  state.shuffledOptions=shuffle(opts);
+}
+
+// ---- TIMER ----
+function startTimer(fromSec){
+  if(fromSec!==undefined)state.timerSec=fromSec;
+  else state.timerSec=TIMED_SECONDS;
+  state.startTime=Date.now();
+  clearInterval(state.timerInterval);
+  state.timerInterval=setInterval(()=>{
+    state.timerSec--;
+    updateTimerDisplay();
+    if(state.timerSec<=0){
+      clearInterval(state.timerInterval);
+      // Auto-submit: if currently on a question and not answered, mark as wrong
+      if(!state.answered && state.screen==='quiz'){
+        const q=state.questions[state.current];
+        state.answerHistory.push({question:q,wasCorrect:false,autoTimeout:true,selectedOriginalIdx:null});
+      }
+      state.timeUsed=TIMED_SECONDS;
+      clearProgress();
+      saveTimedResult(state.score,state.questions.length,state.timeUsed,true);
+      state.screen='results';
+      render();
+    } else if(state.timerSec%10===0){
+      saveProgress();
+    }
+  },1000);
+}
+
+function stopTimer(){
+  clearInterval(state.timerInterval);
+  state.timeUsed=TIMED_SECONDS-state.timerSec;
+}
+
+function updateTimerDisplay(){
+  const el=document.getElementById('timerBadge');
+  if(!el)return;
+  const m=Math.floor(state.timerSec/60).toString().padStart(2,'0');
+  const s=(state.timerSec%60).toString().padStart(2,'0');
+  el.textContent=m+':'+s;
+  el.className='timer-badge'+(state.timerSec<120?' danger':state.timerSec<300?' warn':'');
+}
+
+function fmtTime(sec){
+  const m=Math.floor(sec/60);
+  const s=sec%60;
+  return m+'m '+s.toString().padStart(2,'0')+'s';
+}
+
+// ---- RENDER ----
+function render(){
+  document.getElementById('app').innerHTML=renderScreen();
+  attachEvents();
+}
+
+function renderScreen(){
+  switch(state.screen){
+    case 'start': return renderStart();
+    case 'chapter-select': return renderChapterSelect();
+    case 'quiz': return renderQuiz();
+    case 'results': return renderResults();
+    case 'review': return renderReview();
+    case 'solo': return renderSolo();
+    case 'ordering-select': return renderOrderingSelect();
+    case 'ordering-question': return renderOrderingQuestion();
+  }
+  return '';
+}
+
+function renderStart(){
+  // Build legend
+  let legend='';
+  for(let c=1;c<=9;c++){
+    const r=CHAPTER_RANGES[c];
+    if(r) legend+=(c>1?' | ':'')+'Cap.'+c+': '+r.start+'–'+r.end;
+  }
+  // Resume banner
+  const saved=loadProgress();
+  let resumeHtml='';
+  if(saved){
+    const modeLabel=saved.mode==='timed'?'Teste Cronometrado':`Capítulo ${saved.chapterMode}`;
+    const qNum=saved.current+1;
+    const qTotal=saved.questionIndices.length;
+    const timeInfo=saved.mode==='timed'?` &nbsp;&middot;&nbsp; ${Math.floor(saved.timerSec/60)}m${String(saved.timerSec%60).padStart(2,'0')}s restantes`:'';
+    resumeHtml=`<div class="resume-banner">
+    <div class="resume-text">&#9654; Sessão em curso — ${escHtml(modeLabel)}, pergunta ${qNum}/${qTotal}${timeInfo}</div>
+    <div class="resume-btns">
+      <button class="btn btn-primary" id="resumeBtn">&#9654; Continuar</button>
+      <button class="btn btn-secondary" id="discardBtn">&#10005; Descartar</button>
+    </div>
+  </div>`;
+  }
+  return `<div class="card">
+  <h1>Quiz Nadador-Salvador</h1>
+  <p class="subtitle">EEAT — Curso de Nadador-Salvador &nbsp;·&nbsp; ${QUESTIONS.length} perguntas em 9 capítulos</p>
+  ${resumeHtml}
+  <div class="mode-buttons">
+    <button class="btn btn-primary" id="btnRandom">&#127922; Aleatório Total<br><small style="font-weight:400;font-size:.82rem">Todas as ${QUESTIONS.length} perguntas em ordem aleatória</small></button>
+    <button class="btn btn-secondary" id="btnChapter">&#128218; Por Capítulo<br><small style="font-weight:400;font-size:.82rem">Escolhe um capítulo específico</small></button>
+    <button class="btn btn-timed" id="btnTimed">&#9201; Teste Cronometrado<br><small style="font-weight:400;font-size:.82rem">20 perguntas &bull; 2 por capítulo &bull; 20 minutos</small></button>
+    <button class="btn btn-ordering" id="btnOrdering">&#128203; Ordenação de Procedimentos<br><small style="font-weight:400;font-size:.82rem">Arrasta e ordena os passos dos 10 cenários</small></button>
+  </div>
+  <div class="search-section">
+    <h3>&#128270; Ir para pergunta específica</h3>
+    <div class="search-row">
+      <input type="number" class="search-input" id="searchInput" placeholder="Nº da pergunta (1–${QUESTIONS.length})" min="1" max="${QUESTIONS.length}">
+      <button class="search-btn" id="searchBtn">Ir</button>
+    </div>
+    <div class="search-legend">${legend}</div>
+    <div class="search-error" id="searchError"></div>
+  </div>
+</div>`;
+}
+
+function renderChapterSelect(){
+  let btns='';
+  for(let c=1;c<=9;c++){
+    const r=CHAPTER_RANGES[c];
+    if(r) btns+=`<button class="chapter-btn" data-ch="${c}">Cap. ${c}<br><small style="font-weight:400;color:#4a6080">${r.count} perg.</small></button>`;
+  }
+  return `<div class="card">
+  <button class="back-btn" id="backBtn">&#8592; Voltar</button>
+  <h2>Escolhe um Capítulo</h2>
+  <div class="chapter-grid">${btns}</div>
+</div>`;
+}
+
+function renderQuiz(){
+  const q=state.questions[state.current];
+  const total=state.questions.length;
+  const pct=(state.current/total*100).toFixed(1);
+  const isTimed=(state.mode==='timed');
+
+  let headerHtml='';
+  if(isTimed){
+    const m=Math.floor(state.timerSec/60).toString().padStart(2,'0');
+    const s=(state.timerSec%60).toString().padStart(2,'0');
+    const timerCls='timer-badge'+(state.timerSec<120?' danger':state.timerSec<300?' warn':'');
+    headerHtml=`<div class="timer-row">
+      <span class="meta">Teste Cronometrado — Pergunta ${state.current+1} de ${total}</span>
+      <span class="${timerCls}" id="timerBadge">${m}:${s}</span>
+    </div>`;
+  } else {
+    const chLabel=state.mode==='chapter'?`Capítulo ${state.chapterMode}`:`Capítulo ${q.chapter}`;
+    headerHtml=`<div class="meta">${chLabel} — Pergunta ${state.current+1} de ${total}</div>`;
+  }
+
+  let optsHtml='';
+  state.shuffledOptions.forEach((opt,i)=>{
+    let cls='option-btn';
+    if(state.answered){
+      const isCorrect=opt.originalIdx===q.correct;
+      const isSel=i===state.selectedIdx;
+      if(isCorrect)cls+=' correct';
+      else if(isSel&&!isCorrect)cls+=' wrong';
+      else cls+=' dimmed';
+    }
+    optsHtml+=`<button class="${cls}" ${state.answered?'disabled':''} data-idx="${i}">
+      <span class="option-label">${LABELS[i]}</span>
+      <span>${escHtml(opt.text)}</span>
+    </button>`;
+  });
+
+  // Reference box (non-timed only)
+  let refHtml='';
+  if(!isTimed && q.reference){
+    refHtml=`<div class="ref-box${state.answered?' visible':''}" id="refBox">
+      <span class="ref-box-icon">&#128218;</span>
+      <span><strong>Referência:</strong> ${escHtml(q.reference)}</span>
+    </div>`;
+  }
+
+  return `<div class="card">
+  <button class="back-btn" id="backBtn">&#8592; Sair do Quiz</button>
+  ${headerHtml}
+  <div class="progress-bar-wrap"><div class="progress-bar-fill" style="width:${pct}%"></div></div>
+  <div class="question-text">${escHtml(q.question)}</div>
+  <div class="options">${optsHtml}</div>
+  ${refHtml}
+  <div class="continue-area${state.answered?' visible':''}" id="contArea">
+    <button class="btn btn-success" id="continueBtn">Continuar &#8594;</button>
+  </div>
+</div>`;
+}
+
+function renderSolo(){
+  const q=state.soloQ;
+  let optsHtml='';
+  state.shuffledOptions.forEach((opt,i)=>{
+    let cls='option-btn';
+    if(state.answered){
+      const isCorrect=opt.originalIdx===q.correct;
+      const isSel=i===state.selectedIdx;
+      if(isCorrect)cls+=' correct';
+      else if(isSel&&!isCorrect)cls+=' wrong';
+      else cls+=' dimmed';
+    }
+    optsHtml+=`<button class="${cls}" ${state.answered?'disabled':''} data-idx="${i}">
+      <span class="option-label">${LABELS[i]}</span>
+      <span>${escHtml(opt.text)}</span>
+    </button>`;
+  });
+
+  let refHtml='';
+  if(q.reference){
+    refHtml=`<div class="ref-box${state.answered?' visible':''}" id="refBox">
+      <span class="ref-box-icon">&#128218;</span>
+      <span><strong>Referência:</strong> ${escHtml(q.reference)}</span>
+    </div>`;
+  }
+
+  return `<div class="card">
+  <button class="back-btn" id="backBtn">&#8592; Voltar ao início</button>
+  <div class="solo-meta">Pergunta #${state.soloGlobalNum} — Capítulo ${q.chapter}</div>
+  <div class="question-text">${escHtml(q.question)}</div>
+  <div class="options">${optsHtml}</div>
+  ${refHtml}
+  ${state.answered?`<div class="continue-area visible"><button class="btn btn-secondary" id="backBtn2">&#8592; Voltar ao início</button></div>`:''}
+</div>`;
+}
+
+function renderOrderingSelect(){
+  let btns='';
+  SCENARIOS.forEach((s,i)=>{
+    btns+=`<button class="scenario-btn" data-idx="${i}"><span style="font-size:.78rem;color:#4a6080;font-weight:500">Cenário ${String(i+1).padStart(2,'0')}</span><br>${escHtml(s.title)}</button>`;
+  });
+  return `<div class="card">
+  <button class="back-btn" id="backBtn">&#8592; Voltar</button>
+  <h2>&#128203; Ordenação de Procedimentos</h2>
+  <p class="subtitle">Escolhe um cenário para ordenar os passos na sequência correta</p>
+  <div class="scenario-grid">${btns}</div>
+</div>`;
+}
+
+function renderOrderingQuestion(){
+  const scenario=SCENARIOS[state.orderingScenarioIdx];
+  const steps=scenario.steps;
+  const n=steps.length;
+  const confirmed=state.orderingConfirmed;
+
+  let score=0;
+  if(confirmed){
+    state.orderingSteps.forEach((stepIdx,pos)=>{if(stepIdx===pos)score++;});
+  }
+
+  let itemsHtml='';
+  state.orderingSteps.forEach((stepIdx,pos)=>{
+    let cls='sort-item';
+    let indicator='';
+    if(confirmed){
+      if(stepIdx===pos){cls+=' correct';indicator='<span class="sort-indicator">&#9989;</span>';}
+      else{cls+=' wrong';indicator='<span class="sort-indicator">&#10060;</span>';}
+    }
+    itemsHtml+=`<div class="${cls}" data-step-idx="${stepIdx}">
+      ${!confirmed?'<span class="sort-handle">&#10783;</span>':''}
+      <span class="sort-num">${pos+1}.</span>
+      <span class="sort-text">${escHtml(steps[stepIdx])}</span>
+      ${indicator}
+    </div>`;
+  });
+
+  let scoreSummaryHtml='';
+  if(confirmed){
+    const pct=Math.round(score/n*100);
+    let msg=pct===100?'&#127942; Perfeito!':pct>=70?'&#128077; Muito bom!':pct>=50?'&#128218; Continua a estudar!':'&#128170; Pratica mais!';
+    scoreSummaryHtml=`<div class="ordering-score-box">
+      <div class="ordering-score">${score}/${n}</div>
+      <div class="ordering-pct">${pct}% corretos — ${msg}</div>
+    </div>`;
+  }
+
+  let correctSeqHtml='';
+  if(confirmed&&score<n){
+    let seqItems='';
+    steps.forEach((step,i)=>{
+      seqItems+=`<div class="correct-seq-item"><span class="correct-seq-num">${i+1}.</span>${escHtml(step)}</div>`;
+    });
+    correctSeqHtml=`<div class="correct-seq"><div class="correct-seq-title">&#128203; Sequência correta:</div>${seqItems}</div>`;
+  }
+
+  const numLabel=String(state.orderingScenarioIdx+1).padStart(2,'0');
+  return `<div class="card">
+  <button class="back-btn" id="backBtn">&#8592; Voltar aos Cenários</button>
+  <div class="meta">Cenário ${numLabel} — ${escHtml(scenario.title)}</div>
+  <div class="scenario-context">${escHtml(scenario.context)}</div>
+  ${scoreSummaryHtml}
+  <div id="sortList" class="sort-list">${itemsHtml}</div>
+  ${!confirmed?`<button class="btn btn-success" id="confirmBtn">&#10004; Confirmar Ordem</button>`:''}
+  ${correctSeqHtml}
+  ${confirmed?`<div style="display:flex;gap:10px;margin-top:16px">
+    <button class="btn btn-secondary" id="retryBtn" style="flex:1;text-align:center">&#128260; Tentar novamente</button>
+    <button class="btn btn-primary" id="backScenBtn" style="flex:1;text-align:center">&#8592; Cenários</button>
+  </div>`:''}
+</div>`;
+}
+
+function renderResults(){
+  const total=state.questions.length;
+  const pct=Math.round(state.score/total*100);
+  let icon,msg;
+  if(pct>=90){icon='🏆';msg='Excelente! Resultado brilhante!';}
+  else if(pct>=70){icon='👍';msg='Muito bom! Continua assim!';}
+  else if(pct>=50){icon='📚';msg='Bom esforço! Continua a estudar.';}
+  else{icon='💪';msg='Continua a praticar — vais melhorar!';}
+
+  const isTimed=(state.mode==='timed');
+  let timeHtml='';
+  if(isTimed){
+    timeHtml=`<div class="result-time">&#9201; Tempo utilizado: <strong>${fmtTime(state.timeUsed)}</strong> de 20:00</div>`;
+  }
+  const savedHtml=isTimed?`<div style="font-size:.85rem;color:#0e9f6e;font-weight:600;margin-top:4px;margin-bottom:2px">✓ Este resultado foi guardado nas suas estatísticas.</div>`:'';
+
+
+  // Breakdown (timed only)
+  let breakdownHtml='';
+  if(isTimed && state.answerHistory.length>0){
+    let rows='';
+    state.answerHistory.forEach((h,i)=>{
+      const icon2=h.wasCorrect?'✅':'❌';
+      const cls=h.wasCorrect?'ok':'fail';
+      const correctText=h.question.options[h.question.correct];
+      rows+=`<div class="breakdown-item ${cls}">
+        <span class="breakdown-num">${i+1}.</span>
+        <span class="breakdown-icon">${icon2}</span>
+        <div class="breakdown-text">
+          <div style="font-weight:600;margin-bottom:2px">${escHtml(h.question.question.length>90?h.question.question.slice(0,90)+'…':h.question.question)}</div>
+          ${!h.wasCorrect?`<div style="color:#059669;font-size:.83rem">✓ ${escHtml(correctText)}</div>`:''}
+        </div>
+      </div>`;
+    });
+    breakdownHtml=`<div class="divider"></div><div style="text-align:left;font-weight:600;font-size:.9rem;margin-bottom:8px;color:#4a6080">Detalhes por pergunta:</div><div class="breakdown">${rows}</div>`;
+  }
+
+  const modeLabel=state.mode==='timed'?'Teste Cronometrado':state.mode==='chapter'?`Capítulo ${state.chapterMode}`:'Todos os capítulos';
+
+  const reviewBtnHtml=state.answerHistory.length>0?`<button class="btn btn-secondary" id="reviewBtn" style="margin-top:10px;text-align:center">&#128203; Rever Respostas</button>`:'';
+
+  return `<div class="card result-card">
+  <div class="result-icon">${icon}</div>
+  <h1>Resultado Final</h1>
+  <p class="subtitle">${modeLabel}</p>
+  <div class="result-score">${state.score}/${total}</div>
+  <div class="result-pct">${pct}% corretos</div>
+  <p class="result-msg">${msg}</p>
+  ${timeHtml}
+  ${savedHtml}
+  <div class="divider"></div>
+  <button class="btn btn-primary" id="restartBtn">&#8635; Recomeçar</button>
+  ${reviewBtnHtml}
+  ${breakdownHtml}
+</div>`;
+}
+
+// ---- EVENTS ----
+function attachEvents(){
+  const $ = id => document.getElementById(id);
+  switch(state.screen){
+    case 'start':
+      $('btnRandom')&&$('btnRandom').addEventListener('click',startRandom);
+      $('btnChapter')&&$('btnChapter').addEventListener('click',showChapterSelect);
+      $('btnTimed')&&$('btnTimed').addEventListener('click',startTimed);
+      $('btnOrdering')&&$('btnOrdering').addEventListener('click',startOrderingMode);
+      $('searchBtn')&&$('searchBtn').addEventListener('click',doSearch);
+      $('searchInput')&&$('searchInput').addEventListener('keydown',e=>{if(e.key==='Enter')doSearch();});
+      $('resumeBtn')&&$('resumeBtn').addEventListener('click',resumeProgress);
+      $('discardBtn')&&$('discardBtn').addEventListener('click',()=>{clearProgress();render();});
+      break;
+    case 'chapter-select':
+      $('backBtn')&&$('backBtn').addEventListener('click',goStart);
+      document.querySelectorAll('.chapter-btn').forEach(btn=>{
+        btn.addEventListener('click',()=>startChapter(parseInt(btn.dataset.ch)));
+      });
+      break;
+    case 'quiz':
+      $('backBtn')&&$('backBtn').addEventListener('click',()=>{stopTimer();goStart();});
+      document.querySelectorAll('.option-btn').forEach(btn=>{
+        btn.addEventListener('click',function(){
+          if(state.answered)return;
+          answer(parseInt(this.dataset.idx));
+        });
+      });
+      $('continueBtn')&&$('continueBtn').addEventListener('click',next);
+      break;
+    case 'results':
+      $('restartBtn')&&$('restartBtn').addEventListener('click',goStart);
+      $('reviewBtn')&&$('reviewBtn').addEventListener('click',()=>{state.screen='review';render();});
+      break;
+    case 'review':
+      $('backBtn')&&$('backBtn').addEventListener('click',()=>{state.screen='results';render();});
+      break;
+    case 'solo':
+      $('backBtn')&&$('backBtn').addEventListener('click',goStart);
+      $('backBtn2')&&$('backBtn2').addEventListener('click',goStart);
+      document.querySelectorAll('.option-btn').forEach(btn=>{
+        btn.addEventListener('click',function(){
+          if(state.answered)return;
+          answerSolo(parseInt(this.dataset.idx));
+        });
+      });
+      break;
+    case 'ordering-select':
+      $('backBtn')&&$('backBtn').addEventListener('click',goStart);
+      document.querySelectorAll('.scenario-btn').forEach(btn=>{
+        btn.addEventListener('click',()=>startOrderingScenario(parseInt(btn.dataset.idx)));
+      });
+      break;
+    case 'ordering-question':
+      $('backBtn')&&$('backBtn').addEventListener('click',goOrderingSelect);
+      $('confirmBtn')&&$('confirmBtn').addEventListener('click',confirmOrdering);
+      $('retryBtn')&&$('retryBtn').addEventListener('click',retryOrdering);
+      $('backScenBtn')&&$('backScenBtn').addEventListener('click',goOrderingSelect);
+      if(!state.orderingConfirmed)attachOrderingDnd();
+      break;
+  }
+}
+
+function escHtml(str){
+  return String(str).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;');
+}
+
+function answer(idx){
+  state.answered=true;
+  state.selectedIdx=idx;
+  const q=state.questions[state.current];
+  const chosen=state.shuffledOptions[idx];
+  const wasCorrect=chosen.originalIdx===q.correct;
+  if(wasCorrect)state.score++;
+  state.answerHistory.push({question:q,wasCorrect,selectedOriginalIdx:chosen.originalIdx});
+  render();
+  if(state.mode==='timed')updateTimerDisplay();
+}
+
+function answerSolo(idx){
+  state.answered=true;
+  state.selectedIdx=idx;
+  render();
+}
+
+function next(){
+  state.current++;
+  if(state.current>=state.questions.length){
+    if(state.mode==='timed'){stopTimer();saveTimedResult(state.score,state.questions.length,state.timeUsed,false);}
+    clearProgress();
+    state.screen='results';
+  } else {
+    loadQuestion();
+    saveProgress();
+  }
+  render();
+  if(state.mode==='timed')updateTimerDisplay();
+}
+
+function startRandom(){
+  state.mode='random';
+  state.chapterMode=null;
+  state.screen='quiz';
+  prepareQuiz(QUESTIONS);
+  render();
+}
+
+function startTimed(){
+  state.mode='timed';
+  state.chapterMode=null;
+  state.screen='quiz';
+  // Build chapter buckets and pick 2 per chapter
+  const byChapter={};
+  QUESTIONS.forEach(q=>{const c=q.chapter||0;(byChapter[c]||(byChapter[c]=[])).push(q);});
+  const picked=[];
+  Object.values(byChapter).forEach(qs=>shuffle(qs).slice(0,2).forEach(q=>picked.push(q)));
+  // If fewer than TIMED_COUNT (e.g. only 9 chapters → 18 qs), top up with random extras
+  if(picked.length<TIMED_COUNT){
+    const usedIds=new Set(picked.map(q=>q.id));
+    const extras=shuffle(QUESTIONS.filter(q=>!usedIds.has(q.id)));
+    extras.slice(0,TIMED_COUNT-picked.length).forEach(q=>picked.push(q));
+  }
+  prepareQuiz(shuffle(picked));
+  render();
+  startTimer();
+  saveProgress();
+}
+
+function showChapterSelect(){
+  state.screen='chapter-select';
+  render();
+}
+
+function startChapter(ch){
+  state.mode='chapter';
+  state.chapterMode=ch;
+  state.screen='quiz';
+  prepareQuiz(QUESTIONS.filter(q=>q.chapter===ch));
+  render();
+  saveProgress();
+}
+
+function goStart(){
+  clearInterval(state.timerInterval);
+  clearProgress();
+  state.screen='start';
+  state.mode=null;
+  state.chapterMode=null;
+  render();
+}
+
+function doSearch(){
+  const input=document.getElementById('searchInput');
+  const errEl=document.getElementById('searchError');
+  const val=parseInt(input.value);
+  if(!val||val<1||val>QUESTIONS.length){
+    errEl.textContent='Número inválido. Insere um valor entre 1 e '+QUESTIONS.length+'.';
+    return;
+  }
+  errEl.textContent='';
+  const q=QUESTIONS[val-1];
+  state.screen='solo';
+  state.mode='solo';
+  state.soloQ=q;
+  state.soloGlobalNum=val;
+  state.answered=false;
+  state.selectedIdx=null;
+  const opts=q.options.map((text,i)=>({text,originalIdx:i}));
+  state.shuffledOptions=shuffle(opts);
+  render();
+}
+
+// ---- ORDERING MODE ----
+function startOrderingMode(){
+  state.screen='ordering-select';
+  render();
+}
+
+function startOrderingScenario(idx){
+  const n=SCENARIOS[idx].steps.length;
+  state.orderingScenarioIdx=idx;
+  state.orderingSteps=shuffle([...Array(n).keys()]);
+  state.orderingConfirmed=false;
+  state.screen='ordering-question';
+  render();
+}
+
+function confirmOrdering(){
+  // Sync DOM order into state one final time before confirming
+  const list=document.getElementById('sortList');
+  if(list){
+    state.orderingSteps=Array.from(list.querySelectorAll('.sort-item'))
+      .map(el=>parseInt(el.dataset.stepIdx));
+  }
+  state.orderingConfirmed=true;
+  render();
+}
+
+function retryOrdering(){
+  startOrderingScenario(state.orderingScenarioIdx);
+}
+
+function goOrderingSelect(){
+  state.screen='ordering-select';
+  state.orderingConfirmed=false;
+  render();
+}
+
+function attachOrderingDnd(){
+  const list=document.getElementById('sortList');
+  if(!list||state.orderingConfirmed)return;
+
+  let dnd=null;
+
+  // Returns all real items (excludes placeholder)
+  function getItems(){
+    return Array.from(list.querySelectorAll('.sort-item:not(.sort-placeholder)'));
+  }
+
+  // Find the item whose top-half the cursor is above → insert before it
+  function findTarget(clientY){
+    for(const el of getItems()){
+      const r=el.getBoundingClientRect();
+      if(clientY<r.top+r.height/2)return el;
+    }
+    return null; // cursor below all items → append at end
+  }
+
+  // FLIP: capture positions before a DOM change, animate from old→new after
+  function flip(items,beforeTops){
+    items.forEach((el,i)=>{
+      const dy=beforeTops[i]-el.getBoundingClientRect().top;
+      if(Math.abs(dy)<1)return;
+      el.style.transition='none';
+      el.style.transform='translateY('+dy+'px)';
+      el.getBoundingClientRect(); // force reflow so the above is applied
+      el.style.transition=''; // re-enable CSS transition (transform .18s ease)
+      el.style.transform=''; // animate to natural position
+    });
+  }
+
+  // Move the placeholder to the right slot and FLIP remaining items
+  function movePlaceholder(cursorY){
+    const target=findTarget(cursorY);
+    const key=target?target.dataset.stepIdx:'__end__';
+    if(key===dnd.lastKey)return; // already in correct slot, skip work
+    dnd.lastKey=key;
+    const items=getItems();
+    const tops=items.map(el=>el.getBoundingClientRect().top);
+    if(target)list.insertBefore(dnd.ph,target);
+    else list.appendChild(dnd.ph);
+    flip(items,tops);
+  }
+
+  function startDrag(item,clientX,clientY){
+    const rect=item.getBoundingClientRect();
+
+    // Ghost: a fixed-position clone that follows the cursor
+    const ghost=item.cloneNode(true);
+    ghost.classList.add('sort-ghost');
+    ghost.style.cssText=[
+      'position:fixed',
+      'left:'+rect.left+'px',
+      'top:'+rect.top+'px',
+      'width:'+rect.width+'px',
+      'margin:0',
+      'z-index:9999',
+      'pointer-events:none',
+      'box-sizing:border-box',
+      'transition:none',
+    ].join(';');
+    document.body.appendChild(ghost);
+
+    // Placeholder: invisible spacer that holds the drop slot open
+    const ph=document.createElement('div');
+    ph.className='sort-placeholder';
+    ph.style.height=rect.height+'px';
+    list.insertBefore(ph,item);
+    item.remove(); // detach real item; ghost is its visual stand-in
+
+    dnd={
+      item,ghost,ph,
+      offsetX:clientX-rect.left,
+      offsetY:clientY-rect.top,
+      height:rect.height,
+      lastKey:null,
+    };
+  }
+
+  function moveDrag(clientX,clientY){
+    if(!dnd)return;
+    // Move ghost to follow cursor
+    dnd.ghost.style.left=(clientX-dnd.offsetX)+'px';
+    dnd.ghost.style.top=(clientY-dnd.offsetY)+'px';
+    // Use ghost center Y to determine placeholder slot
+    movePlaceholder(clientY-dnd.offsetY+dnd.height/2);
+  }
+
+  function endDrag(){
+    if(!dnd)return;
+    const{item,ghost,ph}=dnd;
+    dnd=null;
+
+    // Animate ghost to placeholder position, then snap real item in
+    const pr=ph.getBoundingClientRect();
+    ghost.style.transition='left .14s ease,top .14s ease,opacity .14s ease,transform .14s ease';
+    ghost.style.left=pr.left+'px';
+    ghost.style.top=pr.top+'px';
+    ghost.style.transform='none';
+    ghost.style.opacity='0.2';
+
+    setTimeout(()=>{
+      list.insertBefore(item,ph);
+      ph.remove();
+      ghost.remove();
+      // Clear any in-progress FLIP transforms
+      getItems().forEach(el=>{el.style.transform='';el.style.transition='';});
+      // Sync logical order to state
+      state.orderingSteps=Array.from(list.querySelectorAll('.sort-item'))
+        .map(el=>parseInt(el.dataset.stepIdx));
+    },150);
+  }
+
+  // ── Mouse ──────────────────────────────────────────────────────────
+  list.addEventListener('mousedown',function(e){
+    if(state.orderingConfirmed)return;
+    const handle=e.target.closest('.sort-handle');
+    if(!handle)return;
+    const item=handle.closest('.sort-item');
+    if(!item)return;
+    e.preventDefault();
+    startDrag(item,e.clientX,e.clientY);
+    function mm(ev){moveDrag(ev.clientX,ev.clientY);}
+    function mu(){
+      endDrag();
+      document.removeEventListener('mousemove',mm);
+      document.removeEventListener('mouseup',mu);
+    }
+    document.addEventListener('mousemove',mm);
+    document.addEventListener('mouseup',mu);
+  });
+
+  // ── Touch ──────────────────────────────────────────────────────────
+  list.addEventListener('touchstart',function(e){
+    if(state.orderingConfirmed)return;
+    const handle=e.target.closest('.sort-handle');
+    if(!handle)return;
+    const item=handle.closest('.sort-item');
+    if(!item)return;
+    e.preventDefault();
+    const t=e.touches[0];
+    startDrag(item,t.clientX,t.clientY);
+    function tm(ev){
+      ev.preventDefault();
+      const t2=ev.touches[0];
+      moveDrag(t2.clientX,t2.clientY);
+    }
+    function tu(){
+      endDrag();
+      document.removeEventListener('touchmove',tm);
+      document.removeEventListener('touchend',tu);
+      document.removeEventListener('touchcancel',tu);
+    }
+    document.addEventListener('touchmove',tm,{passive:false});
+    document.addEventListener('touchend',tu);
+    document.addEventListener('touchcancel',tu);
+  },{passive:false});
+}
+
+// ---- STATISTICS ----
+const HISTORY_KEY='quiz_ns_history';
+const HISTORY_MAX=50;
+
+function getHistory(){
+  try{return JSON.parse(localStorage.getItem(HISTORY_KEY)||'[]');}catch(e){return[];}
+}
+
+function saveTimedResult(score,total,timeUsedSec,timedOut){
+  const history=getHistory();
+  const percentage=Math.round(score/total*100);
+  const mm=Math.floor(timeUsedSec/60).toString().padStart(2,'0');
+  const ss=(timeUsedSec%60).toString().padStart(2,'0');
+  history.unshift({date:new Date().toISOString(),score,total,percentage,timeUsed:mm+':'+ss,timedOut});
+  if(history.length>HISTORY_MAX)history.length=HISTORY_MAX;
+  try{localStorage.setItem(HISTORY_KEY,JSON.stringify(history));}catch(e){}
+}
+
+function fmtDate(iso){
+  const d=new Date(iso);
+  const dd=d.getDate().toString().padStart(2,'0');
+  const mm=(d.getMonth()+1).toString().padStart(2,'0');
+  const hh=d.getHours().toString().padStart(2,'0');
+  const mi=d.getMinutes().toString().padStart(2,'0');
+  return dd+'/'+mm+' '+hh+':'+mi;
+}
+
+function renderTrendChart(history){
+  const last10=[...history].slice(0,10).reverse();
+  if(last10.length<2)return `<div style="font-size:.82rem;color:#9cb0cc;padding:8px 0">Precisas de pelo menos 2 testes para ver a tendência.</div>`;
+  const W=300,H=110,PL=30,PR=36,PT=10,PB=22;
+  const cW=W-PL-PR,cH=H-PT-PB;
+  const mean=last10.reduce((a,b)=>a+b.percentage,0)/last10.length;
+  const xStep=last10.length>1?cW/(last10.length-1):cW;
+  const yS=v=>PT+cH-(v/100)*cH;
+  const pts=last10.map((e,i)=>({x:PL+i*xStep,y:yS(e.percentage),p:e.percentage}));
+  const poly=pts.map(p=>p.x.toFixed(1)+','+p.y.toFixed(1)).join(' ');
+  const meanY=yS(mean).toFixed(1);
+  const gridLines=[0,25,50,75,100].map(v=>{
+    const gy=yS(v).toFixed(1);
+    return `<line x1="${PL}" y1="${gy}" x2="${PL+cW}" y2="${gy}" stroke="#e0ebff" stroke-width="1"/>
+    <text x="${PL-4}" y="${parseFloat(gy)+4}" text-anchor="end" fill="#b0c8e0" font-size="8">${v}</text>`;
+  }).join('');
+  const dots=pts.map(p=>`<circle cx="${p.x.toFixed(1)}" cy="${p.y.toFixed(1)}" r="4" fill="${p.p>=70?'#0e9f6e':p.p>=50?'#d97706':'#e02424'}" stroke="#fff" stroke-width="1.5"/>`).join('');
+  const xLabels=pts.map((p,i)=>{
+    if(pts.length<=6||i===0||i===pts.length-1)
+      return `<text x="${p.x.toFixed(1)}" y="${H-4}" text-anchor="middle" fill="#b0c8e0" font-size="8">${history.length-(last10.length-1-i)}</text>`;
+    return '';
+  }).join('');
+  return `<div class="stats-chart">
+    <div style="font-size:.78rem;font-weight:600;color:#4a6080;margin-bottom:8px">Últimos ${last10.length} testes</div>
+    <svg viewBox="0 0 ${W} ${H}" style="width:100%;max-height:110px;display:block">
+      ${gridLines}
+      <line x1="${PL}" y1="${meanY}" x2="${PL+cW}" y2="${meanY}" stroke="#1a56db" stroke-width="1.2" stroke-dasharray="5,3" opacity=".55"/>
+      <text x="${PL+cW+3}" y="${parseFloat(meanY)+4}" fill="#1a56db" font-size="8" opacity=".7">${Math.round(mean)}%</text>
+      <polyline points="${poly}" fill="none" stroke="#3b82f6" stroke-width="2.2" stroke-linejoin="round" stroke-linecap="round"/>
+      ${dots}
+      ${xLabels}
+    </svg>
+    <div style="font-size:.74rem;color:#9cb0cc;margin-top:4px">Linha tracejada = média (${mean.toFixed(1)}%)</div>
+  </div>`;
+}
+
+function renderStatsPanelContent(){
+  const history=getHistory();
+  let html=`<div class="stats-title">📊 Estatísticas</div>`;
+  if(history.length===0){
+    return html+`<div class="stats-empty">Ainda não realizou nenhum teste cronometrado.<br><br>Complete um <strong>Teste Cronometrado</strong> para ver as suas estatísticas aqui.</div>`;
+  }
+  const mean=history.reduce((a,b)=>a+b.percentage,0)/history.length;
+  const best=Math.max(...history.map(e=>e.percentage));
+  const worst=Math.min(...history.map(e=>e.percentage));
+  const avgSec=history.reduce((a,b)=>{const p=b.timeUsed.split(':');return a+parseInt(p[0])*60+parseInt(p[1]);},0)/history.length;
+  const avgMM=Math.floor(avgSec/60).toString().padStart(2,'0');
+  const avgSS=Math.round(avgSec%60).toString().padStart(2,'0');
+
+  html+=`<div class="stats-summary">
+    <div class="stats-accuracy">${mean.toFixed(1)}%</div>
+    <div class="stats-accuracy-label">Índice de Acerto (média global)</div>
+    <div class="stats-grid">
+      <div class="stats-stat"><div class="stats-stat-val">${history.length}</div><div class="stats-stat-lbl">Testes realizados</div></div>
+      <div class="stats-stat"><div class="stats-stat-val">${best}%</div><div class="stats-stat-lbl">Melhor resultado</div></div>
+      <div class="stats-stat"><div class="stats-stat-val">${worst}%</div><div class="stats-stat-lbl">Pior resultado</div></div>
+      <div class="stats-stat"><div class="stats-stat-val">${avgMM}:${avgSS}</div><div class="stats-stat-lbl">Tempo médio</div></div>
+    </div>
+  </div>`;
+
+  html+=`<div class="stats-section-title">Tendência</div>`;
+  html+=renderTrendChart(history);
+
+  html+=`<div class="stats-section-title">Histórico</div>`;
+  let rows='';
+  history.forEach((e,i)=>{
+    const rowCls=e.percentage>=70?'hist-row-green':e.percentage>=50?'hist-row-orange':'hist-row-red';
+    rows+=`<tr class="${rowCls}">
+      <td style="color:#6b84a0">${history.length-i}</td>
+      <td>${fmtDate(e.date)}</td>
+      <td>${e.score}/${e.total}</td>
+      <td><strong>${e.percentage}%</strong></td>
+      <td>${e.timeUsed}</td>
+      <td style="font-size:1rem">${e.timedOut?'⏱️':'✅'}</td>
+    </tr>`;
+  });
+  html+=`<div class="hist-wrap"><table class="hist-table">
+    <thead><tr><th>#</th><th>Data</th><th>Acertos</th><th>%</th><th>Tempo</th><th>Estado</th></tr></thead>
+    <tbody>${rows}</tbody>
+  </table></div>`;
+
+  html+=`<div style="margin-top:24px">
+    <button class="btn-danger" id="clearBtn">🗑️ Limpar Histórico</button>
+    <div id="clearConfirm" style="display:none">
+      <div style="color:#dc2626;font-size:.87rem;margin:10px 0 6px;font-weight:600">Tem a certeza? Esta ação é irreversível.</div>
+      <div class="confirm-row">
+        <button class="btn btn-primary" id="clearYes" style="background:#dc2626;text-align:center">Sim, limpar</button>
+        <button class="btn btn-secondary" id="clearNo" style="text-align:center">Cancelar</button>
+      </div>
+    </div>
+  </div>`;
+  return html;
+}
+
+function attachStatsPanelEvents(){
+  const clearBtn=document.getElementById('clearBtn');
+  const clearConfirm=document.getElementById('clearConfirm');
+  const clearYes=document.getElementById('clearYes');
+  const clearNo=document.getElementById('clearNo');
+  if(clearBtn)clearBtn.addEventListener('click',()=>{
+    clearBtn.style.display='none';
+    if(clearConfirm)clearConfirm.style.display='';
+  });
+  if(clearYes)clearYes.addEventListener('click',()=>{
+    localStorage.removeItem(HISTORY_KEY);
+    document.getElementById('statsPanelContent').innerHTML=renderStatsPanelContent();
+    attachStatsPanelEvents();
+  });
+  if(clearNo)clearNo.addEventListener('click',()=>{
+    if(clearConfirm)clearConfirm.style.display='none';
+    if(clearBtn)clearBtn.style.display='';
+  });
+}
+
+function showStats(){
+  const overlay=document.getElementById('statsOverlay');
+  if(!overlay)return;
+  overlay.classList.remove('hidden');
+  document.body.style.overflow='hidden';
+  document.getElementById('statsPanelContent').innerHTML=renderStatsPanelContent();
+  attachStatsPanelEvents();
+}
+
+function hideStats(){
+  const overlay=document.getElementById('statsOverlay');
+  if(overlay)overlay.classList.add('hidden');
+  document.body.style.overflow='';
+}
+
+// ---- DARK MODE ----
+function initDarkMode(){
+  const stored=localStorage.getItem('ns_darkmode');
+  const dark=stored!==null?stored==='1':window.matchMedia('(prefers-color-scheme:dark)').matches;
+  applyDarkMode(dark);
+}
+function applyDarkMode(dark){
+  document.body.classList.toggle('dark',dark);
+  const btn=document.getElementById('darkFab');
+  if(btn)btn.textContent=dark?'☀️':'🌙';
+}
+function toggleDarkMode(){
+  const dark=document.body.classList.toggle('dark');
+  localStorage.setItem('ns_darkmode',dark?'1':'0');
+  const btn=document.getElementById('darkFab');
+  if(btn)btn.textContent=dark?'☀️':'🌙';
+}
+
+// ---- PROGRESS PERSISTENCE ----
+const PROGRESS_KEY='ns_progress';
+function saveProgress(){
+  if((state.mode!=='chapter'&&state.mode!=='timed')||state.screen!=='quiz')return;
+  const data={
+    mode:state.mode,
+    chapterMode:state.chapterMode,
+    questionIndices:state.questions.map(q=>QUESTIONS.indexOf(q)),
+    current:state.current,
+    score:state.score,
+    answerHistory:state.answerHistory.map(h=>({
+      qIdx:QUESTIONS.indexOf(h.question),
+      wasCorrect:h.wasCorrect,
+      selectedOriginalIdx:h.selectedOriginalIdx!=null?h.selectedOriginalIdx:null
+    })),
+    timerSec:state.timerSec
+  };
+  try{localStorage.setItem(PROGRESS_KEY,JSON.stringify(data));}catch(e){}
+}
+function loadProgress(){
+  try{return JSON.parse(localStorage.getItem(PROGRESS_KEY)||'null');}catch(e){return null;}
+}
+function clearProgress(){
+  localStorage.removeItem(PROGRESS_KEY);
+}
+function resumeProgress(){
+  const saved=loadProgress();
+  if(!saved)return;
+  clearProgress();
+  state.mode=saved.mode;
+  state.chapterMode=saved.chapterMode;
+  state.questions=saved.questionIndices.map(i=>QUESTIONS[i]);
+  state.current=saved.current;
+  state.score=saved.score;
+  state.answered=false;
+  state.selectedIdx=null;
+  state.answerHistory=saved.answerHistory.map(h=>({
+    question:QUESTIONS[h.qIdx],
+    wasCorrect:h.wasCorrect,
+    selectedOriginalIdx:h.selectedOriginalIdx
+  }));
+  state.timerSec=saved.timerSec!=null?saved.timerSec:TIMED_SECONDS;
+  state.screen='quiz';
+  loadQuestion();
+  render();
+  if(state.mode==='timed')startTimer(state.timerSec);
+}
+
+// ---- REVIEW SCREEN ----
+function renderReview(){
+  const history=state.answerHistory;
+  const total=history.length;
+  const correct=history.filter(h=>h.wasCorrect).length;
+  const wrong=total-correct;
+  const pct=total>0?Math.round(correct/total*100):0;
+  let questionsHtml='';
+  history.forEach((h,i)=>{
+    const q=h.question;
+    const hIcon=h.wasCorrect?'&#9989;':'&#10060;';
+    let optsHtml='';
+    q.options.forEach((text,origIdx)=>{
+      const isCorrect=origIdx===q.correct;
+      const isSel=h.selectedOriginalIdx!=null&&origIdx===h.selectedOriginalIdx;
+      let cls='option-btn';
+      if(isCorrect)cls+=' correct';
+      else if(isSel)cls+=' wrong';
+      else cls+=' dimmed';
+      optsHtml+=`<button class="${cls}" disabled>
+        <span class="option-label">${LABELS[origIdx]}</span>
+        <span>${escHtml(text)}</span>
+      </button>`;
+    });
+    questionsHtml+=`<div class="review-question">
+      <div class="review-q-header">
+        <span class="review-icon">${hIcon}</span>
+        <span class="review-q-num">Pergunta ${i+1}</span>
+      </div>
+      <div class="review-q-text">${escHtml(q.question)}</div>
+      <div class="options" style="margin-top:10px">${optsHtml}</div>
+    </div>`;
+  });
+  return `<div class="card">
+  <button class="back-btn" id="backBtn">&#8592; Voltar aos Resultados</button>
+  <h2>&#128203; Revisão de Respostas</h2>
+  <div class="review-summary">
+    <span class="review-correct">&#9989; ${correct} corretas</span>
+    <span class="review-wrong">&#10060; ${wrong} erradas</span>
+    <span class="review-pct">${pct}%</span>
+  </div>
+  <div class="review-list">${questionsHtml}</div>
+</div>`;
+}
+
+render();
+
+// Stats button and overlay events (set up once, not re-rendered)
+document.getElementById('statsFab').addEventListener('click',showStats);
+document.getElementById('statsClose').addEventListener('click',hideStats);
+document.getElementById('statsOverlay').addEventListener('click',function(e){
+  if(e.target===this)hideStats();
+});
+initDarkMode();
+document.getElementById('darkFab').addEventListener('click',toggleDarkMode);
+</script>
+</body>
+</html>

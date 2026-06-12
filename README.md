@@ -7,7 +7,6 @@
 
 [![Live Demo](https://img.shields.io/badge/▶%20Demo%20ao%20Vivo-0284c7?style=for-the-badge&logoColor=white)](https://anacleto-pt.github.io/EEAT_NS/)
 [![HTML](https://img.shields.io/badge/HTML-Single%20File-e34f26?style=for-the-badge&logo=html5&logoColor=white)](index.html)
-[![License](https://img.shields.io/badge/Licença-MIT-22c55e?style=for-the-badge)](LICENSE)
 
 <br>
 

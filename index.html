@@ -4372,7 +4372,7 @@ function renderStart(){
   <div class="mode-buttons">
     <button class="btn btn-primary" id="btnRandom">&#127922; Aleatório Total<br><small style="font-weight:400;font-size:.82rem">Todas as ${QUESTIONS.length} perguntas em ordem aleatória</small></button>
     <button class="btn btn-secondary" id="btnChapter">&#128218; Por Capítulo<br><small style="font-weight:400;font-size:.82rem">Escolhe um capítulo específico</small></button>
-    <button class="btn btn-timed" id="btnTimed">&#9201; Teste Cronometrado<br><small style="font-weight:400;font-size:.82rem">20 perguntas &bull; 2 por capítulo &bull; 20 minutos</small></button>
+    <button class="btn btn-timed" id="btnTimed">&#9201; Teste Cronometrado<br><small style="font-weight:400;font-size:.82rem">20 perguntas &bull; 2 por capítulo + 2 aleatórias &bull; 20 minutos</small></button>
     <button class="btn btn-ordering" id="btnOrdering">&#128203; Ordenação de Procedimentos<br><small style="font-weight:400;font-size:.82rem">Arrasta e ordena os passos dos 10 cenários</small></button>
   </div>
   <div class="search-section">
@@ -4701,8 +4701,7 @@ function answer(idx){
   const wasCorrect=chosen.originalIdx===q.correct;
   if(wasCorrect)state.score++;
   state.answerHistory.push({question:q,wasCorrect,selectedOriginalIdx:chosen.originalIdx});
-  render();
-  if(state.mode==='timed')updateTimerDisplay();
+  if(state.mode==='timed'){next();}else{render();}
 }
 
 function answerSolo(idx){
@@ -4742,10 +4741,10 @@ function startTimed(){
   QUESTIONS.forEach(q=>{const c=q.chapter||0;(byChapter[c]||(byChapter[c]=[])).push(q);});
   const picked=[];
   Object.values(byChapter).forEach(qs=>shuffle(qs).slice(0,2).forEach(q=>picked.push(q)));
-  // If fewer than TIMED_COUNT (e.g. only 9 chapters → 18 qs), top up with random extras
+  // Always top up to TIMED_COUNT with random extras (9 chapters × 2 = 18, need 2 more)
   if(picked.length<TIMED_COUNT){
-    const usedIds=new Set(picked.map(q=>q.id));
-    const extras=shuffle(QUESTIONS.filter(q=>!usedIds.has(q.id)));
+    const usedSet=new Set(picked);
+    const extras=shuffle(QUESTIONS.filter(q=>!usedSet.has(q)));
     extras.slice(0,TIMED_COUNT-picked.length).forEach(q=>picked.push(q));
   }
   prepareQuiz(shuffle(picked));

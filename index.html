@@ -743,75 +743,116 @@ h3{font-size:0.95rem;font-weight:600;color:var(--text-primary)}
   border:1px solid var(--ctx-border);
   border-radius:10px;
   padding:14px 16px;
-  margin-bottom:18px;
+  margin-bottom:12px;
   font-size:0.9rem;
   color:var(--ctx-color);
   line-height:1.6;
 }
-.sort-list{
+.ordering-progress{
+  font-size:0.78rem;
+  color:var(--text-muted);
+  font-weight:600;
+  margin-bottom:12px;
+  letter-spacing:0.05em;
+  text-transform:uppercase;
+}
+/* ── DnD list ── */
+.dnd-list{
   display:flex;
   flex-direction:column;
   gap:8px;
   margin-bottom:18px;
-  -webkit-user-select:none;
   user-select:none;
+  -webkit-user-select:none;
+  touch-action:none;
 }
-.sort-item{
+.dnd-item{
   display:flex;
   align-items:center;
   gap:10px;
-  padding:11px 14px;
+  padding:12px 14px;
+  border-radius:10px;
+  border:1.5px solid var(--border-input);
   background:var(--sort-item-bg);
-  border:1px solid var(--border-input);
-  border-radius:10px;
-  transition:border-color 0.15s,background 0.15s,opacity 0.15s,transform 0.18s ease;
+  transition:box-shadow 0.12s,border-color 0.12s,background 0.12s;
+  cursor:default;
 }
-.sort-ghost{
-  opacity:0.94;
-  box-shadow:0 8px 36px rgba(14,165,233,0.28);
-  cursor:grabbing!important;
-  transform:rotate(1.5deg) scale(1.04);
-}
-.sort-placeholder{
-  border:2px dashed var(--border-input);
-  border-radius:10px;
-  background:var(--accent-bg);
-  pointer-events:none;
-  box-sizing:border-box;
-}
-.sort-item.correct{border-color:var(--safe-green);background:rgba(34,197,94,0.1)}
-.sort-item.wrong{border-color:var(--rescue-red);background:rgba(239,68,68,0.1)}
-.sort-handle{
-  font-size:1.15rem;
+.dnd-handle{
   color:var(--text-muted);
+  font-size:1.15rem;
   cursor:grab;
-  padding:2px 6px;
-  touch-action:none;
   flex-shrink:0;
+  padding:2px 3px;
   line-height:1;
+  touch-action:none;
 }
-.sort-handle:active{cursor:grabbing}
-.sort-num{
-  font-family:'Barlow Condensed',sans-serif;
+.dnd-handle:active{cursor:grabbing}
+.dnd-label{
+  font-size:0.9rem;
+  color:var(--text-primary);
+  line-height:1.42;
+  flex:1;
+}
+.dnd-placeholder{
+  border:2px dashed var(--wave);
+  border-radius:10px;
+  background:rgba(14,165,233,0.05);
+  flex-shrink:0;
+}
+.dnd-item.dnd-dragging{
+  box-shadow:0 10px 28px rgba(0,0,0,0.15);
+  border-color:var(--wave);
+  z-index:999;
+  cursor:grabbing;
+}
+.dnd-item.correct{border-color:var(--safe-green)!important;background:rgba(34,197,94,0.09)!important}
+.dnd-item.correct .dnd-handle{color:var(--safe-green)}
+.dnd-item.wrong{border-color:var(--rescue-red)!important;background:rgba(239,68,68,0.09)!important}
+.dnd-item.wrong .dnd-handle{color:var(--rescue-red)}
+/* correct order box */
+.correct-order-box{
+  background:rgba(14,165,233,0.07);
+  border:1px solid rgba(14,165,233,0.2);
+  border-radius:10px;
+  padding:12px 16px;
+  margin-bottom:16px;
+}
+.correct-order-title{
+  font-size:0.75rem;
   font-weight:700;
   color:var(--wave);
-  min-width:26px;
-  font-size:1rem;
+  text-transform:uppercase;
+  letter-spacing:0.06em;
+  margin-bottom:8px;
+}
+.correct-order-item{
+  font-size:0.86rem;
+  color:var(--text-secondary);
+  padding:2px 0;
+  line-height:1.45;
+}
+/* phase results summary */
+.phase-results{display:flex;flex-direction:column;gap:8px;margin-bottom:16px}
+.phase-result-row{
+  display:flex;
+  align-items:center;
+  justify-content:space-between;
+  gap:12px;
+  padding:10px 14px;
+  border-radius:8px;
+  background:var(--accent-bg);
+  border:1px solid var(--border-color);
+}
+.phase-result-label{font-size:0.85rem;color:var(--text-secondary);flex:1;line-height:1.35}
+.phase-result-score{
+  font-family:'Barlow Condensed',sans-serif;
+  font-size:1.05rem;
+  font-weight:700;
+  color:var(--rescue-red);
+  white-space:nowrap;
   flex-shrink:0;
-  letter-spacing:0.02em;
 }
-.sort-text{flex:1;font-size:0.9rem;line-height:1.48;color:var(--text-primary)}
-.sort-indicator{font-size:1rem;flex-shrink:0;margin-left:4px}
-.correct-seq{
-  background:rgba(34,197,94,0.08);
-  border:1px solid rgba(34,197,94,0.28);
-  border-radius:10px;
-  padding:14px 16px;
-  margin-top:14px;
-}
-.correct-seq-title{font-weight:700;font-size:0.88rem;color:var(--safe-green);margin-bottom:8px}
-.correct-seq-item{font-size:0.85rem;color:var(--text-primary);line-height:1.5;padding:2px 0}
-.correct-seq-num{color:var(--safe-green);font-weight:700;margin-right:6px}
+.phase-result-score.all-correct{color:var(--safe-green)}
 .ordering-score{
   font-family:'Barlow Condensed',sans-serif;
   font-size:2.8rem;
@@ -4006,211 +4047,107 @@ const LABELS = ['A','B','C','D'];
 const TIMED_COUNT = 20;
 const TIMED_SECONDS = 20 * 60;
 
-// ---- ORDERING MODE DATA ----
+// ---- ORDERING MODE DATA (phase-based drag-and-drop) ----
 const SCENARIOS = [
   {
-    num:1,
-    title:"Afogamento adulto + O2 inalação",
-    context:"Praia do Cabedelo. Um homem com aproximadamente 40 anos de idade foi resgatado do mar por populares e encontra-se inanimado no areal. Não há suspeita de trauma.",
-    steps:[
-      "Definir algoritmo SBV Afogamento",
-      "Avaliar condições de segurança",
-      "Avaliar estado de consciência (estímulo verbal + tátil bilateral)",
-      "Permeabilizar via aérea (extensão da cabeça + elevação da mandíbula)",
-      "Teste de VOS (até 10 segundos)",
-      "Ligar 112",
-      "5 insuflações iniciais com O2",
-      "Iniciar RCP 30:2 (2 a 4 ciclos)",
-      "Colocar vítima em PLS",
-      "Montar regulador de pressão + ligar tubo conector",
-      "Máscara de alta concentração, 15 L/min",
-      "Desmontar material e fechar garrafa"
+    num:1,title:"Afogamento adulto + O₂ inalação",
+    phases:[
+      {enquadramento:"Praia do Cabedelo. Um homem com aproximadamente 40 anos de idade foi resgatado do mar por populares e encontra-se inanimado no areal. Não há suspeita de trauma. Como procederia?",
+       steps:["Definir o algoritmo: SBV Afogamento","Avaliar condições de segurança","Avaliar estado de consciência (estímulo verbal + tátil bilateral)","Permeabilizar via aérea (extensão da cabeça + elevação da mandíbula)","Teste de VOS (até 10 segundos)","Ligar 112 (localização, vítima, o que aconteceu, manobras)","5 insuflações iniciais com O₂ (afogamento)","Iniciar RCP 30:2","Colocar vítima em PLS"]},
+      {enquadramento:"A vítima está estável em PLS. Chega o kit de Oxigénio Terapia. Como administra o O₂?",
+       steps:["Montar regulador de pressão + ligar tubo conector","Definir método: Inalação — máscara de alta concentração (composta/alto débito)","Débito de 15 L/min","Colocar máscara à vítima","Desmontar material e fechar garrafa"]}
     ]
   },
   {
-    num:2,
-    title:"SBV adulto + O2 inalação",
-    context:"Praia Norte. Uma mulher com aproximadamente 55 anos de idade encontra-se inanimada na areia. Não há registo de afogamento nem suspeita de trauma.",
-    steps:[
-      "Definir algoritmo SBV",
-      "Avaliar condições de segurança",
-      "Avaliar estado de consciência",
-      "Permeabilizar via aérea",
-      "Teste de VOS",
-      "Ligar 112",
-      "Iniciar RCP 30:2 (2 a 4 ciclos)",
-      "Colocar vítima em PLS",
-      "Montar regulador + máscara alta concentração, 15 L/min",
-      "Desmontar material e fechar garrafa"
+    num:2,title:"SBV adulto + O₂ inalação",
+    phases:[
+      {enquadramento:"Praia Norte. Uma mulher com aproximadamente 55 anos de idade encontra-se inanimada na areia. Não há registo de afogamento nem suspeita de trauma. Como procederia?",
+       steps:["Definir o algoritmo: SBV","Avaliar condições de segurança","Avaliar estado de consciência (estímulo verbal + tátil bilateral)","Permeabilizar via aérea (extensão da cabeça + elevação da mandíbula)","Teste de VOS (até 10 segundos)","Ligar 112 (localização, vítima, o que aconteceu, manobras)","Iniciar RCP sem insuflações iniciais — rácio 30:2 (SBV adulto)","Colocar vítima em PLS"]},
+      {enquadramento:"A vítima está estável em PLS. Chega o kit de Oxigénio Terapia. Como administra o O₂?",
+       steps:["Montar regulador de pressão + ligar tubo conector","Definir método: Inalação — máscara de alta concentração (composta/alto débito)","Débito de 15 L/min","Colocar máscara à vítima","Desmontar material e fechar garrafa"]}
     ]
   },
   {
-    num:3,
-    title:"Afogamento pediátrico + O2 inalação",
-    context:"Praia de Paçô. Um rapaz com aproximadamente 8 anos de idade foi retirado do mar e encontra-se inanimado no areal. Não há suspeita de trauma.",
-    steps:[
-      "Definir algoritmo SBV Afogamento",
-      "Avaliar condições de segurança",
-      "Avaliar estado de consciência",
-      "Permeabilizar via aérea",
-      "Teste de VOS",
-      "Ligar 112",
-      "5 insuflações iniciais (inverter máscara — criança)",
-      "Iniciar RCP 15:2 (3 a 6 ciclos)",
-      "Colocar vítima em PLS",
-      "Montar regulador + máscara pediátrica alta concentração, 10 L/min",
-      "Desmontar material e fechar garrafa"
+    num:3,title:"Afogamento pediátrico + O₂ inalação",
+    phases:[
+      {enquadramento:"Praia de Paçô. Um rapaz com aproximadamente 8 anos de idade foi retirado do mar e encontra-se inanimado no areal. Não há suspeita de trauma. Como procederia?",
+       steps:["Definir o algoritmo: SBV Afogamento","Avaliar condições de segurança","Avaliar estado de consciência (estímulo verbal + tátil bilateral)","Permeabilizar via aérea (extensão da cabeça + elevação da mandíbula)","Teste de VOS (até 10 segundos)","Ligar 112 (localização, vítima, o que aconteceu, manobras)","5 insuflações iniciais — inverter máscara (criança)","Iniciar RCP 15:2","Colocar vítima em PLS"]},
+      {enquadramento:"A vítima está estável em PLS. Chega o kit de Oxigénio Terapia. Como administra o O₂?",
+       steps:["Montar regulador de pressão + ligar tubo conector","Definir método: Inalação — máscara de alta concentração pediátrica","Débito de 10 L/min","Colocar máscara à vítima","Desmontar material e fechar garrafa"]}
     ]
   },
   {
-    num:4,
-    title:"SBV pediátrico + O2 inalação",
-    context:"Praia de Afife. Uma rapariga com aproximadamente 6 anos de idade encontra-se inanimada na areia. Não há registo de afogamento nem suspeita de trauma. O Nadador-Salvador encontra-se sozinho.",
-    steps:[
-      "Definir algoritmo SBV Pediátrico",
-      "Avaliar condições de segurança + gritar por ajuda",
-      "Avaliar estado de consciência",
-      "Permeabilizar via aérea",
-      "Teste de VOS",
-      "5 insuflações (inverter máscara — criança)",
-      "Iniciar 1 minuto de RCP — 5 ciclos 15:2",
-      "Ligar 112",
-      "Continuar RCP 15:2 (3 a 6 ciclos)",
-      "Colocar vítima em PLS",
-      "Montar regulador + máscara pediátrica alta concentração, 10 L/min",
-      "Desmontar material e fechar garrafa"
+    num:4,title:"SBV pediátrico + O₂ inalação",
+    phases:[
+      {enquadramento:"Praia de Afife. Uma rapariga com aproximadamente 6 anos de idade encontra-se inanimada na areia. Não há registo de afogamento nem suspeita de trauma. O Nadador-Salvador encontra-se sozinho. Como procederia?",
+       steps:["Definir o algoritmo: SBV Pediátrico","Avaliar condições de segurança + gritar por ajuda","Avaliar estado de consciência (estímulo verbal + tátil bilateral)","Permeabilizar via aérea (extensão da cabeça + elevação da mandíbula)","Teste de VOS (até 10 segundos)","5 insuflações iniciais — inverter máscara (criança)","1 minuto de RCP (5 ciclos 15:2) antes de ligar 112","Ligar 112 (localização, vítima, o que aconteceu, manobras)","Continuar RCP 15:2","Colocar vítima em PLS"]},
+      {enquadramento:"A vítima está estável em PLS. Chega o kit de Oxigénio Terapia. Como administra o O₂?",
+       steps:["Montar regulador de pressão + ligar tubo conector","Definir método: Inalação — máscara de alta concentração pediátrica","Débito de 10 L/min","Colocar máscara à vítima","Desmontar material e fechar garrafa"]}
     ]
   },
   {
-    num:5,
-    title:"OVA grávida + O2 insuflação",
-    context:"Praia da Arda. Uma mulher grávida com aproximadamente 35 anos de idade apresenta sinais de engasgamento (obstrução da via aérea). A vítima evolui para perda de consciência.",
-    steps:[
-      "Definir algoritmo OVA",
-      "Avaliar condições de segurança",
-      "Avaliar obstrução (ligeira→tossir; grave→desobstruir)",
-      "Pancadas inter-escapulares (até 5)",
-      "Compressões torácicas (grávida — em vez de abdominais)",
-      "Ligar 112 se inconsciente",
-      "Iniciar RCP 30:2",
-      "Colocar vítima em PLS",
-      "Montar regulador + insuflador manual com balonete, 15 L/min",
-      "Colocar tubo orofaríngeo (medição, introdução invertida, rodar 180°)",
-      "Selar máscara e insuflar com 1 mão",
-      "Desmontar material e fechar garrafa"
+    num:5,title:"OVA grávida + O₂ insuflação",
+    phases:[
+      {enquadramento:"Praia da Arda. Uma mulher grávida com aproximadamente 35 anos de idade apresenta sinais de engasgamento (obstrução grave da via aérea). A vítima evolui para perda de consciência. Como procederia?",
+       steps:["Definir o algoritmo: OVA","Avaliar condições de segurança","Avaliar grau de obstrução — ligeira: encorajar a tossir; grave: desobstruir","Pancadas inter-escapulares + CTE (grávida/obeso)","Ligar 112 (vítima inconsciente)","Iniciar RCP 30:2","Colocar vítima em PLS"]},
+      {enquadramento:"A vítima está em PLS. Chega o kit de Oxigénio Terapia. Como administra o O₂?",
+       steps:["Montar regulador de pressão + ligar tubo conector","Definir método: Insuflação — insuflador manual (com balonete), 15 L/min","Colocar tubo orofaríngeo (medição: ângulo mandíbula → comissura labial; introdução invertida, rodar 180°)","Selar máscara e insuflar com técnica de 1 mão","Desmontar material e fechar garrafa"]}
     ]
   },
   {
-    num:6,
-    title:"OVA lactente + O2 insuflação",
-    context:"Praia de Moledo. Um bebé de 8 meses apresenta sinais de obstrução grave da via aérea (engasgamento). A vítima evolui para perda de consciência.",
-    steps:[
-      "Definir algoritmo OVA lactente",
-      "Avaliar condições de segurança",
-      "Avaliar obstrução grave",
-      "Pancadas inter-escapulares (até 5)",
-      "Compressões torácicas com 2 dedos (até 5)",
-      "Ligar 112 se inconsciente",
-      "Iniciar RCP 15:2 (3 a 6 ciclos) — inverter máscara lactente",
-      "Colocar vítima em PLS",
-      "Montar regulador + insuflador manual com balonete, 10 L/min",
-      "Reduzir insuflador (vítima lactente) + tubo orofaríngeo",
-      "Usar máscara pediátrica, selar e insuflar com 1 mão",
-      "Desmontar material e fechar garrafa"
+    num:6,title:"OVA lactente + O₂ insuflação",
+    phases:[
+      {enquadramento:"Praia de Moledo. Um bebé de 8 meses apresenta sinais de obstrução grave da via aérea (engasgamento). A vítima evolui para perda de consciência. Como procederia?",
+       steps:["Definir o algoritmo: OVA (lactente)","Avaliar condições de segurança","Avaliar obstrução grave","Pancadas inter-escapulares + compressões torácicas com 2 dedos (lactente)","1 minuto de RCP (5 ciclos 15:2) antes de ligar 112","Ligar 112 (vítima inconsciente)","Continuar RCP 15:2","Colocar vítima em PLS"]},
+      {enquadramento:"A vítima está em PLS. Chega o kit de Oxigénio Terapia. Como administra o O₂?",
+       steps:["Montar regulador de pressão + ligar tubo conector","Definir método: Insuflação — insuflador manual reduzido (lactente), 10 L/min","Colocar tubo orofaríngeo (tamanho lactente)","Usar máscara pediátrica; selar e insuflar com técnica de 1 mão","Desmontar material e fechar garrafa"]}
     ]
   },
   {
-    num:7,
-    title:"Dificuldade respiratória consciente → SBV + O2",
-    context:"Praia do Rodanho. Uma mulher com aproximadamente 60 anos de idade apresenta dificuldade respiratória, encontrando-se consciente. Durante o atendimento o seu estado agrava-se progressivamente até perda de consciência e ausência de ventilação.",
-    steps:[
-      "Abordagem ABCDE (exame primário)",
-      "Avaliar condições de segurança",
-      "Avaliar estado de consciência (consciente)",
-      "Administrar O2 por inalação: máscara simples ou cânulas nasais, 5 L/min",
-      "[Agravamento] Avaliar estado de consciência (não responde)",
-      "Permeabilizar via aérea",
-      "Teste de VOS",
-      "Ligar 112",
-      "Trocar para insuflador manual + balonete, 15 L/min",
-      "Colocar tubo orofaríngeo",
-      "Iniciar RCP 30:2 (2 a 4 ciclos)",
-      "Colocar vítima em PLS",
-      "Trocar para máscara alta concentração, 15 L/min",
-      "Desmontar material e fechar garrafa"
+    num:7,title:"Dificuldade respiratória consciente → SBV + O₂",
+    phases:[
+      {enquadramento:"Praia do Rodanho. Uma mulher com aproximadamente 60 anos de idade apresenta dificuldade respiratória, encontrando-se consciente. Como procederia?",
+       steps:["Definir o algoritmo: Abordagem ABCDE (exame primário)","Avaliar condições de segurança","Avaliar estado de consciência — consciente, responde","Administrar O₂ por inalação (máscara simples ou cânulas nasais, 5 L/min)"]},
+      {enquadramento:"O estado da vítima agrava-se progressivamente até perda de consciência e ausência de ventilação. Como adapta o protocolo?",
+       steps:["Avaliar estado de consciência — não responde","Permeabilizar via aérea (extensão da cabeça + elevação da mandíbula)","Teste de VOS (até 10 segundos)","Ligar 112 (localização, vítima, o que aconteceu, manobras)","Trocar para insuflação: insuflador manual (com balonete), 15 L/min","Colocar tubo orofaríngeo","Iniciar RCP 30:2","Colocar vítima em PLS"]},
+      {enquadramento:"A vítima recuperou circulação espontânea e está em PLS.",
+       steps:["Trocar para inalação: máscara de alta concentração (composta/alto débito), 15 L/min","Desmontar material e fechar garrafa"]}
     ]
   },
   {
-    num:8,
-    title:"Afogamento + trauma + O2 inalação",
-    context:"Praia da Amorosa. Um homem com aproximadamente 40 anos de idade foi resgatado do mar após queda resultante de mergulhos em zona pouco profunda. Suspeita-se de traumatismo vertebromedular. A vítima encontra-se inanimada no areal.",
-    steps:[
-      "Definir algoritmo SBV Afogamento",
-      "Avaliar condições de segurança",
-      "Avaliar estado de consciência",
-      "Permeabilizar via aérea",
-      "Teste de VOS",
-      "Ligar 112",
-      "5 insuflações com O2",
-      "Iniciar RCP 30:2 (2 a 4 ciclos)",
-      "Colocar vítima em PLS",
-      "Abordagem ABCDE — avaliar disfunção neurológica (escala AVDS)",
-      "Estabilizar cabeça e cervical (alinhamento nariz-umbigo-pés)",
-      "Colocar colar cervical (medição ângulo mandíbula–início ombro)",
-      "Técnica de rolamento para plano rígido (mínimo 3 elementos)",
-      "Imobilizar no plano rígido (cintas: tórax → pélvica → ombros em Y → cabeça → joelhos → tornozelos)",
-      "Montar regulador + máscara alta concentração, 15 L/min",
-      "Desmontar material e fechar garrafa"
+    num:8,title:"Afogamento + trauma + O₂ inalação",
+    phases:[
+      {enquadramento:"Praia da Amorosa. Um homem com aproximadamente 40 anos de idade foi resgatado do mar. A vítima encontra-se inanimada no areal. Como procederia?",
+       steps:["Definir o algoritmo: SBV Afogamento","Avaliar condições de segurança","Avaliar estado de consciência (estímulo verbal + tátil bilateral)","Permeabilizar via aérea (extensão da cabeça + elevação da mandíbula)","Teste de VOS (até 10 segundos)","Ligar 112 (localização, vítima, o que aconteceu, manobras)","5 insuflações com O₂","Iniciar RCP 30:2 (2 a 4 ciclos)","Colocar vítima em PLS"]},
+      {enquadramento:"Após a vítima recuperar, ventilando normalmente, é informado por uma testemunha que a vítima sofreu uma queda aparatosa no decorrer da prática de mergulhos e acrobacias. Chega um meio complementar com o material de imobilização (colar cervical e plano rígido).",
+       steps:["Avaliar disfunção neurológica (escala AVDS)","Estabilizar cabeça e cervical (alinhamento nariz-umbigo-pés)","Colocar colar cervical (medição: ângulo mandíbula → início do ombro)","Técnica de rolamento para plano rígido (mínimo 3 elementos)","Imobilizar no plano rígido (cintas: tórax → pélvica → ombros em Y → cabeça → joelhos → tornozelos)"]},
+      {enquadramento:"Entretanto, chega o seu colega com o Kit de Oxigénio Terapia.",
+       steps:["Definir método de administração: Inalação — máscara de alta concentração, 15 L/min","Montar regulador de pressão + ligar tubo conector","Colocar máscara à vítima (acalmar e informar)","Desmontar material e fechar garrafa"]}
     ]
   },
   {
-    num:9,
-    title:"Trauma em piscina + imobilização + O2",
-    context:"Piscina Municipal do Atlântico. Um homem com aproximadamente 55 anos de idade sofreu uma queda nas instalações. Suspeita-se de traumatismo vertebromedular. A vítima encontra-se inanimada.",
-    steps:[
-      "Abordagem ABCDE — Trauma",
-      "Avaliar condições de segurança",
-      "Avaliar estado de consciência",
-      "Permeabilizar via aérea (elevação mandíbula ou tubo orofaríngeo)",
-      "Teste de VOS",
-      "Ligar 112",
-      "Iniciar RCP 30:2 (2 a 4 ciclos)",
-      "Avaliação ABCDE: D (escala AVDS) + E (exposição com controlo temperatura)",
-      "Estabilizar cabeça e cervical",
-      "Colocar colar cervical",
-      "Técnica de rolamento para plano rígido",
-      "Imobilizar no plano rígido",
-      "Montar regulador + máscara alta concentração, 15 L/min",
-      "Desmontar material e fechar garrafa"
+    num:9,title:"Trauma em piscina + imobilização + O₂",
+    phases:[
+      {enquadramento:"Piscina Municipal do Atlântico. Um homem com aproximadamente 55 anos de idade sofreu uma queda nas instalações. Suspeita-se de traumatismo vertebromedular. A vítima encontra-se inanimada. Como procederia?",
+       steps:["Definir o algoritmo: Abordagem ABCDE — ligação com SBV — Trauma","Avaliar condições de segurança","Avaliar estado de consciência (estímulo verbal + tátil bilateral)","Permeabilizar via aérea (elevação da mandíbula ou tubo orofaríngeo)","Teste de VOS (até 10 segundos)","Ligar 112 (localização, vítima, o que aconteceu, manobras)","Iniciar RCP 30:2","Avaliação ABCDE — D: disfunção neurológica (escala AVDS)","Avaliação ABCDE — E: exposição com controlo de temperatura","Estabilizar cabeça e cervical","Colocar colar cervical","Técnica de rolamento para plano rígido","Imobilizar no plano rígido"]},
+      {enquadramento:"A vítima está imobilizada no plano rígido. Chega o kit de Oxigénio Terapia. Como administra o O₂?",
+       steps:["Montar regulador de pressão + ligar tubo conector","Definir método: Inalação — máscara de alta concentração (composta/alto débito), 15 L/min","Colocar máscara à vítima","Desmontar material e fechar garrafa"]}
     ]
   },
   {
-    num:10,
-    title:"Trauma em piscina + insuflação → imobilização + O2",
-    context:"Piscina Municipal de Barroselas. Uma mulher com aproximadamente 60 anos de idade sofreu uma queda nas instalações. Suspeita-se de traumatismo vertebromedular. A vítima encontra-se inanimada e não ventila.",
-    steps:[
-      "Abordagem ABCDE — Trauma",
-      "Avaliar condições de segurança",
-      "Avaliar estado de consciência",
-      "Permeabilizar via aérea",
-      "Teste de VOS",
-      "Ligar 112",
-      "Iniciar RCP 30:2 (2 a 4 ciclos)",
-      "Avaliação ABCDE: D + E",
-      "Montar regulador + insuflador manual com balonete, 15 L/min",
-      "Colocar tubo orofaríngeo + selar máscara, insuflar com 1 mão",
-      "[Vítima cuspiu tubo] Teste de VOS — ventila",
-      "Avaliação disfunção neurológica (escala AVDS)",
-      "Estabilizar cabeça e cervical",
-      "Colocar colar cervical",
-      "Técnica de rolamento para plano rígido",
-      "Imobilizar no plano rígido",
-      "Retirar insuflador, montar máscara alta concentração, 15 L/min",
-      "Desmontar material e fechar garrafa"
+    num:10,title:"Trauma em piscina + insuflação → imobilização + O₂",
+    phases:[
+      {enquadramento:"Piscina Municipal de Barroselas. Uma mulher com aproximadamente 60 anos de idade sofreu uma queda nas instalações. Suspeita-se de traumatismo vertebromedular. A vítima encontra-se inanimada e não ventila. Como procederia?",
+       steps:["Definir o algoritmo: Abordagem ABCDE — ligação com SBV — Trauma","Avaliar condições de segurança","Avaliar estado de consciência (estímulo verbal + tátil bilateral)","Permeabilizar via aérea (extensão da cabeça + elevação da mandíbula)","Teste de VOS (até 10 segundos)","Ligar 112 (localização, vítima, o que aconteceu, manobras)","Iniciar RCP 30:2","Avaliação ABCDE — D + E"]},
+      {enquadramento:"A vítima não ventila. Chega o kit de Oxigénio Terapia. Como administra o O₂?",
+       steps:["Montar regulador de pressão + ligar tubo conector","Definir método: Insuflação — insuflador manual (com balonete), 15 L/min","Colocar tubo orofaríngeo; selar máscara; insuflar com técnica de 1 mão"]},
+      {enquadramento:"A vítima cuspiu o tubo. Na reavaliação — Teste de VOS — ventila espontaneamente. Chega o material de imobilização.",
+       steps:["Avaliar disfunção neurológica (escala AVDS)","Estabilizar cabeça e cervical","Colocar colar cervical","Técnica de rolamento para plano rígido","Imobilizar no plano rígido"]},
+      {enquadramento:"A vítima está imobilizada e ventila. Troca para O₂ por inalação.",
+       steps:["Retirar insuflador — montar máscara de alta concentração (composta/alto débito), 15 L/min","Colocar máscara à vítima","Desmontar material e fechar garrafa"]}
     ]
   }
 ];
-
 function shuffle(arr){
   const a=[...arr];
   for(let i=a.length-1;i>0;i--){const j=Math.floor(Math.random()*(i+1));[a[i],a[j]]=[a[j],a[i]];}
@@ -4253,10 +4190,13 @@ let state = {
   answerHistory: [], // [{question, wasCorrect}]
   // solo
   soloGlobalNum: 0,
-  // ordering mode
+  // ordering mode (phase-based drag-and-drop)
   orderingScenarioIdx: null,
-  orderingSteps: [],
+  orderingPhaseIdx: 0,
+  orderingCurrentOrder: [],
   orderingConfirmed: false,
+  orderingResults: [],
+  orderingFinished: false,
 };
 
 function prepareQuiz(questions){
@@ -4373,7 +4313,7 @@ function renderStart(){
     <button class="btn btn-primary" id="btnRandom">&#127922; Aleatório Total<br><small style="font-weight:400;font-size:.82rem">Todas as ${QUESTIONS.length} perguntas em ordem aleatória</small></button>
     <button class="btn btn-secondary" id="btnChapter">&#128218; Por Capítulo<br><small style="font-weight:400;font-size:.82rem">Escolhe um capítulo específico</small></button>
     <button class="btn btn-timed" id="btnTimed">&#9201; Teste Cronometrado<br><small style="font-weight:400;font-size:.82rem">20 perguntas &bull; 2 por capítulo + 2 aleatórias &bull; 20 minutos</small></button>
-    <button class="btn btn-ordering" id="btnOrdering">&#128203; Ordenação de Procedimentos<br><small style="font-weight:400;font-size:.82rem">Arrasta e ordena os passos dos 10 cenários</small></button>
+    <button class="btn btn-ordering" id="btnOrdering">&#128203; Ordenação de Procedimentos<br><small style="font-weight:400;font-size:.82rem">Responde aos passos dos 10 cenários clínicos</small></button>
   </div>
   <div class="search-section">
     <h3>&#128270; Ir para pergunta específica</h3>
@@ -4502,70 +4442,85 @@ function renderOrderingSelect(){
   return `<div class="card">
   <button class="back-btn" id="backBtn">&#8592; Voltar</button>
   <h2>&#128203; Ordenação de Procedimentos</h2>
-  <p class="subtitle">Escolhe um cenário para ordenar os passos na sequência correta</p>
+  <p class="subtitle">Escolhe um cenário e responde corretamente a cada passo clínico</p>
   <div class="scenario-grid">${btns}</div>
 </div>`;
 }
 
 function renderOrderingQuestion(){
   const scenario=SCENARIOS[state.orderingScenarioIdx];
-  const steps=scenario.steps;
-  const n=steps.length;
-  const confirmed=state.orderingConfirmed;
-
-  let score=0;
-  if(confirmed){
-    state.orderingSteps.forEach((stepIdx,pos)=>{if(stepIdx===pos)score++;});
-  }
-
-  let itemsHtml='';
-  state.orderingSteps.forEach((stepIdx,pos)=>{
-    let cls='sort-item';
-    let indicator='';
-    if(confirmed){
-      if(stepIdx===pos){cls+=' correct';indicator='<span class="sort-indicator">&#9989;</span>';}
-      else{cls+=' wrong';indicator='<span class="sort-indicator">&#10060;</span>';}
-    }
-    itemsHtml+=`<div class="${cls}" data-step-idx="${stepIdx}">
-      ${!confirmed?'<span class="sort-handle">&#10783;</span>':''}
-      <span class="sort-num">${pos+1}.</span>
-      <span class="sort-text">${escHtml(steps[stepIdx])}</span>
-      ${indicator}
-    </div>`;
-  });
-
-  let scoreSummaryHtml='';
-  if(confirmed){
-    const pct=Math.round(score/n*100);
-    let msg=pct===100?'&#127942; Perfeito!':pct>=70?'&#128077; Muito bom!':pct>=50?'&#128218; Continua a estudar!':'&#128170; Pratica mais!';
-    scoreSummaryHtml=`<div class="ordering-score-box">
-      <div class="ordering-score">${score}/${n}</div>
-      <div class="ordering-pct">${pct}% corretos — ${msg}</div>
-    </div>`;
-  }
-
-  let correctSeqHtml='';
-  if(confirmed&&score<n){
-    let seqItems='';
-    steps.forEach((step,i)=>{
-      seqItems+=`<div class="correct-seq-item"><span class="correct-seq-num">${i+1}.</span>${escHtml(step)}</div>`;
-    });
-    correctSeqHtml=`<div class="correct-seq"><div class="correct-seq-title">&#128203; Sequência correta:</div>${seqItems}</div>`;
-  }
-
   const numLabel=String(state.orderingScenarioIdx+1).padStart(2,'0');
-  return `<div class="card">
-  <button class="back-btn" id="backBtn">&#8592; Voltar aos Cenários</button>
-  <div class="meta">Cenário ${numLabel} — ${escHtml(scenario.title)}</div>
-  <div class="scenario-context">${escHtml(scenario.context)}</div>
-  ${scoreSummaryHtml}
-  <div id="sortList" class="sort-list">${itemsHtml}</div>
-  ${!confirmed?`<button class="btn btn-success" id="confirmBtn">&#10004; Confirmar Ordem</button>`:''}
-  ${correctSeqHtml}
-  ${confirmed?`<div style="display:flex;gap:10px;margin-top:16px">
+  const header=`<button class="back-btn" id="backBtn">&#8592; Voltar aos Cenários</button>
+  <div class="meta">Cenário ${numLabel} — ${escHtml(scenario.title)}</div>`;
+
+  // RESULTS VIEW
+  if(state.orderingFinished){
+    let total=0,correct=0,phaseRowsHtml='';
+    state.orderingResults.forEach((r,i)=>{
+      total+=r.total; correct+=r.correct;
+      const allOk=r.correct===r.total;
+      phaseRowsHtml+=`<div class="phase-result-row">
+        <span class="phase-result-label">Fase ${i+1}</span>
+        <span class="phase-result-score${allOk?' all-correct':''}">${r.correct}/${r.total}</span>
+      </div>`;
+    });
+    const pct=total>0?Math.round(correct/total*100):100;
+    const msg=pct===100?'&#127942; Perfeito!':pct>=70?'&#128077; Muito bom!':pct>=50?'&#128218; Continua a estudar!':'&#128170; Pratica mais!';
+    return `<div class="card">
+  ${header}
+  <div class="ordering-score-box" style="margin-top:16px">
+    <div class="ordering-score">${correct}/${total}</div>
+    <div class="ordering-pct">${pct}% corretos — ${msg}</div>
+  </div>
+  <div class="phase-results">${phaseRowsHtml}</div>
+  <div style="display:flex;gap:10px;margin-top:16px">
     <button class="btn btn-secondary" id="retryBtn" style="flex:1;text-align:center">&#128260; Tentar novamente</button>
     <button class="btn btn-primary" id="backScenBtn" style="flex:1;text-align:center">&#8592; Cenários</button>
-  </div>`:''}
+  </div>
+</div>`;
+  }
+
+  // ACTIVE PHASE
+  const phase=scenario.phases[state.orderingPhaseIdx];
+  const phTotal=scenario.phases.length;
+  const phNum=state.orderingPhaseIdx+1;
+  const isLastPhase=(state.orderingPhaseIdx===phTotal-1);
+
+  const itemsHtml=state.orderingCurrentOrder.map((stepIdx,pos)=>{
+    let cls='dnd-item';
+    if(state.orderingConfirmed){
+      cls+=stepIdx===pos?' correct':' wrong';
+    }
+    return `<div class="${cls}" data-stepidx="${stepIdx}">
+      <span class="dnd-handle">&#10303;</span>
+      <span class="dnd-label">${escHtml(phase.steps[stepIdx])}</span>
+    </div>`;
+  }).join('');
+
+  let correctOrderHtml='';
+  if(state.orderingConfirmed){
+    const hasError=state.orderingCurrentOrder.some((si,pos)=>si!==pos);
+    if(hasError){
+      const orderedItems=phase.steps.map((s,i)=>`<div class="correct-order-item">${i+1}. ${escHtml(s)}</div>`).join('');
+      correctOrderHtml=`<div class="correct-order-box">
+        <div class="correct-order-title">&#10003; Ordem correta</div>
+        ${orderedItems}
+      </div>`;
+    }
+  }
+
+  const nextLabel=isLastPhase?'&#10004; Ver Resultados':'Seguinte Fase &#8594;';
+  const actionBtn=state.orderingConfirmed
+    ?`<button class="btn btn-primary" id="nextPhaseBtn">${nextLabel}</button>`
+    :`<button class="btn btn-primary" id="confirmBtn">&#10003; Confirmar Fase</button>`;
+
+  return `<div class="card">
+  ${header}
+  <div class="ordering-progress">Fase ${phNum} de ${phTotal}</div>
+  <div class="scenario-context">${escHtml(phase.enquadramento)}</div>
+  <div class="dnd-list" id="dndList">${itemsHtml}</div>
+  ${correctOrderHtml}
+  ${actionBtn}
 </div>`;
 }
 
@@ -4681,10 +4636,11 @@ function attachEvents(){
       break;
     case 'ordering-question':
       $('backBtn')&&$('backBtn').addEventListener('click',goOrderingSelect);
-      $('confirmBtn')&&$('confirmBtn').addEventListener('click',confirmOrdering);
+      $('confirmBtn')&&$('confirmBtn').addEventListener('click',confirmPhase);
+      $('nextPhaseBtn')&&$('nextPhaseBtn').addEventListener('click',nextPhase);
       $('retryBtn')&&$('retryBtn').addEventListener('click',retryOrdering);
       $('backScenBtn')&&$('backScenBtn').addEventListener('click',goOrderingSelect);
-      if(!state.orderingConfirmed)attachOrderingDnd();
+      initDnD();
       break;
   }
 }
@@ -4803,196 +4759,110 @@ function startOrderingMode(){
   render();
 }
 
+// ---- ORDERING MODE DRAG-AND-DROP ----
+let dnd={active:false,item:null,placeholder:null,listEl:null,grabY:0};
+
+function initDnD(){
+  const list=document.getElementById('dndList');
+  if(!list||state.orderingConfirmed)return;
+  list.querySelectorAll('.dnd-handle').forEach(handle=>{
+    handle.addEventListener('pointerdown',function(e){
+      e.preventDefault();
+      startDrag(e,this.closest('.dnd-item'),list);
+    },{passive:false});
+  });
+}
+
+function startDrag(e,item,list){
+  const rect=item.getBoundingClientRect();
+  const ph=document.createElement('div');
+  ph.className='dnd-placeholder';
+  ph.style.height=rect.height+'px';
+  list.insertBefore(ph,item);
+  item.classList.add('dnd-dragging');
+  item.style.cssText='position:fixed;left:'+rect.left+'px;top:'+rect.top+'px;width:'+rect.width+'px;z-index:999;margin:0;box-sizing:border-box;';
+  document.body.appendChild(item);
+  dnd={active:true,item,placeholder:ph,listEl:list,grabY:e.clientY-rect.top};
+  document.addEventListener('pointermove',onDragMove,{passive:false});
+  document.addEventListener('pointerup',onDragEnd);
+}
+
+function onDragMove(e){
+  if(!dnd.active)return;
+  e.preventDefault();
+  dnd.item.style.top=(e.clientY-dnd.grabY)+'px';
+  const siblings=[...dnd.listEl.querySelectorAll('.dnd-item:not(.dnd-dragging)')];
+  let insertBefore=null;
+  for(const el of siblings){
+    const r=el.getBoundingClientRect();
+    if(e.clientY<r.top+r.height/2){insertBefore=el;break;}
+  }
+  if(insertBefore){dnd.listEl.insertBefore(dnd.placeholder,insertBefore);}
+  else{dnd.listEl.appendChild(dnd.placeholder);}
+}
+
+function onDragEnd(){
+  if(!dnd.active)return;
+  document.removeEventListener('pointermove',onDragMove);
+  document.removeEventListener('pointerup',onDragEnd);
+  dnd.item.classList.remove('dnd-dragging');
+  dnd.item.style.cssText='';
+  dnd.listEl.replaceChild(dnd.item,dnd.placeholder);
+  const newOrder=[];
+  dnd.listEl.querySelectorAll('.dnd-item').forEach(el=>newOrder.push(parseInt(el.dataset.stepidx)));
+  state.orderingCurrentOrder=newOrder;
+  dnd.active=false;
+  render();
+}
+
 function startOrderingScenario(idx){
-  const n=SCENARIOS[idx].steps.length;
+  const n=SCENARIOS[idx].phases[0].steps.length;
   state.orderingScenarioIdx=idx;
-  state.orderingSteps=shuffle([...Array(n).keys()]);
+  state.orderingPhaseIdx=0;
+  state.orderingCurrentOrder=shuffle([...Array(n).keys()]);
   state.orderingConfirmed=false;
+  state.orderingResults=[];
+  state.orderingFinished=false;
   state.screen='ordering-question';
   render();
 }
 
-function confirmOrdering(){
-  // Sync DOM order into state one final time before confirming
-  const list=document.getElementById('sortList');
-  if(list){
-    state.orderingSteps=Array.from(list.querySelectorAll('.sort-item'))
-      .map(el=>parseInt(el.dataset.stepIdx));
-  }
+function confirmPhase(){
+  const phase=SCENARIOS[state.orderingScenarioIdx].phases[state.orderingPhaseIdx];
+  const correct=state.orderingCurrentOrder.filter((si,pos)=>si===pos).length;
+  state.orderingResults.push({correct,total:phase.steps.length});
   state.orderingConfirmed=true;
   render();
 }
 
+function nextPhase(){
+  const scenario=SCENARIOS[state.orderingScenarioIdx];
+  if(state.orderingPhaseIdx<scenario.phases.length-1){
+    state.orderingPhaseIdx++;
+    const n=scenario.phases[state.orderingPhaseIdx].steps.length;
+    state.orderingCurrentOrder=shuffle([...Array(n).keys()]);
+    state.orderingConfirmed=false;
+  } else {
+    state.orderingFinished=true;
+  }
+  render();
+}
+
 function retryOrdering(){
-  startOrderingScenario(state.orderingScenarioIdx);
+  const n=SCENARIOS[state.orderingScenarioIdx].phases[0].steps.length;
+  state.orderingPhaseIdx=0;
+  state.orderingCurrentOrder=shuffle([...Array(n).keys()]);
+  state.orderingConfirmed=false;
+  state.orderingResults=[];
+  state.orderingFinished=false;
+  render();
 }
 
 function goOrderingSelect(){
   state.screen='ordering-select';
-  state.orderingConfirmed=false;
   render();
 }
 
-function attachOrderingDnd(){
-  const list=document.getElementById('sortList');
-  if(!list||state.orderingConfirmed)return;
-
-  let dnd=null;
-
-  // Returns all real items (excludes placeholder)
-  function getItems(){
-    return Array.from(list.querySelectorAll('.sort-item:not(.sort-placeholder)'));
-  }
-
-  // Find the item whose top-half the cursor is above → insert before it
-  function findTarget(clientY){
-    for(const el of getItems()){
-      const r=el.getBoundingClientRect();
-      if(clientY<r.top+r.height/2)return el;
-    }
-    return null; // cursor below all items → append at end
-  }
-
-  // FLIP: capture positions before a DOM change, animate from old→new after
-  function flip(items,beforeTops){
-    items.forEach((el,i)=>{
-      const dy=beforeTops[i]-el.getBoundingClientRect().top;
-      if(Math.abs(dy)<1)return;
-      el.style.transition='none';
-      el.style.transform='translateY('+dy+'px)';
-      el.getBoundingClientRect(); // force reflow so the above is applied
-      el.style.transition=''; // re-enable CSS transition (transform .18s ease)
-      el.style.transform=''; // animate to natural position
-    });
-  }
-
-  // Move the placeholder to the right slot and FLIP remaining items
-  function movePlaceholder(cursorY){
-    const target=findTarget(cursorY);
-    const key=target?target.dataset.stepIdx:'__end__';
-    if(key===dnd.lastKey)return; // already in correct slot, skip work
-    dnd.lastKey=key;
-    const items=getItems();
-    const tops=items.map(el=>el.getBoundingClientRect().top);
-    if(target)list.insertBefore(dnd.ph,target);
-    else list.appendChild(dnd.ph);
-    flip(items,tops);
-  }
-
-  function startDrag(item,clientX,clientY){
-    const rect=item.getBoundingClientRect();
-
-    // Ghost: a fixed-position clone that follows the cursor
-    const ghost=item.cloneNode(true);
-    ghost.classList.add('sort-ghost');
-    ghost.style.cssText=[
-      'position:fixed',
-      'left:'+rect.left+'px',
-      'top:'+rect.top+'px',
-      'width:'+rect.width+'px',
-      'margin:0',
-      'z-index:9999',
-      'pointer-events:none',
-      'box-sizing:border-box',
-      'transition:none',
-    ].join(';');
-    document.body.appendChild(ghost);
-
-    // Placeholder: invisible spacer that holds the drop slot open
-    const ph=document.createElement('div');
-    ph.className='sort-placeholder';
-    ph.style.height=rect.height+'px';
-    list.insertBefore(ph,item);
-    item.remove(); // detach real item; ghost is its visual stand-in
-
-    dnd={
-      item,ghost,ph,
-      offsetX:clientX-rect.left,
-      offsetY:clientY-rect.top,
-      height:rect.height,
-      lastKey:null,
-    };
-  }
-
-  function moveDrag(clientX,clientY){
-    if(!dnd)return;
-    // Move ghost to follow cursor
-    dnd.ghost.style.left=(clientX-dnd.offsetX)+'px';
-    dnd.ghost.style.top=(clientY-dnd.offsetY)+'px';
-    // Use ghost center Y to determine placeholder slot
-    movePlaceholder(clientY-dnd.offsetY+dnd.height/2);
-  }
-
-  function endDrag(){
-    if(!dnd)return;
-    const{item,ghost,ph}=dnd;
-    dnd=null;
-
-    // Animate ghost to placeholder position, then snap real item in
-    const pr=ph.getBoundingClientRect();
-    ghost.style.transition='left .14s ease,top .14s ease,opacity .14s ease,transform .14s ease';
-    ghost.style.left=pr.left+'px';
-    ghost.style.top=pr.top+'px';
-    ghost.style.transform='none';
-    ghost.style.opacity='0.2';
-
-    setTimeout(()=>{
-      list.insertBefore(item,ph);
-      ph.remove();
-      ghost.remove();
-      // Clear any in-progress FLIP transforms
-      getItems().forEach(el=>{el.style.transform='';el.style.transition='';});
-      // Sync logical order to state
-      state.orderingSteps=Array.from(list.querySelectorAll('.sort-item'))
-        .map(el=>parseInt(el.dataset.stepIdx));
-    },150);
-  }
-
-  // ── Mouse ──────────────────────────────────────────────────────────
-  list.addEventListener('mousedown',function(e){
-    if(state.orderingConfirmed)return;
-    const handle=e.target.closest('.sort-handle');
-    if(!handle)return;
-    const item=handle.closest('.sort-item');
-    if(!item)return;
-    e.preventDefault();
-    startDrag(item,e.clientX,e.clientY);
-    function mm(ev){moveDrag(ev.clientX,ev.clientY);}
-    function mu(){
-      endDrag();
-      document.removeEventListener('mousemove',mm);
-      document.removeEventListener('mouseup',mu);
-    }
-    document.addEventListener('mousemove',mm);
-    document.addEventListener('mouseup',mu);
-  });
-
-  // ── Touch ──────────────────────────────────────────────────────────
-  list.addEventListener('touchstart',function(e){
-    if(state.orderingConfirmed)return;
-    const handle=e.target.closest('.sort-handle');
-    if(!handle)return;
-    const item=handle.closest('.sort-item');
-    if(!item)return;
-    e.preventDefault();
-    const t=e.touches[0];
-    startDrag(item,t.clientX,t.clientY);
-    function tm(ev){
-      ev.preventDefault();
-      const t2=ev.touches[0];
-      moveDrag(t2.clientX,t2.clientY);
-    }
-    function tu(){
-      endDrag();
-      document.removeEventListener('touchmove',tm);
-      document.removeEventListener('touchend',tu);
-      document.removeEventListener('touchcancel',tu);
-    }
-    document.addEventListener('touchmove',tm,{passive:false});
-    document.addEventListener('touchend',tu);
-    document.addEventListener('touchcancel',tu);
-  },{passive:false});
-}
 
 // ---- STATISTICS ----
 const HISTORY_KEY='quiz_ns_history';
